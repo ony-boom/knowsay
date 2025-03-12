@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KnowSay",
+  title: "Knowsay",
   description: "A quizz app",
 };
 
