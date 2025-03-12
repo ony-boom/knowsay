@@ -41,6 +41,18 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Extend tailwind color with custom one */
+  --color-ks-black: var(--ks-black);
+  --color-ks-grey: var(--ks-grey);
+  --color-ks-blue: var(--ks-blue);
+  --color-ks-green: var(--ks-green);
+  --color-ks-yellow: var(--ks-yellow);
+  --color-ks-purple: var(--ks-purple);
+
+  /* Change font */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 :root {
@@ -118,6 +130,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
