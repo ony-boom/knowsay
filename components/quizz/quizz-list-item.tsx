@@ -47,37 +47,49 @@ export const QuizzListItem = ({
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-w-[95vw] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{title}</DialogTitle>
-          <DialogDescription className="text-muted-foreground text-sm">
+          <DialogTitle className="text-lg font-bold break-words sm:text-xl">
+            {title}
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground text-xs sm:text-sm">
             {description}
           </DialogDescription>
         </DialogHeader>
-        <div className="mt-4 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-secondary/50 rounded-lg py-3">
+        <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            <div className="bg-secondary/50 rounded-lg p-2 sm:px-4 sm:py-3">
               <p className="text-muted-foreground text-xs font-medium">
                 Category
               </p>
-              <p className="font-medium">{category}</p>
+              <p className="text-sm font-medium sm:text-base">{category}</p>
             </div>
-            <div className="bg-secondary/50 rounded-lg py-3">
+            <div className="bg-secondary/50 rounded-lg p-2 sm:px-4 sm:py-3">
               <p className="text-muted-foreground text-xs font-medium">
                 Difficulty
               </p>
-              <p className="font-medium">{difficulty}</p>
+              <p className="text-sm font-medium sm:text-base">{difficulty}</p>
             </div>
           </div>
-          <div className="bg-secondary/50 rounded-lg py-3">
+          <div className="bg-secondary/50 rounded-lg p-2 sm:px-4 sm:py-3">
             <p className="text-muted-foreground text-xs font-medium">Created</p>
-            <p className="font-medium">{createdAt}</p>
+            <p className="text-sm font-medium sm:text-base">{createdAt}</p>
           </div>
         </div>
-        <Button>Take Quiz</Button>
+        <div className="mt-4 flex justify-center sm:mt-6 sm:justify-end">
+          <Button className="w-full sm:w-auto" size="sm">
+            Take Quiz
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
+};
+
+// take quiz dialog
+
+const QuizzOverviewDialog = () => {
+  return <div>QuizzOverviewDialog</div>;
 };
 
 type QuizzListItemProps = {
