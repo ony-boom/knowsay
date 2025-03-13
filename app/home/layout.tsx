@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="container mx-auto flex h-screen flex-col">
+    <div className="container mx-auto flex h-screen flex-col px-4">
       <header className="flex items-center justify-between border-b bg-white p-6">
         <div aria-labelledby="logo" className="flex items-center gap-1">
           <Logo />

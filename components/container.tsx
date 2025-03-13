@@ -6,7 +6,7 @@ export function Container(props: ContainerProps) {
   return (
     <div
       {...divProps}
-      className={cn("container mx-auto px-4 sm:p-0", divProps.className)}
+      className={cn("container mx-auto px-4", divProps.className)}
     >
       {children}
     </div>
