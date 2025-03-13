@@ -67,7 +67,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </section>
 
       <Separator />
-      {children}
+
+      <section className="mt-8">{children}</section>
     </div>
   );
 }
