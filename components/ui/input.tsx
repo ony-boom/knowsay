@@ -17,5 +17,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
     />
   )
 }
-
+declare type InputProps = React.ComponentProps<"input">
 export { Input }
+export type { InputProps }
+
