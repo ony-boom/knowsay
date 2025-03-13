@@ -76,7 +76,7 @@ const AccountMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="gap-2">
-        <Button variant="outline" className="py-6">
+        <Button variant="outline" className="py-4">
           Account
           <ChevronDown className="h-4 w-4" />
         </Button>
