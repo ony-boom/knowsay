@@ -6,17 +6,21 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function HomeNavMenu() {
+  const pathname = usePathname();
+  const isLogin = pathname === "/auth/login";
+  const isSignup = pathname === "/auth/signup";
   return (
     <div>
       <div id="desktop-nav" className="hidden items-center gap-4 md:flex">
-        <Button asChild variant="outline">
-          <Link href="/auth/login">Login</Link>
+        <Button asChild className={cn({ hidden: isSignup })}>
+          <Link href="/auth/signup">Sign up</Link>
         </Button>
 
-        <Button asChild>
-          <Link href="/auth/signup">Sign up</Link>
+        <Button asChild variant="outline" className={cn({ hidden: isLogin })}>
+          <Link href="/auth/login">Login</Link>
         </Button>
       </div>
 
@@ -30,6 +34,9 @@ export function HomeNavMenu() {
 const MobileNavMenu = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const pathname = usePathname();
+
+  const isLogin = pathname === "/auth/login";
+  const isSignup = pathname === "/auth/signup";
 
   const handleMenuToggle = () => {
     setOpenMenu((prev) => !prev);
@@ -62,13 +69,22 @@ const MobileNavMenu = () => {
             exit={{
               opacity: 0,
             }}
-            className="bg-background absolute inset-0 top-16 z-0 w-full space-y-2 p-4"
+            className="bg-background absolute inset-0 top-16 h-max w-full space-y-2 rounded-lg p-4 shadow-2xs"
           >
-            <Button asChild className="w-full">
+            <Button
+              asChild
+              className={cn("w-full", {
+                hidden: isSignup,
+              })}
+            >
               <Link href="/auth/signup">Sign up</Link>
             </Button>
 
-            <Button asChild variant="outline" className="w-full">
+            <Button
+              asChild
+              variant="outline"
+              className={cn("w-full", { hidden: isLogin })}
+            >
               <Link href="/auth/login">Login</Link>
             </Button>
           </motion.div>
