@@ -12,11 +12,11 @@ export function HomeNavMenu() {
     <div>
       <div id="desktop-nav" className="hidden items-center gap-4 md:flex">
         <Button asChild variant="outline">
-          <Link href="/app/(home)/auth/login">Login</Link>
+          <Link href="/auth/login">Login</Link>
         </Button>
 
         <Button asChild>
-          <Link href="/app/(home)/auth/signup">Sign up</Link>
+          <Link href="/auth/signup">Sign up</Link>
         </Button>
       </div>
 
