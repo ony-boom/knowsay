@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
 import { Container } from "@/components/container";
 import { HomeNavMenu } from "@/components/home-nav-menu";
+import { ReactNode } from "react";
 
-export default function Home() {
+export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <Container className="flex h-screen flex-col">
-      <nav className="bg-background sticky top-0 flex items-center justify-between py-4 z-50">
+      <nav className="bg-background sticky top-0 z-50 flex items-center justify-between py-4">
         <div aria-labelledby="logo" className="flex items-center gap-1">
           <Logo />
 
@@ -18,6 +18,8 @@ export default function Home() {
 
         <HomeNavMenu />
       </nav>
+
+      <div className="py-2 grow">{children}</div>
     </Container>
   );
 }

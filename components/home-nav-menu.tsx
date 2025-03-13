@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";
+import { usePathname } from "next/navigation";
 
 export function HomeNavMenu() {
   return (
@@ -28,10 +29,15 @@ export function HomeNavMenu() {
 
 const MobileNavMenu = () => {
   const [openMenu, setOpenMenu] = useState(false);
+  const pathname = usePathname();
 
   const handleMenuToggle = () => {
     setOpenMenu((prev) => !prev);
   };
+
+  useEffect(() => {
+    setOpenMenu(false);
+  }, [pathname]);
 
   return (
     <>
