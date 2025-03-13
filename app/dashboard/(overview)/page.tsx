@@ -1,4 +1,7 @@
 import { QuizzListItem } from "@/components/quizz/quizz-list-item";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -8,59 +11,58 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Search } from "lucide-react";
 
 export default async function Page() {
   return (
     <div className="flex w-full flex-col gap-6 md:flex-row">
       <aside className="w-full shrink-0 space-y-6 md:w-64">
-        <div className="rounded-lg border p-4 shadow-sm">
-          <h3 className="mb-3 text-lg font-medium">Search</h3>
-          <div className="relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        <Card className="gap-2">
+          <CardHeader>
+            <CardTitle>Search</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="relative">
+              <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
+              <Input
+                type="search"
+                placeholder="Search quizzes..."
+                className="pl-8"
               />
-            </svg>
-            <input
-              type="search"
-              placeholder="Search quizzes..."
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring w-full rounded-md border py-2 pr-3 pl-8 text-sm focus-visible:ring-2 focus-visible:outline-none"
-            />
-          </div>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-lg border p-4 shadow-sm">
-          <h3 className="mb-3 text-lg font-medium">Categories</h3>
-          <ul className="space-y-2">
-            {[
-              "General Knowledge",
-              "Science",
-              "History",
-              "Geography",
-              "Entertainment",
-              "Sports",
-              "Technology",
-            ].map((category) => (
-              <li key={category}>
-                <button className="hover:bg-muted group flex w-full items-center justify-between rounded-md px-2 py-1 text-left text-sm transition-colors">
-                  {category}
-                  <span className="text-muted-foreground bg-muted rounded-full px-2 py-0.5 text-xs">
-                    {Math.floor(Math.random() * 20) + 1}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Card className="gap-2">
+          <CardHeader>
+            <CardTitle>Categories</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {[
+                "General Knowledge",
+                "Science",
+                "History",
+                "Geography",
+                "Entertainment",
+                "Sports",
+                "Technology",
+              ].map((category) => (
+                <li key={category}>
+                  <Button
+                    variant="ghost"
+                    className="h-auto w-full justify-between px-2 py-1 text-left text-sm"
+                  >
+                    {category}
+                    <span className="text-muted-foreground bg-muted rounded-full px-2 py-0.5 text-xs">
+                      {Math.floor(Math.random() * 20) + 1}
+                    </span>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
       </aside>
 
       <main className="flex-1">
