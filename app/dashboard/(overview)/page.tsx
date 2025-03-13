@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { QuizzListItem } from "@/components/quizz/quizz-list-item";
 import {
   Pagination,
   PaginationContent,
@@ -62,43 +54,3 @@ export default async function Page() {
     </main>
   );
 }
-
-const QuizzListItem = ({
-  title,
-  description,
-  category,
-  difficulty,
-  createdAt,
-}: QuizzListItemProps) => {
-  return (
-    <Card className="w-full transition-shadow hover:shadow-md">
-      <CardHeader>
-        <CardTitle className="text-lg font-medium">{title}</CardTitle>
-        <CardDescription className="line-clamp-2">
-          {description}
-        </CardDescription>
-        <div className="mt-2 flex gap-2">
-          <span className="bg-secondary inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
-            {difficulty}
-          </span>
-          <span className="bg-primary/10 text-primary inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
-            {category}
-          </span>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="text-muted-foreground flex justify-end text-xs">
-          <span>Created: {createdAt}</span>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-type QuizzListItemProps = {
-  title: string;
-  description: string;
-  category: string;
-  difficulty: string;
-  createdAt: string;
-};

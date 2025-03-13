@@ -75,7 +75,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 const AccountMenu = () => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="gap-2">
+      <DropdownMenuTrigger className="gap-2" asChild>
         <Button variant="outline" className="py-4">
           Account
           <ChevronDown className="h-4 w-4" />
