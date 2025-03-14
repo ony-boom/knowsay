@@ -25,7 +25,7 @@ export default function Home() {
       </hgroup>
 
       <div className="relative flex gap-12 md:grow">
-        <div className="relative flex gap-4 md:gap-6 overflow-x-hidden">
+        <div className="relative flex gap-4 md:gap-6 overflow-hidden">
           <Image
             alt="Interactive quizzes"
             src="/home-hero.png"
@@ -41,21 +41,10 @@ export default function Home() {
             height={400}
             className="hidden -translate-y-20 scale-80 duration-300 xl:block"
           />
-
-          <Image
-            alt="Interactive quizzes"
-            src="/home-hero-3.png"
-            width={400}
-            height={400}
-            className="hidden -translate-x-12 translate-y-4 xl:block"
-          />
         </div>
 
         {/* Bottom fade effect */}
         <div className="from-background pointer-events-none absolute right-0 -bottom-4 left-0 h-24 bg-gradient-to-t to-transparent" />
-
-        {/* Right side fade effect for desktop */}
-        <div className="from-background pointer-events-none absolute top-0 right-0 bottom-0 hidden w-24 bg-gradient-to-l to-transparent md:block" />
       </div>
     </div>
   );
