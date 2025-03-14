@@ -7,7 +7,7 @@ import { AuthButtons } from "@/components/auth";
 
 export default function Home() {
   const { isSignedIn } = useAuth();
-  if (isSignedIn) redirect("/dashboard");
+  if (isSignedIn) redirect("/home");
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-20 md:flex-row md:justify-between lg:gap-32">
