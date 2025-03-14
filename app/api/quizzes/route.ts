@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { QuizSchema, QuizzArraySchema } from "@/schemas/quizSchema";
+import { QuizSchema, QuizArraySchema } from "@/schemas/quizSchema";
 import { z } from "zod";
 
 export async function GET() {
@@ -10,7 +10,7 @@ export async function GET() {
 
     // Validate the data against the schema
     // ✅ Validate and parse the response using Zod
-    const validatedData = QuizzArraySchema.parse(data);
+    const validatedData = QuizArraySchema.parse(data);
 
     return Response.json(validatedData, { status: 200 });
   } catch (error) {
