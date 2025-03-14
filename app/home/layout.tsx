@@ -38,8 +38,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </nav>
       </header>
 
-      <section className="flex justify-between bg-neutral-50-50 py-4">
+      <section className="bg-neutral-50-50 flex justify-between py-4">
         <Button variant="link" className="flex items-center gap-2 px-6">
+          {/* TODO: make avatar dynamic */}
           <Avatar>
             <AvatarImage src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
             <AvatarFallback>CN</AvatarFallback>
@@ -49,21 +50,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {isAtHomeRoot && (
           <div className="flex gap-4 px-6">
+            <Link href="/home/quiz/create">
+              <Button
+                variant="outline"
+                className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
+              >
+                Create Quiz
+              </Button>
+            </Link>
             <Button
               variant="outline"
-              className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
-            >
-              Create Quiz
-            </Button>
-            <Button
-              variant="outline"
-              className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointe"
+              className="hover:cursor-pointe border-2 border-dashed border-neutral-300 p-4"
             >
               Create Challenge
             </Button>
             <Button
               variant="outline"
-              className="border-2 border-dashed border-neutral-50-300 p-4 hover:cursor-pointer"
+              className="border-neutral-50-300 border-2 border-dashed p-4 hover:cursor-pointer"
             >
               Create Test
             </Button>
