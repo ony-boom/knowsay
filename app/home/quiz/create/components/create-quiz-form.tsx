@@ -42,7 +42,7 @@ export const CreateQuizForm = () => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-8">
         <div className="grid gap-6">
           <div className="grid gap-6 md:grid-cols-2">
             <FormField
