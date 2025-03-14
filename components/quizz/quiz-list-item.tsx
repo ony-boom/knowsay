@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -15,13 +16,14 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 
-export const QuizzListItem = ({
+export const QuizListItem = ({
+  quizId,
   title,
   description,
   category,
   difficulty,
   createdAt,
-}: QuizzListItemProps) => {
+}: QuizListItemProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -77,8 +79,8 @@ export const QuizzListItem = ({
           </div>
         </div>
         <div className="mt-4 flex justify-center sm:mt-6 sm:justify-end">
-          <Button className="w-full sm:w-auto" size="sm">
-            Take Quiz
+          <Button asChild className="w-full sm:w-auto" size="sm">
+            <Link href={`/home/quiz/${quizId}`}>Take Quiz</Link>
           </Button>
         </div>
       </DialogContent>
@@ -88,11 +90,12 @@ export const QuizzListItem = ({
 
 // take quiz dialog
 
-const QuizzOverviewDialog = () => {
-  return <div>QuizzOverviewDialog</div>;
+const QuizOverviewDialog = () => {
+  return <div>QuizOverviewDialog</div>;
 };
 
-type QuizzListItemProps = {
+type QuizListItemProps = {
+  quizId: string;
   title: string;
   description: string;
   category: string;
