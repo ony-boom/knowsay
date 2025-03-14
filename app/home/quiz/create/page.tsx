@@ -6,6 +6,7 @@ import {
 import { CreateQuizForm } from "./components/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
+import { QuestionEditor } from "./components/question-editor";
 
 export default function CreateQuizPage() {
   return (
@@ -18,6 +19,7 @@ export default function CreateQuizPage() {
         </p>
       </hgroup>
 
+      {/* create quiz form */}
       <Collapsible className="w-full rounded-lg border">
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
@@ -32,6 +34,7 @@ export default function CreateQuizPage() {
           <CreateQuizForm />
         </CollapsibleContent>
       </Collapsible>
+      <QuestionEditor />
     </div>
   );
 }
