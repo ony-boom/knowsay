@@ -19,11 +19,14 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
+import { SignInButton } from '@clerk/nextjs'
+import GoogleLoginButton from '@/components/auth/google-login-button'
 
 // Improved schema with additional validation rules
 const formSchema = z.object({
@@ -119,19 +122,13 @@ export default function LoginPreview() {
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Use Linkedin
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Go with Github
-                </Button>
               </div>
             </form>
           </Form>
         </CardContent>
+        <CardFooter>
+          <GoogleLoginButton />
+        </CardFooter>
       </Card>
     </div>
   )

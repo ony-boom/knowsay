@@ -16,7 +16,7 @@ export function HomeNavMenu() {
     <div>
       <div id="desktop-nav" className="hidden items-center gap-4 md:flex">
         <Button asChild className={cn({ hidden: isSignup })}>
-          <Link href="/auth/signup">Sign up</Link>
+          <Link href="/auth/sign-up">Sign up</Link>
         </Button>
 
         <Button asChild variant="outline" className={cn({ hidden: isLogin })}>
