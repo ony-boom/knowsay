@@ -1,16 +1,7 @@
-import { QuizzListItem } from "@/components/quizz/quizz-list-item";
+import { QuizListContainer } from "@/components/quizz/quizz-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Search } from "lucide-react";
 
 export default async function Page() {
@@ -66,20 +57,8 @@ export default async function Page() {
       </aside>
 
       <main className="flex-1">
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <QuizzListItem
-              key={index}
-              title={`Sample Quiz ${index + 1}`}
-              description="This is a sample quiz description"
-              category="General Knowledge"
-              difficulty="Medium"
-              createdAt="2023-07-15"
-            />
-          ))}
-        </div>
-
-        <div className="mt-8">
+        <QuizListContainer />
+        {/* <div className="mt-8">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -104,7 +83,7 @@ export default async function Page() {
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-        </div>
+        </div> */}
       </main>
     </div>
   );
