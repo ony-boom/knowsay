@@ -1,77 +1,27 @@
+import { fetchFilteredQuizzes } from "@/app/api/quizzes/route";
 import { QuizListItem } from "./quiz-list-item";
-import { Suspense } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { QuizListItemSkeleton } from "./quiz-list-item-skeleton";
-import { getQuizzes } from "@/app/api/quizzes/route";
 
 interface QuizListProps {
-  page?: number;
-  pageSize?: number;
+  query: string;
+  currentPage: number;
 }
 
-export async function QuizList({ page = 1, pageSize = 9 }: QuizListProps) {
-  const { quizzes, totalCount } = await getQuizzes(page, pageSize);
-  const totalPages = Math.ceil(totalCount / pageSize);
+export async function QuizList({ query, currentPage }: QuizListProps) {
+  const { quizzes } = await fetchFilteredQuizzes(query, currentPage);
 
   return (
-    <div className="space-y-6">
-      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {quizzes.map((quiz) => (
-          <QuizListItem
-            key={quiz.id}
-            quizId={quiz.id}
-            title={quiz.title}
-            description={quiz.description || "No description available"}
-            category={quiz.category}
-            difficulty={quiz.difficulty}
-            createdAt={new Date(quiz.created_at).toLocaleDateString()}
-          />
-        ))}
-      </div>
-
-      {totalPages > 1 && (
-        <Pagination>
-          <PaginationContent>
-            {page > 1 && (
-              <PaginationItem>
-                <PaginationPrevious href={`/quizzes?page=${page - 1}`} />
-              </PaginationItem>
-            )}
-
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href={`/quizzes?page=${i + 1}`}
-                  isActive={page === i + 1}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-
-            {page < totalPages && (
-              <PaginationItem>
-                <PaginationNext href={`/quizzes?page=${page + 1}`} />
-              </PaginationItem>
-            )}
-          </PaginationContent>
-        </Pagination>
-      )}
+    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {quizzes.map((quiz) => (
+        <QuizListItem
+          key={quiz.id}
+          quizId={quiz.id}
+          title={quiz.title}
+          description={quiz.description || "No description available"}
+          category={quiz.category}
+          difficulty={quiz.difficulty}
+          createdAt={new Date(quiz.created_at).toLocaleDateString()}
+        />
+      ))}
     </div>
-  );
-}
-
-export function QuizListContainer({ page = 1, pageSize = 9 }: QuizListProps) {
-  return (
-    <Suspense fallback={<QuizListItemSkeleton />}>
-      <QuizList page={page} pageSize={pageSize} />
-    </Suspense>
   );
 }

@@ -1,10 +1,16 @@
-import { QuizListContainer } from "@/components/quizz/quiz-list";
+import { SearchInput } from "@/components/search";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import QuizListContainer from "../components/quiz-list-container";
+import { Suspense } from "react";
+import { QuizListItemSkeleton } from "@/components/quizz/quiz-list-item-skeleton";
 
-export default async function Page() {
+export default async function Page(props: {
+  searchParams?: Promise<{
+    query?: string;
+    page?: string;
+  }>;
+}) {
   return (
     <div className="flex w-full flex-col gap-6 md:flex-row">
       <aside className="w-full shrink-0 space-y-6 md:w-64">
@@ -13,14 +19,7 @@ export default async function Page() {
             <CardTitle>Search</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="relative">
-              <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
-              <Input
-                type="search"
-                placeholder="Search quizzes..."
-                className="pl-8"
-              />
-            </div>
+            <SearchInput />
           </CardContent>
         </Card>
 
@@ -56,35 +55,9 @@ export default async function Page() {
         </Card>
       </aside>
 
-      <main className="flex-1">
-        <QuizListContainer />
-        {/* <div className="mt-8">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div> */}
-      </main>
+      <Suspense fallback={<QuizListItemSkeleton />}>
+        <QuizListContainer props={props.searchParams} />
+      </Suspense>
     </div>
   );
 }

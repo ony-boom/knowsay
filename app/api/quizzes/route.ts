@@ -60,26 +60,69 @@ export async function POST(req: Request) {
   }
 }
 
-export async function getQuizzes(page = 1, pageSize = 9) {
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize - 1;
+const ITEMS_PER_PAGE = 9;
+// fetch quizzes page, return total pages
+export async function fetchQuizzesPage(query: string) {
+  try {
+    let queryBuilder = supabase.from("quizzes").select("*", { count: "exact" });
 
-  const { data, error, count } = await supabase
-    .from("quizzes")
-    .select("*", { count: "exact" })
-    .range(start, end)
-    .order("created_at", { ascending: false });
+    // Apply filter if query exists
+    if (query) {
+      queryBuilder = queryBuilder.ilike("title", `%${query}%`);
+    }
 
-  if (error) throw new Error(error.message);
+    const { data, error, count } = await queryBuilder;
 
-  // Validate data against schema
-  const validatedData = z.array(QuizSchema).safeParse(data);
-  if (!validatedData.success) {
-    throw new Error("Invalid data returned from database");
+    if (error) throw new Error(error.message);
+
+    // Validate data against schema
+    const validatedData = QuizArraySchema.safeParse(data);
+    if (!validatedData.success) {
+      throw new Error("Invalid data returned from database");
+    }
+
+    return {
+      quizzes: validatedData.data,
+      totalPages: Math.ceil((count || 0) / ITEMS_PER_PAGE),
+      totalCount: count || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching quizzes:", error);
+    throw error;
   }
+}
 
-  return {
-    quizzes: validatedData.data,
-    totalCount: count || 0,
-  };
+// fetch filtered quizzes
+export async function fetchFilteredQuizzes(query: string, currentPage: number) {
+  try {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE - 1;
+
+    let queryBuilder = supabase.from("quizzes").select("*", { count: "exact" });
+
+    // Apply filter if query exists
+    if (query) {
+      queryBuilder = queryBuilder.ilike("title", `%${query}%`);
+    }
+
+    const { data, error, count } = await queryBuilder
+      .range(start, end)
+      .order("created_at", { ascending: false });
+
+    if (error) throw new Error(error.message);
+
+    // Validate data against schema
+    const validatedData = QuizArraySchema.safeParse(data);
+    if (!validatedData.success) {
+      throw new Error("Invalid data returned from database");
+    }
+
+    return {
+      quizzes: validatedData.data,
+      totalCount: count || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching filtered quizzes:", error);
+    throw error;
+  }
 }
