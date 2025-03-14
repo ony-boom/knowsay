@@ -37,6 +37,7 @@ export const CreateQuizForm = () => {
   });
 
   function onSubmit(values: Quiz) {
+    // TODO: submit the form data to the server
     console.log(values);
   }
   return (
