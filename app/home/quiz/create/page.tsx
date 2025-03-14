@@ -21,7 +21,7 @@ export default function CreateQuizPage() {
       <Collapsible className="w-full rounded-lg border">
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
-            <span>Quiz Creation Form</span>
+            <span>Create Your Amazing Quiz Here</span>
             <Button variant="ghost" size="sm">
               <ChevronsUpDown className="h-4 w-4" />
               <span className="sr-only">Toggle</span>
