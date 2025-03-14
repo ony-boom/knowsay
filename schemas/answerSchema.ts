@@ -5,7 +5,7 @@ export const AnswerSchema = z.object({
   question_id: z.string().uuid(),
   content: z.string().min(1, "Answer cannot be empty"),
   is_correct: z.boolean(),
-  created_at: z.string().datetime(),
+  created_at: z.coerce.date(),
 });
 
 export type Answer = z.infer<typeof AnswerSchema>;

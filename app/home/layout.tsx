@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { AccountMenu } from "@/components/account-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
+import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -39,25 +40,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </header>
 
       <section className="bg-neutral-50-50 flex justify-between py-4">
+        {!isAtHomeRoot && <HomeBreadcrumb />}
+
         <Button variant="link" className="flex items-center gap-2 px-6">
           {/* TODO: make avatar dynamic */}
           <Avatar>
             <AvatarImage src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium">Learner</span>
+          <span className="text-sm hidden md:inline-block font-medium">Learner</span>
         </Button>
 
         {isAtHomeRoot && (
           <div className="flex gap-4 px-6">
-            <Link href="/home/quiz/create">
-              <Button
-                variant="outline"
-                className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
-              >
-                Create Quiz
-              </Button>
-            </Link>
+            <Button
+              asChild
+              variant="outline"
+              className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
+            >
+              <Link href="/home/quiz/create">Create Quiz</Link>
+            </Button>
             <Button
               variant="outline"
               className="hover:cursor-pointe border-2 border-dashed border-neutral-300 p-4"

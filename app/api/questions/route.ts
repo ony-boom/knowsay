@@ -83,6 +83,8 @@ export async function getQuestions(quizId: string, page = 1, pageSize = 10) {
   // Validate data against schema
   const validatedData = z.array(QuestionSchema).safeParse(data);
   if (!validatedData.success) {
+    console.log(validatedData.error);
+
     throw new Error("Invalid data returned from database");
   }
 
@@ -90,4 +92,21 @@ export async function getQuestions(quizId: string, page = 1, pageSize = 10) {
     questions: validatedData.data,
     totalCount: count || 0,
   };
+}
+
+export async function getQuestion(id: string) {
+  const { data, error } = await supabase
+    .from("questions")
+    .select("*")
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  // Validate data against schema
+  const validatedData = QuestionSchema.safeParse(data);
+  if (!validatedData.success) {
+    throw new Error("Invalid data returned from database");
+  }
+
+  return validatedData.data;
 }

@@ -79,7 +79,7 @@ export const QuizListItem = ({
           </div>
         </div>
         <div className="mt-4 flex justify-center sm:mt-6 sm:justify-end">
-          <Button asChild className="w-full sm:w-auto" size="sm">
+          <Button asChild className="w-full sm:w-auto">
             <Link href={`/home/quiz/${quizId}`}>Take Quiz</Link>
           </Button>
         </div>
