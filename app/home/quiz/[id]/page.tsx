@@ -1,6 +1,6 @@
-import { getQuestions } from "@/app/api/questions/route";
+// import { getQuestions } from "@/app/api/questions/route";
 import { getQuiz } from "@/app/api/quizzes/[id]/route";
-import { TakeQuizCard } from "@/components/quizz/take-quiz-card";
+// import { TakeQuizCard } from "@/components/quizz/take-quiz-card";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -11,7 +11,7 @@ export default async function QuizPage(props: {
   const quiz = await getQuiz(id);
   // TODO: paginate, show one question at a time
   // but keep score of all questions
-  const { questions } = await getQuestions(id);
+  // const { questions } = await getQuestions(id);
 
 
   return (
@@ -24,7 +24,6 @@ export default async function QuizPage(props: {
         )}
       </hgroup>
 
-      <TakeQuizCard question={questions[0]} />
     </div>
   );
 }

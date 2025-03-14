@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Suspense } from "react";
 import { fetchQuizzesPage } from "@/app/api/quizzes/route";
 import { Pagination } from "@/components/pagination";
-import { QuizList } from "@/components/quizz/quiz-list";
-import { QuizListSkeleton } from "@/components/quizz/quiz-list-skeleton";
+import { QuizList } from "@/components/quiz/quiz-list";
+import { QuizListSkeleton } from "@/components/quiz/quiz-list-skeleton";
 
 export default async function Page(props: {
   searchParams?: Promise<{
