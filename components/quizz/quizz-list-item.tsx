@@ -86,12 +86,6 @@ export const QuizzListItem = ({
   );
 };
 
-// take quiz dialog
-
-const QuizzOverviewDialog = () => {
-  return <div>QuizzOverviewDialog</div>;
-};
-
 type QuizzListItemProps = {
   title: string;
   description: string;
