@@ -1,4 +1,4 @@
-import { QuizListContainer } from "@/components/quizz/quizz-list";
+import { QuizListContainer } from "@/components/quizz/quiz-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

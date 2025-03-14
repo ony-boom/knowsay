@@ -1,4 +1,4 @@
-import { QuizzListItem } from "./quizz-list-item";
+import { QuizListItem } from "./quiz-list-item";
 import { Suspense } from "react";
 import {
   Pagination,
@@ -8,7 +8,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { QuizzListItemSkeleton } from "./quizz-list-item-skeleton";
+import { QuizListItemSkeleton } from "./quiz-list-item-skeleton";
 import { getQuizzes } from "@/app/api/quizzes/route";
 
 interface QuizListProps {
@@ -24,8 +24,9 @@ export async function QuizList({ page = 1, pageSize = 9 }: QuizListProps) {
     <div className="space-y-6">
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {quizzes.map((quiz) => (
-          <QuizzListItem
+          <QuizListItem
             key={quiz.id}
+            quizId={quiz.id}
             title={quiz.title}
             description={quiz.description || "No description available"}
             category={quiz.category}
@@ -69,7 +70,7 @@ export async function QuizList({ page = 1, pageSize = 9 }: QuizListProps) {
 
 export function QuizListContainer({ page = 1, pageSize = 9 }: QuizListProps) {
   return (
-    <Suspense fallback={<QuizzListItemSkeleton />}>
+    <Suspense fallback={<QuizListItemSkeleton />}>
       <QuizList page={page} pageSize={pageSize} />
     </Suspense>
   );

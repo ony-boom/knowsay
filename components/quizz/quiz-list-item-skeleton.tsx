@@ -1,6 +1,6 @@
 import { Skeleton } from "../ui/skeleton";
 
-export const QuizzListItemSkeleton = () => {
+export const QuizListItemSkeleton = () => {
   return (
     <Skeleton className="h-[180px] w-full rounded-lg p-6">
       {/* Card content container */}

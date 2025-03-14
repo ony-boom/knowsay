@@ -11,6 +11,6 @@ export const QuizSchema = z.object({
   created_at: z.string(),
 });
 
-export const QuizzArraySchema = z.array(QuizSchema);
+export const QuizArraySchema = z.array(QuizSchema);
 
 export type Quiz = z.infer<typeof QuizSchema>;
