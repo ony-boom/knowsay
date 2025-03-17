@@ -37,6 +37,8 @@ export const Pagination = ({ totalPages }: PaginationProps) => {
 
         {/* Pages */}
         {allPages.map((page, index) => {
+          if (totalPages <= 1) return null;
+
           if (page === "...") {
             return <PaginationEllipsis key={`ellipsis-${index}`} />;
           }
