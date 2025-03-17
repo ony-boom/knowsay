@@ -4,6 +4,7 @@ import { SortableDragHandle } from "@/components/ui/sortable";
 import { Edit, GripVertical, Trash2 } from "lucide-react";
 import { SortableQuestionsSchema } from "../sortable-question-list";
 import { QuestionAnswersSheet } from "./question-answers-sheet";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 interface QuestionActionsProps {
   question: SortableQuestionsSchema["questions"][0];
@@ -17,16 +18,16 @@ export const QuestionActions: React.FC<QuestionActionsProps> = ({
   onDelete,
 }) => (
   <div className="mt-2 flex shrink-0 space-x-2 self-end sm:mt-0 sm:space-x-3 sm:self-auto">
-    <Sheet>
-      <SheetTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="h-7 text-xs">
           View Answers
         </Button>
-      </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md">
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
         <QuestionAnswersSheet question={question} />
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
 
     <SortableDragHandle className="hover:bg-accent hover:text-accent-foreground flex h-7 w-7 items-center justify-center rounded-full">
       <GripVertical className="h-3.5 w-3.5" aria-hidden="true" />

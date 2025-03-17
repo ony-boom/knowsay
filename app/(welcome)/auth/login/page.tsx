@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import Link from "next/link";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 // import { toast } from 'sonner'
 
 import {
@@ -13,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -22,47 +22,46 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/ui/password-input'
-import { SignInButton } from '@clerk/nextjs'
-import GoogleLoginButton from '@/components/auth/google-login-button'
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import GoogleLoginButton from "@/components/auth/google-login-button";
 
 // Improved schema with additional validation rules
 const formSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
+  email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters long' })
-    .regex(/[a-zA-Z0-9]/, { message: 'Password must be alphanumeric' }),
-})
+    .min(6, { message: "Password must be at least 6 characters long" })
+    .regex(/[a-zA-Z0-9]/, { message: "Password must be alphanumeric" }),
+});
 
 export default function LoginPreview() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       // Assuming an async login function
-      console.log(values)
+      console.log(values);
       // toast(
       //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
       //     <code className="text-white">{JSON.stringify(values, null, 2)}</code>
       //   </pre>,
       // )
     } catch (error) {
-      console.error('Form submission error', error)
+      console.error("Form submission error", error);
       // toast.error('Failed to submit the form. Please try again.')
     }
   }
 
   return (
-    <div className="flex flex-col min-h-[50vh] h-full w-full items-center justify-center px-4">
+    <div className="flex h-full min-h-[50vh] w-full flex-col items-center justify-center px-4">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
@@ -98,7 +97,7 @@ export default function LoginPreview() {
                   name="password"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <div className="flex justify-between items-center">
+                      <div className="flex items-center justify-between">
                         <FormLabel htmlFor="password">Password</FormLabel>
                         <Link
                           href="#"
@@ -131,5 +130,5 @@ export default function LoginPreview() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
