@@ -25,7 +25,7 @@ export default function Home() {
       </hgroup>
 
       <div className="relative flex gap-12 md:grow">
-        <div className="relative flex gap-4 md:gap-6 overflow-hidden">
+        <div className="relative flex gap-4 overflow-hidden md:gap-6">
           <Image
             alt="Interactive quizzes"
             src="/home-hero.png"

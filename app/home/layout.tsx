@@ -82,7 +82,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <Separator />
 
-      <ScrollArea className="h-full w-full mt-8">
+      <ScrollArea className="h-full w-full pt-8">
         {children}
       </ScrollArea>
     </div>

@@ -5,11 +5,9 @@ import { Progress } from "@/components/ui/progress";
 import { cn, swrFetcher } from "@/lib/utils";
 import { z } from "zod";
 import { QuestionSchema } from "@/schemas/questionSchema";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import useSWR from "swr";
 import { AnswerSchema } from "@/schemas/answerSchema";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { QCMQuiz } from "@/components/quiz/qcm-quiz";
 
 export function StartQuiz(props: StartQuizProps) {
   const { questions, ...divProps } = props;
@@ -21,11 +19,11 @@ export function StartQuiz(props: StartQuizProps) {
 
   return (
     <div {...divProps} className={cn(props.className)}>
-      <ScrollArea className="mt-8 flex w-full">
+      <div className="flex w-full overflow-x-auto snap-x space-x-4">
         {questions.map((question, index) => {
           return <QuestionItem key={question.id} question={question} />;
         })}
-      </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -39,10 +37,8 @@ const QuestionItem = (props: { question: z.infer<typeof QuestionSchema> }) => {
   if (!data) return null;
 
   return (
-    <div className="shrink-0 grow space-y-4">
-      <h3 className="">{props.question.content}</h3>
-
-      <div>{renderQuestionBasedOnType(props.question, data)}</div>
+    <div className="w-full shrink-0 snap-start">
+      {renderQuestionBasedOnType(props.question, data)}
     </div>
   );
 };
@@ -55,19 +51,11 @@ const renderQuestionBasedOnType = (
 
   if (type === "QCM") {
     return (
-      <RadioGroup>
-        {answers.map((answer, index) => {
-          return (
-            <div
-              className="border-border flex w-full items-center space-x-4 rounded-md border p-4"
-              key={answer.id}
-            >
-              <RadioGroupItem value={answer.content} id={`r${index + 1}`} />
-              <Label htmlFor={`r${index + 1}`}>{answer.content}</Label>
-            </div>
-          );
-        })}
-      </RadioGroup>
+      <QCMQuiz
+        question={question.content}
+        options={answers.map((a) => a.content)}
+        correctAnswer={answers.filter((a) => a.is_correct)[0].content}
+      />
     );
   }
 
