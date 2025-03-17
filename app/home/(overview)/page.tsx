@@ -5,12 +5,10 @@ import { fetchQuizzesPage } from "@/app/api/quizzes/route";
 import { Pagination } from "@/components/pagination";
 import { QuizList } from "@/components/quiz/quiz-list";
 import { QuizListSkeleton } from "@/components/quiz/quiz-list-skeleton";
-import {
-  CategoryCard,
-  CategoryCardList,
-} from "@/components/quiz/category-card";
+import { CategoryCardList } from "@/components/quiz/category-card";
 import { getCategoriesWithQuizCount } from "@/app/api/quizzes/category/route";
 import { CategoryCardSkeleton } from "@/components/quiz/category-card-skeleton";
+import { CategoryWithQuizCount } from "@/schemas/categorySchema";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -23,7 +21,12 @@ export default async function Page(props: {
 
   const currentPage = Number(searchParams?.page) || 1;
   const { totalPages } = await fetchQuizzesPage(query);
-  const categories = await getCategoriesWithQuizCount();
+  const rawCategories = await getCategoriesWithQuizCount();
+
+  const categories = rawCategories.map((category) => ({
+    ...category,
+    quizzes_count: [{ count: parseInt(category.quizzes_count as string) || 0 }],
+  })) as CategoryWithQuizCount[];
 
   return (
     <div className="flex w-full flex-col gap-6 md:flex-row">

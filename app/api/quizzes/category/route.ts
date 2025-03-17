@@ -1,5 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import { CategoryArraySchema } from "@/schemas/categorySchema";
+import {
+  CategoryArraySchema,
+  CategoryWithQuizCountArraySchema,
+} from "@/schemas/categorySchema";
 
 export async function GET() {
   try {
@@ -22,13 +25,11 @@ export async function GET() {
 export async function getCategoriesWithQuizCount() {
   try {
     // Fetch categories with the count of quizzes
-    const { data, error } = await supabase.from("categories").select(`
-        id, 
-        name, 
-        slug, 
-        created_at,
-        quizzes:quizzes(count)
-      `);
+    const { data, error } = await supabase
+      .from("categories")
+      .select("*, quizzes_count: quizzes(count)");
+
+    console.log("Fetched categories with quiz count:", data);
 
     if (error) {
       console.error(
@@ -38,9 +39,16 @@ export async function getCategoriesWithQuizCount() {
       return [];
     }
 
-    const validatedData = CategoryArraySchema.parse(data);
+    const validatedData = CategoryWithQuizCountArraySchema.parse(data);
 
-    return validatedData;
+    // Format counts with leading zeros for numbers less than 10
+    return validatedData.map((category) => {
+      const count = category.quizzes_count[0]?.count || 0;
+      return {
+        ...category,
+        quizzes_count: count < 10 ? `0${count}` : `${count}`,
+      };
+    });
   } catch (error) {
     console.error("Validation failed:", error);
     throw error;
