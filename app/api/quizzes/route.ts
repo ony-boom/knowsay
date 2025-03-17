@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabase";
 import { QuizSchema, QuizArraySchema } from "@/schemas/quizSchema";
-import { z } from "zod";
 
 export async function GET() {
   try {
@@ -35,13 +34,12 @@ export async function POST(req: Request) {
       return Response.json({ error: result.error.format() }, { status: 400 });
     }
 
-    const { title, category, difficulty, created_by, is_public, description } =
+    const { title, difficulty, created_by, is_public, description } =
       result.data;
 
     const { data, error } = await supabase.from("quizzes").insert([
       {
         title,
-        category,
         difficulty,
         created_by,
         is_public,

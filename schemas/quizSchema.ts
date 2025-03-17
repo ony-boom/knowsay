@@ -3,7 +3,6 @@ import { z } from "zod";
 export const QuizSchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(3, "Quiz title must be at least 3 characters"),
-  category: z.string(),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
   is_public: z.boolean().default(true),
   description: z.string().nullable(), // Newly added column
