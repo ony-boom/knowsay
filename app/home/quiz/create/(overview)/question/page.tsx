@@ -14,16 +14,21 @@ import { BlocNote } from "@/components/quiz/create/bloc-note/bloc-note";
 export default function CreateQuestionPage() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Create New Question</CardTitle>
-        <CardDescription>
-          Add a question to your quiz. Make sure to provide multiple options and
-          select the correct answer.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="space-y-2">
+          <CardTitle>Create New Question</CardTitle>
+          <CardDescription>
+            Add a question to your quiz. Make sure to provide multiple options
+            and select the correct answer.
+          </CardDescription>
+        </div>
+        <Button type="submit" form="question-form">
+          Save Question
+        </Button>
       </CardHeader>
-      <form>
+      <form id="question-form">
         <CardContent className="space-y-6">
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div className="bg-background rounded-md">
               <BlocNote />
             </div>
@@ -32,9 +37,6 @@ export default function CreateQuestionPage() {
             </p>
           </div>
         </CardContent>
-        <CardFooter className="mt-4 flex justify-end">
-          <Button type="submit">Save Question</Button>
-        </CardFooter>
       </form>
     </Card>
   );
