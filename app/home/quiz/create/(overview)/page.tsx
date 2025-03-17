@@ -5,10 +5,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CreateQuizForm } from "./components/create-quiz-form";
+import { CreateQuizForm } from "../../../../../components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
-import { QuestionsManager } from "./components/question-manager";
+import { QuestionsManager } from "../../../../../components/quiz/create/question-manager";
 
 export default function CreateQuizPage() {
   return (

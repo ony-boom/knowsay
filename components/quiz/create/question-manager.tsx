@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Question } from "../types";
+import { Question } from "../../../app/home/quiz/create/types";
 import { AddQuestionButton } from "./add-question-button";
 import { SortableQuestionList } from "./sortable-question-list";
 
