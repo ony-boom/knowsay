@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { getCategoriesWithQuizCount } from "@/app/api/quizzes/category/route";
 import { Category } from "@/schemas/categorySchema";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 interface CategoryWithQuizCount extends Category {
   quiz_count?: number;
@@ -19,10 +20,10 @@ export function CategoryCardList({ categories }: CategoryCardProps) {
       <CardHeader>
         <CardTitle>Categories</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ul className="space-y-2">
+      <CardContent className="p-0">
+        <ScrollArea className="space-y-2 px-4 h-[348px]">
           {categories.map((category) => (
-            <li key={category.id}>
+            <div key={category.id}>
               <Button
                 variant="ghost"
                 className="h-auto w-full justify-between px-2 py-1 text-left text-sm"
@@ -32,9 +33,10 @@ export function CategoryCardList({ categories }: CategoryCardProps) {
                   {category.quiz_count || 0}
                 </span>
               </Button>
-            </li>
+            </div>
           ))}
-        </ul>
+        </ScrollArea>
+
       </CardContent>
     </Card>
   );

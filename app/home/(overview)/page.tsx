@@ -25,8 +25,6 @@ export default async function Page(props: {
   const { totalPages } = await fetchQuizzesPage(query);
   const categories = await getCategoriesWithQuizCount();
 
-  console.log("categories", categories);
-
   return (
     <div className="flex w-full flex-col gap-6 md:flex-row">
       <aside className="w-full shrink-0 space-y-6 md:w-64">
