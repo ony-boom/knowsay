@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { Fragment } from "react";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import useSWR from "swr";
 import { swrFetcher } from "@/lib/utils";
@@ -22,9 +22,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function HomeBreadcrumb() {
   const pathNames = usePathname().split("/").filter(Boolean);
 
+  pathNames.shift();
+
+  const { back } = useRouter();
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Button
+              size="icon"
+              variant="link"
+              className="text-foreground/60 hover:text-foreground cursor-pointer transition-[color]"
+              onClick={back}
+            >
+              <ArrowLeft />
+            </Button>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
         {pathNames.map((pathname, index) => {
           const isLast = index === pathNames.length - 1;
           const isId = z.string().uuid().safeParse(pathname).success;
@@ -53,18 +69,6 @@ export function HomeBreadcrumb() {
 }
 
 function renderBreadcrumbContent(pathname: string, isId: boolean) {
-  if (pathname === "home") {
-    return (
-      <Button
-        size="icon"
-        variant="link"
-        className="text-foreground/60 hover:text-foreground cursor-pointer transition-[color]"
-      >
-        <Home />
-      </Button>
-    );
-  }
-
   if (isId) {
     return <IdContent id={pathname} />;
   }
