@@ -9,8 +9,10 @@ import { AccountMenu } from "@/components/account-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
+import { ReactNode } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const isAtHomeRoot = pathname === "/home";
@@ -48,7 +50,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <AvatarImage src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span className="text-sm hidden md:inline-block font-medium">Learner</span>
+          <span className="hidden text-sm font-medium md:inline-block">
+            Learner
+          </span>
         </Button>
 
         {isAtHomeRoot && (
@@ -78,7 +82,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <Separator />
 
-      <section className="mt-8">{children}</section>
+      <ScrollArea className="h-full w-full mt-8">
+        {children}
+      </ScrollArea>
     </div>
   );
 }
