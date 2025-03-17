@@ -21,50 +21,74 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomeBreadcrumb() {
   const pathNames = usePathname().split("/").filter(Boolean);
-
-  pathNames.shift();
-
   const { back } = useRouter();
 
-  return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Button
-              size="icon"
-              variant="link"
-              className="text-foreground/60 hover:text-foreground cursor-pointer transition-[color]"
-              onClick={back}
-            >
-              <ArrowLeft />
-            </Button>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {pathNames.map((pathname, index) => {
-          const isLast = index === pathNames.length - 1;
-          const isId = z.string().uuid().safeParse(pathname).success;
-          const isSpecialPath =
-            pathname === "quiz" || pathname === "challenges";
-          const href = isSpecialPath
-            ? "/home"
-            : `/${pathNames.slice(0, index + 1).join("/")}`;
+  const segments = pathNames.length > 0 ? pathNames.slice(1) : [];
 
-          return (
-            <Fragment key={pathname}>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href={href}>
-                    {renderBreadcrumbContent(pathname, isId)}
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              {!isLast && <BreadcrumbSeparator />}
-            </Fragment>
-          );
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
+  return (
+    <div className="flex flex-col space-y-1">
+      <Breadcrumb className="py-2">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 h-8 w-8 rounded-full"
+                onClick={back}
+                aria-label="Go back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/home" className="text-foreground font-medium">
+                Home
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+
+          {segments.map((segment, index) => {
+            const isLast = index === segments.length - 1;
+            const isId = z.string().uuid().safeParse(segment).success;
+            const isSpecialPath =
+              segment === "quiz" || segment === "challenges";
+
+            // Build the href based on the current position in the path
+            const href = isSpecialPath
+              ? "/home"
+              : `/home/${segments.slice(0, index + 1).join("/")}`;
+
+            return (
+              <Fragment key={`${segment}-${index}`}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem className={isLast ? "font-medium" : ""}>
+                  <BreadcrumbLink
+                    asChild
+                    className={isLast ? "pointer-events-none" : ""}
+                  >
+                    <Link
+                      href={href}
+                      className={
+                        isLast
+                          ? "text-foreground"
+                          : "text-muted-foreground hover:text-foreground transition-colors"
+                      }
+                      aria-current={isLast ? "page" : undefined}
+                    >
+                      {renderBreadcrumbContent(segment, isId)}
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </Fragment>
+            );
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
   );
 }
 
