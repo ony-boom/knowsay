@@ -1,6 +1,7 @@
+import { z } from "zod";
+import { NextRequest } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { AnswerSchema } from "@/schemas/answerSchema";
-import { z } from "zod";
 
 export async function getAnswers(questionId: string) {
   const { data, error } = await supabase
@@ -16,5 +17,23 @@ export async function getAnswers(questionId: string) {
     throw new Error("Invalid data returned from database");
   }
 
-  return validatedData.data;
+  return Response.json(validatedData.data);
+}
+
+export async function GET(
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{
+      questionId: string;
+    }>;
+  },
+) {
+  const { questionId } = await params;
+  try {
+    return await getAnswers(questionId);
+  } catch (error) {
+    return Response.json({ error: (error as Error).message }, { status: 500 });
+  }
 }

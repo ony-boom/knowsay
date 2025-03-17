@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <AccountMenu />
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             className="rounded-full md:hidden"
           >

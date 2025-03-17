@@ -67,16 +67,25 @@ export async function POST(req: Request) {
   }
 }
 
-export async function getQuestions(quizId: string, page = 1, pageSize = 10) {
+export async function getQuestions(
+  quizId: string,
+  page = 1,
+  pageSize = 10,
+  paginate = true,
+) {
   const start = (page - 1) * pageSize;
   const end = start + pageSize - 1;
 
-  const { data, error, count } = await supabase
+  let query = supabase
     .from("questions")
     .select("*", { count: "exact" })
-    .eq("quiz_id", quizId)
-    .range(start, end)
-    .order("created_at", { ascending: false });
+    .eq("quiz_id", quizId);
+
+  if (paginate) {
+    query = query.range(start, end).order("created_at", { ascending: false });
+  }
+
+  const { data, error, count } = await query;
 
   if (error) throw new Error(error.message);
 
