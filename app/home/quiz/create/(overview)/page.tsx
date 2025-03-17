@@ -38,7 +38,7 @@ export default function CreateQuizPage() {
       </Collapsible>
 
       {/* create questions */}
-      <Collapsible className="w-full rounded-lg border">
+      <Collapsible className="w-full rounded-lg border" defaultOpen>
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
             <span>Create Questions</span>
