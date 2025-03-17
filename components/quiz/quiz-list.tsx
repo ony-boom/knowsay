@@ -4,10 +4,21 @@ import { QuizListItem } from "./quiz-list-item";
 interface QuizListProps {
   query: string;
   currentPage: number;
+  categorySlug?: string;
 }
 
-export async function QuizList({ query, currentPage }: QuizListProps) {
-  const { quizzes } = await fetchFilteredQuizzes(query, currentPage);
+export async function QuizList({
+  query,
+  currentPage,
+  categorySlug,
+}: QuizListProps) {
+  const { quizzes } = await fetchFilteredQuizzes(
+    query,
+    currentPage,
+    categorySlug,
+  );
+
+  console.log("category slug:", categorySlug);
 
   return (
     <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -17,7 +28,7 @@ export async function QuizList({ query, currentPage }: QuizListProps) {
           quizId={quiz.id}
           title={quiz.title}
           description={quiz.description || "No description available"}
-          category={quiz.category}
+          category={quiz.categories.name}
           difficulty={quiz.difficulty}
           createdAt={new Date(quiz.created_at).toLocaleDateString()}
         />

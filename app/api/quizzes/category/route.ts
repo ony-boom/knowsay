@@ -29,8 +29,6 @@ export async function getCategoriesWithQuizCount() {
       .from("categories")
       .select("*, quizzes_count: quizzes(count)");
 
-    console.log("Fetched categories with quiz count:", data);
-
     if (error) {
       console.error(
         "Error fetching categories with quiz count:",
