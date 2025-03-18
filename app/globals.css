@@ -150,3 +150,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.bn-editor {
+  padding: 8px !important;
+
+  h1.bn-inline-content {
+    @apply text-3xl
+  }
+}
