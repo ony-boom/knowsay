@@ -14,11 +14,57 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 
 type Answer = {
   id: string;
   text: string;
   isCorrect: boolean;
+};
+
+type SortableItemProps = {
+  id: string;
+  children: React.ReactNode;
+};
+
+const SortableItem = ({ id, children }: SortableItemProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <div className="flex items-center">
+        <button
+          className="cursor-grab p-2 active:cursor-grabbing"
+          {...listeners}
+          type="button"
+        >
+          <GripVertical className="text-muted-foreground h-4 w-4" />
+        </button>
+        <div className="flex-1">{children}</div>
+      </div>
+    </div>
+  );
 };
 
 export default function CreateAnswerPage() {
@@ -28,6 +74,13 @@ export default function CreateAnswerPage() {
   ]);
 
   const [newAnswer, setNewAnswer] = useState("");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const addAnswer = () => {
     if (newAnswer.trim()) {
@@ -57,6 +110,23 @@ export default function CreateAnswerPage() {
         answer.id === id ? { ...answer, isCorrect: !answer.isCorrect } : answer,
       ),
     );
+  };
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setAnswers((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
+        const newArray = [...items];
+        const [movedItem] = newArray.splice(oldIndex, 1);
+        newArray.splice(newIndex, 0, movedItem);
+
+        return newArray;
+      });
+    }
   };
 
   const formattedAnswers = answers.map((answer) => ({
@@ -101,6 +171,7 @@ export default function CreateAnswerPage() {
             </div>
             <p className="text-muted-foreground text-xs">
               After adding, you can mark answers as correct from the list below.
+              Drag answers to reorder them.
             </p>
           </div>
 
@@ -115,56 +186,73 @@ export default function CreateAnswerPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-2">
-                {answers.map((answer, index) => (
-                  <Card
-                    key={answer.id}
-                    className="border-l-4 transition-all hover:shadow-md"
-                    style={{
-                      borderLeftColor: answer.isCorrect
-                        ? "var(--primary)"
-                        : "transparent",
-                    }}
-                  >
-                    <CardContent className="flex items-center justify-between p-4">
-                      <div className="flex flex-1 items-center gap-3">
-                        <span className="text-muted-foreground font-medium">
-                          {index + 1}.
-                        </span>
-                        <Input
-                          value={answer.text}
-                          onChange={(e) =>
-                            handleEdit({ ...answer, text: e.target.value })
-                          }
-                          className="border-none p-0 shadow-none focus-visible:ring-0"
-                        />
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            id={`correct-${answer.id}`}
-                            checked={answer.isCorrect}
-                            onCheckedChange={() => toggleCorrect(answer.id)}
-                          />
-                          <Label
-                            htmlFor={`correct-${answer.id}`}
-                            className="text-sm"
-                          >
-                            Correct
-                          </Label>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(answer.id)}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={answers.map((a) => a.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-2">
+                    {answers.map((answer, index) => (
+                      <SortableItem key={answer.id} id={answer.id}>
+                        <Card
+                          className="border-l-4 transition-all hover:shadow-md"
+                          style={{
+                            borderLeftColor: answer.isCorrect
+                              ? "var(--primary)"
+                              : "transparent",
+                          }}
                         >
-                          <Trash2 className="text-muted-foreground h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                          <CardContent className="flex items-center justify-between p-4">
+                            <div className="flex flex-1 items-center gap-3">
+                              <span className="text-muted-foreground font-medium">
+                                {index + 1}.
+                              </span>
+                              <Input
+                                value={answer.text}
+                                onChange={(e) =>
+                                  handleEdit({
+                                    ...answer,
+                                    text: e.target.value,
+                                  })
+                                }
+                                className="border-none p-0 shadow-none focus-visible:ring-0"
+                              />
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center space-x-2">
+                                <Switch
+                                  id={`correct-${answer.id}`}
+                                  checked={answer.isCorrect}
+                                  onCheckedChange={() =>
+                                    toggleCorrect(answer.id)
+                                  }
+                                />
+                                <Label
+                                  htmlFor={`correct-${answer.id}`}
+                                  className="text-sm"
+                                >
+                                  Correct
+                                </Label>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDelete(answer.id)}
+                              >
+                                <Trash2 className="text-muted-foreground h-4 w-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </SortableItem>
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             )}
           </div>
         </CardContent>
