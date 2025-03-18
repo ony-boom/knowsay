@@ -4,12 +4,13 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
-export function NextQuizButton(props: NextQuizButtonProps) {
+export function QuizControllButton(props: QuizControlButtonProps) {
   const pathname = usePathname();
   const { currentPage, totalPages, ...rest } = props;
-  const nextPage = currentPage + Number(currentPage !== totalPages);
+  let newPage = currentPage + (props.direction === "next" ? 1 : -1);
+  newPage = Math.min(Math.max(newPage, 1), totalPages);
 
   const searchParams = useSearchParams();
 
@@ -19,20 +20,21 @@ export function NextQuizButton(props: NextQuizButtonProps) {
   );
 
   const createPageURL = () => {
-    params.set("page", nextPage.toString());
+    params.set("page", newPage.toString());
     return `${pathname}?${params.toString()}`;
   };
 
   return (
-    <Button {...rest} asChild>
+    <Button {...rest} variant="outline">
       <Link href={createPageURL()}>
-        <ChevronRight />
+        {props.direction === "next" ? <ChevronRight /> : <ChevronLeft />}
       </Link>
     </Button>
   );
 }
 
-export type NextQuizButtonProps = React.ComponentProps<typeof Button> & {
+export type QuizControlButtonProps = React.ComponentProps<typeof Button> & {
   currentPage: number;
   totalPages: number;
+  direction: "next" | "prev";
 };

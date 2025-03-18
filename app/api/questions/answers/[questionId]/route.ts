@@ -11,17 +11,18 @@ export async function getAnswers(questionId: string) {
 
   if (error) throw new Error(error.message);
   const validatedData = z.array(AnswerSchema).safeParse(data);
+
   if (!validatedData.success) {
     console.error(validatedData.error);
 
     throw new Error("Invalid data returned from database");
   }
 
-  return Response.json(validatedData.data);
+  return validatedData.data;
 }
 
 export async function GET(
-  req: NextRequest,
+  _: NextRequest,
   {
     params,
   }: {
@@ -32,7 +33,8 @@ export async function GET(
 ) {
   const { questionId } = await params;
   try {
-    return await getAnswers(questionId);
+    const data = await getAnswers(questionId);
+    return Response.json(data);
   } catch (error) {
     return Response.json({ error: (error as Error).message }, { status: 500 });
   }

@@ -2,17 +2,21 @@
 
 import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
+import { BlockNoteView } from "@blocknote/shadcn";
+import { QuestionSchema } from "@/schemas/questionSchema";
+import { z } from "zod";
 
-export function QuizView(props: QuizViewProps) {
+export default function QuizView(props: QuizViewProps) {
   const editor = useCreateBlockNote({
     initialContent: props.initialContent,
   });
-  // render
+
   return <BlockNoteView theme="light" editor={editor} editable={false} />;
 }
 
 export type QuizViewProps = {
   initialContent: any;
+  questionId: string;
+  questionType: z.infer<typeof QuestionSchema>["type"];
 };

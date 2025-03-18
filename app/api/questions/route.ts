@@ -79,10 +79,11 @@ export async function getQuestions(
   let query = supabase
     .from("questions")
     .select("*", { count: "exact" })
-    .eq("quiz_id", quizId);
+    .eq("quiz_id", quizId)
+    .order("created_at", { ascending: false });
 
   if (paginate) {
-    query = query.range(start, end).order("created_at", { ascending: false });
+    query = query.range(start, end);
   }
 
   const { data, error, count } = await query;

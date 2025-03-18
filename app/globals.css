@@ -132,7 +132,6 @@
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
 
-
   --ks-black: oklch(0.163 0.012 333.034);
   --ks-gray: oklch(0.913 0 89.876);
   --ks-blue: oklch(0.822 0.08 260.261);
@@ -152,9 +151,14 @@
 }
 
 .bn-editor {
-  padding: 8px !important;
+  padding: 0 !important;
+  padding-right: 8px !important;
+
+  .bn-block-group {
+    @apply space-y-3;
+  }
 
   h1.bn-inline-content {
-    @apply text-3xl
+    @apply text-3xl;
   }
 }
