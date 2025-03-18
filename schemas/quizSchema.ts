@@ -24,3 +24,5 @@ export const QuizArraySchema = z.array(QuizSchema);
 export const QuizArraySchemaWithCategory = z.array(QuizSchemaWithCategory);
 
 export type Quiz = z.infer<typeof QuizSchema>;
+
+export type QuizWithCategory = z.infer<typeof QuizSchemaWithCategory>;
