@@ -4,16 +4,21 @@ import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "./ui/input";
+import { useMemo } from "react";
 
 export const SearchInput = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams],
+  );
+
   const handleSearch = useDebouncedCallback(function handleSearch(
     term: string,
   ) {
-    const params = new URLSearchParams(searchParams);
     params.set("page", "1");
     if (term) {
       params.set("query", term);
