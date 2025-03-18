@@ -7,12 +7,8 @@ import { CategoryLink } from "./category-link";
 
 // Client component that receives data
 export async function CategoryCardList() {
-  const rawCategories = await getCategoriesWithQuizCount();
-
-  const categories = rawCategories.map((category) => ({
-    ...category,
-    quizzes_count: [{ count: parseInt(category.quizzes_count as string) || 0 }],
-  })) as CategoryWithQuizCount[];
+  const categories: CategoryWithQuizCount[] =
+    await getCategoriesWithQuizCount();
 
   return (
     <Card className="gap-2">

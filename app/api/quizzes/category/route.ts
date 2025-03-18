@@ -39,14 +39,7 @@ export async function getCategoriesWithQuizCount() {
 
     const validatedData = CategoryWithQuizCountArraySchema.parse(data);
 
-    // Format counts with leading zeros for numbers less than 10
-    return validatedData.map((category) => {
-      const count = category.quizzes_count[0]?.count || 0;
-      return {
-        ...category,
-        quizzes_count: count < 10 ? `0${count}` : `${count}`,
-      };
-    });
+    return validatedData;
   } catch (error) {
     console.error("Validation failed:", error);
     throw error;
