@@ -1,8 +1,10 @@
+import { QuizView } from "./dynamic-quiz-view";
 import { getQuiz } from "@/app/api/quizzes/[id]/route";
 import { getQuestions } from "@/app/api/questions/route";
-import { QuizView } from "./quiz-view";
 import { mockData } from "@/app/home/quiz/[id]/mock-data";
-import { NextQuizButton } from "./components/next-quiz-button";
+import { QuizControllButton } from "@/components/quiz/take/next-quiz-button";
+import { getAnswers } from "@/app/api/questions/answers/[questionId]/route";
+import { AnswerView } from "@/components/quiz/take/answer-view";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -15,12 +17,22 @@ export default async function QuizPage(props: {
   const { id } = await props.params;
   const searchParams = await props.searchParams;
   const quiz = await getQuiz(id);
+  const currentPage = Number(searchParams?.page) || 1;
+  const PAGE_SIZE = 1;
 
-  // TODO: use questions which should be an array of json
   const { questions, totalCount } = await getQuestions(
     quiz.id,
-    searchParams?.page,
+    currentPage,
+    PAGE_SIZE,
   );
+
+  const currentQuestion = questions[0];
+
+  if (!currentQuestion) {
+    return null;
+  }
+
+  const answers = await getAnswers(currentQuestion.id);
 
   return (
     <div className="space-y-8">
@@ -30,13 +42,29 @@ export default async function QuizPage(props: {
         )}
       </hgroup>
 
-      <QuizView initialContent={mockData} />
+      <QuizView
+        initialContent={mockData}
+        questionId={currentQuestion.id}
+        questionType={currentQuestion.type}
+      />
 
-      <div className="flex justify-end">
-        <NextQuizButton
+      <AnswerView answers={answers} questionType={currentQuestion.type} />
+
+      <div className="flex justify-center gap-4">
+        <QuizControllButton
           size="icon"
+          direction="prev"
           totalPages={totalCount}
-          currentPage={Number(searchParams?.page ?? 1)}
+          disabled={currentPage === 1}
+          currentPage={currentPage}
+        />
+
+        <QuizControllButton
+          size="icon"
+          direction="next"
+          totalPages={totalCount}
+          currentPage={currentPage}
+          disabled={currentPage === totalCount}
         />
       </div>
     </div>
