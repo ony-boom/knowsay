@@ -102,7 +102,6 @@ export async function fetchQuizzes(
 
     const { data, error, count } = await queryBuilder;
 
-
     if (error) throw new Error(error.message);
 
     // Validate data against schema
@@ -118,56 +117,6 @@ export async function fetchQuizzes(
     };
   } catch (error) {
     console.error("Error fetching quizzes:", error);
-    throw error;
-  }
-}
-
-// fetch filtered quizzes
-export async function fetchFilteredQuizzes(
-  query: string,
-  currentPage: number,
-  categorySlug?: string,
-) {
-  try {
-    const start = (currentPage - 1) * ITEMS_PER_PAGE;
-    const end = start + ITEMS_PER_PAGE - 1;
-
-    // Always join with categories table for consistent data structure
-    let queryBuilder = supabase
-      .from("quizzes")
-      .select("*, categories!inner(*)", { count: "exact" });
-
-    // Apply title filter if query exists
-    if (query) {
-      queryBuilder = queryBuilder.ilike("title", `%${query}%`);
-    }
-
-    // Apply category filter if categorySlug is provided
-    if (categorySlug) {
-      queryBuilder = queryBuilder.eq("categories.slug", categorySlug);
-    }
-
-    const { data, error, count } = await queryBuilder
-      .range(start, end)
-      .order("created_at", { ascending: false });
-
-    console.log("Filtered Data:", data);
-
-    if (error) throw new Error(error.message);
-
-    // Always validate with QuizArraySchemaWithCategory
-    const validatedData = QuizArraySchemaWithCategory.safeParse(data);
-
-    if (!validatedData.success) {
-      throw new Error("Invalid data returned from database");
-    }
-
-    return {
-      quizzes: validatedData.data,
-      totalCount: count || 0,
-    };
-  } catch (error) {
-    console.error("Error fetching filtered quizzes:", error);
     throw error;
   }
 }
