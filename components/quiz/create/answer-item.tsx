@@ -1,0 +1,56 @@
+import { Answer } from "@/app/home/quiz/create/(overview)/answer/page";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Trash2 } from "lucide-react";
+
+type AnswerItemProps = {
+  answer: Answer;
+  index: number;
+  onEdit: (updatedAnswer: Answer) => void;
+  onToggleCorrect: (id: string) => void;
+  onDelete: (id: string) => void;
+};
+
+export const AnswerItem = ({
+  answer,
+  index,
+  onEdit,
+  onToggleCorrect,
+  onDelete,
+}: AnswerItemProps) => (
+  <Card
+    className="border-l-4 transition-all hover:shadow-md"
+    style={{
+      borderLeftColor: answer.isCorrect ? "var(--primary)" : "transparent",
+    }}
+  >
+    <CardContent className="flex items-center justify-between p-4">
+      <div className="flex flex-1 items-center gap-3">
+        <span className="text-muted-foreground font-medium">{index + 1}.</span>
+        <Input
+          value={answer.text}
+          onChange={(e) => onEdit({ ...answer, text: e.target.value })}
+          className="border-none p-0 shadow-none focus-visible:ring-0"
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center space-x-2">
+          <Switch
+            id={`correct-${answer.id}`}
+            checked={answer.isCorrect}
+            onCheckedChange={() => onToggleCorrect(answer.id)}
+          />
+          <Label htmlFor={`correct-${answer.id}`} className="text-sm">
+            Correct
+          </Label>
+        </div>
+        <Button variant="ghost" size="icon" onClick={() => onDelete(answer.id)}>
+          <Trash2 className="text-muted-foreground h-4 w-4" />
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+);
