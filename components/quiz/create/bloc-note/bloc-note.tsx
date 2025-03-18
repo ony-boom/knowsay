@@ -10,7 +10,7 @@ import { useState } from "react";
 export const BlocNote = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
 
-  const editor = useCreateBlockNote({});
+  const editor = useCreateBlockNote();
 
   console.log("Editor content:", blocks);
 
