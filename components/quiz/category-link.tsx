@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { Badge } from "../ui/badge";
 
 type CategoryLinkProps = {
   name: string;
@@ -34,20 +35,19 @@ export const CategoryLink = ({ name, slug, count }: CategoryLinkProps) => {
     >
       <Link href={createCategoryUrl(slug)}>
         <span className="flex items-center gap-2">
-          {isActive && (
-            <span className="bg-primary/70 h-1.5 w-1.5 animate-pulse rounded-full" />
+          {isActive ? (
+            <span className="bg-primary h-1.5 w-1.5 animate-pulse rounded-full" />
+          ) : (
+            <span className="h-1.5 w-1.5 rounded-full opacity-0 transition-opacity group-hover:opacity-30" />
           )}
           {name}
         </span>
-        <span
-          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            isActive
-              ? "bg-primary/5 text-primary/80"
-              : "bg-muted text-muted-foreground"
-          }`}
+        <Badge
+          variant={isActive ? "default" : "secondary"}
+          className={`${isActive ? "bg-primary/10 hover:bg-primary/15 text-primary" : "bg-muted/70 text-muted-foreground"}`}
         >
           {count || 0}
-        </span>
+        </Badge>
       </Link>
     </Button>
   );
