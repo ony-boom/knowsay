@@ -20,10 +20,12 @@ import { QuizSchema } from "@/schemas/quizSchema";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomeBreadcrumb() {
-  const pathNames = usePathname().split("/").filter(Boolean);
+  const pathname = usePathname();
+  const pathNames = pathname.split("/").filter(Boolean);
   const { back } = useRouter();
 
   const segments = pathNames.length > 0 ? pathNames.slice(1) : [];
+  const isHomePage = pathname === "/home" || pathname === "/home/";
 
   return (
     <div className="flex flex-col space-y-1">
@@ -43,9 +45,20 @@ export function HomeBreadcrumb() {
             </BreadcrumbLink>
           </BreadcrumbItem>
 
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/home" className="text-foreground font-medium">
+          <BreadcrumbItem className={isHomePage ? "font-medium" : ""}>
+            <BreadcrumbLink
+              asChild
+              className={isHomePage ? "pointer-events-none" : ""}
+            >
+              <Link
+                href="/home"
+                className={
+                  isHomePage
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground transition-colors"
+                }
+                aria-current={isHomePage ? "page" : undefined}
+              >
                 Home
               </Link>
             </BreadcrumbLink>

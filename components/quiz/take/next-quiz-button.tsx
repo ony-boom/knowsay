@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
-export function QuizControllButton(props: QuizControlButtonProps) {
+export function QuizControlButton(props: QuizControlButtonProps) {
   const pathname = usePathname();
   const { currentPage, totalPages, ...rest } = props;
   let newPage = currentPage + (props.direction === "next" ? 1 : -1);
@@ -25,7 +25,7 @@ export function QuizControllButton(props: QuizControlButtonProps) {
   };
 
   return (
-    <Button {...rest} variant="outline">
+    <Button {...rest} asChild size="icon">
       <Link href={createPageURL()}>
         {props.direction === "next" ? <ChevronRight /> : <ChevronLeft />}
       </Link>
