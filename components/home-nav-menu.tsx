@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export function HomeNavMenu() {
   const pathname = usePathname();
   const isLogin = pathname === "/auth/login";
-  const isSignup = pathname === "/auth/signup";
+  const isSignup = pathname === "/auth/sign-up";
   return (
     <div>
       <div id="desktop-nav" className="hidden items-center gap-4 md:flex">

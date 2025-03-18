@@ -2,7 +2,7 @@
 
 import { generatePagination } from "@/lib/utils";
 import { usePathname, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   PaginationEllipsis,
   PaginationLink,
@@ -19,8 +19,12 @@ export const Pagination = ({ totalPages }: PaginationProps) => {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
 
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams],
+  );
+
   const createPageURL = (pageNumber: number | string) => {
-    const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };

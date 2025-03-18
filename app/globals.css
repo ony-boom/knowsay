@@ -90,12 +90,12 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   /* custom color */
-  --ks-black: oklch(0.163 0.012 333.034);
-  --ks-gray: oklch(0.913 0 89.876);
-  --ks-blue: oklch(0.822 0.08 260.261);
-  --ks-green: oklch(0.915 0.074 128.679);
-  --ks-yellow: oklch(0.945 0.076 91.816);
-  --ks-purple: oklch(0.809 0.111 298.016);
+  --ks-black: oklch(0.163 0.025 333.034);
+  --ks-gray: oklch(0.913 0.03 89.876);
+  --ks-blue: oklch(0.822 0.12 260.261);
+  --ks-green: oklch(0.915 0.11 128.679);
+  --ks-yellow: oklch(0.945 0.12 91.816);
+  --ks-purple: oklch(0.809 0.15 298.016);
 }
 
 .dark {
@@ -131,6 +131,14 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+
+  --ks-black: oklch(0.163 0.012 333.034);
+  --ks-gray: oklch(0.913 0 89.876);
+  --ks-blue: oklch(0.822 0.08 260.261);
+  --ks-green: oklch(0.915 0.074 128.679);
+  --ks-yellow: oklch(0.945 0.076 91.816);
+  --ks-purple: oklch(0.809 0.111 298.016);
 }
 
 @layer base {
@@ -140,5 +148,13 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.bn-editor {
+  padding: 8px !important;
+
+  h1.bn-inline-content {
+    @apply text-3xl
   }
 }

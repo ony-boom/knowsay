@@ -1,35 +1,44 @@
 import { getQuiz } from "@/app/api/quizzes/[id]/route";
 import { getQuestions } from "@/app/api/questions/route";
-import { StartQuiz } from "./start-quiz";
-import { Separator } from "@/components/ui/separator";
+import { QuizView } from "./quiz-view";
+import { mockData } from "@/app/home/quiz/[id]/mock-data";
+import { NextQuizButton } from "./components/next-quiz-button";
 
 export default async function QuizPage(props: {
   params: Promise<{
     id: string;
   }>;
+  searchParams?: Promise<{
+    page?: number;
+  }>;
 }) {
   const { id } = await props.params;
+  const searchParams = await props.searchParams;
   const quiz = await getQuiz(id);
-  const { questions } = await getQuestions(
+
+  // TODO: use questions which should be an array of json
+  const { questions, totalCount } = await getQuestions(
     quiz.id,
-    undefined,
-    undefined,
-    false,
+    searchParams?.page,
   );
 
   return (
     <div className="space-y-8">
       <hgroup className="space-y-2">
         {quiz.description && (
-          <p className="text-foreground/70 max-w-[45ch]">
-            {quiz.description}
-          </p>
+          <p className="text-foreground/70 max-w-[45ch]">{quiz.description}</p>
         )}
       </hgroup>
 
-      <Separator />
+      <QuizView initialContent={mockData} />
 
-      <StartQuiz questions={questions} />
+      <div className="flex justify-end">
+        <NextQuizButton
+          size="icon"
+          totalPages={totalCount}
+          currentPage={Number(searchParams?.page ?? 1)}
+        />
+      </div>
     </div>
   );
 }
