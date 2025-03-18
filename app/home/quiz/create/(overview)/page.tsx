@@ -5,10 +5,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CreateQuizForm } from "./components/create-quiz-form";
+import { CreateQuizForm } from "../../../../../components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
-import { QuestionsManager } from "./components/question-manager";
+import { QuestionsManager } from "../../../../../components/quiz/create/question-manager";
 
 export default function CreateQuizPage() {
   return (
@@ -38,7 +38,7 @@ export default function CreateQuizPage() {
       </Collapsible>
 
       {/* create questions */}
-      <Collapsible className="w-full rounded-lg border">
+      <Collapsible className="w-full rounded-lg border" defaultOpen>
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
             <span>Create Questions</span>

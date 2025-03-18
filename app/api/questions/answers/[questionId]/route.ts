@@ -12,7 +12,7 @@ export async function getAnswers(questionId: string) {
   if (error) throw new Error(error.message);
   const validatedData = z.array(AnswerSchema).safeParse(data);
   if (!validatedData.success) {
-    console.log(validatedData.error);
+    console.error(validatedData.error);
 
     throw new Error("Invalid data returned from database");
   }

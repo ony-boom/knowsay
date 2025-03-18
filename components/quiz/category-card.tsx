@@ -1,16 +1,19 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
 import { CategoryWithQuizCount } from "@/schemas/categorySchema";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
-
-interface CategoryCardProps {
-  categories: CategoryWithQuizCount[];
-}
+import { getCategoriesWithQuizCount } from "@/app/api/quizzes/category/route";
+import { CategoryLink } from "./category-link";
 
 // Client component that receives data
-export function CategoryCardList({ categories }: CategoryCardProps) {
+export async function CategoryCardList() {
+  const rawCategories = await getCategoriesWithQuizCount();
+
+  const categories = rawCategories.map((category) => ({
+    ...category,
+    quizzes_count: [{ count: parseInt(category.quizzes_count as string) || 0 }],
+  })) as CategoryWithQuizCount[];
+
   return (
     <Card className="gap-2">
       <CardHeader>
@@ -20,18 +23,11 @@ export function CategoryCardList({ categories }: CategoryCardProps) {
         <ScrollArea className="h-[348px] space-y-2 px-4">
           {categories.map((category) => (
             <div key={category.id}>
-              <Button
-                variant="ghost"
-                className="h-auto w-full justify-between px-2 py-1 text-left text-sm"
-                asChild
-              >
-                <Link href={`/category/${category.slug}`}>
-                  {category.name}
-                  <span className="text-muted-foreground bg-muted rounded-full px-2 py-0.5 text-xs">
-                    {category.quizzes_count[0].count || 0}
-                  </span>
-                </Link>
-              </Button>
+              <CategoryLink
+                name={category.name}
+                slug={category.slug}
+                count={category.quizzes_count[0]?.count || 0}
+              />
             </div>
           ))}
         </ScrollArea>

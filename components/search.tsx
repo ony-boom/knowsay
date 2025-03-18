@@ -21,7 +21,7 @@ export const SearchInput = () => {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  }, 250);
 
   return (
     <div className="relative">

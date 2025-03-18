@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { ChallengeSchema, type Challenge } from "@/schemas/challengeSchema";
+import { ChallengeSchema } from "@/schemas/challengeSchema";
 import { z } from "zod";
 
 export async function GET() {
@@ -19,6 +19,7 @@ export async function GET() {
 
     return Response.json(validatedChallenges.data, { status: 200 });
   } catch (error) {
+    console.error("Error fetching challenges:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
       { status: 201 },
     );
   } catch (error) {
+    console.error("Error creating challenge:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

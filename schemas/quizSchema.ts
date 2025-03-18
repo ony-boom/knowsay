@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CategorySchema } from "./categorySchema";
 
 export const QuizSchema = z.object({
   id: z.string().uuid(),
@@ -10,6 +11,16 @@ export const QuizSchema = z.object({
   created_at: z.string(),
 });
 
+export const QuizSchemaWithCategory = QuizSchema.extend({
+  categories: CategorySchema.pick({
+    id: true,
+    name: true,
+    slug: true,
+  }),
+});
+
 export const QuizArraySchema = z.array(QuizSchema);
+
+export const QuizArraySchemaWithCategory = z.array(QuizSchemaWithCategory);
 
 export type Quiz = z.infer<typeof QuizSchema>;

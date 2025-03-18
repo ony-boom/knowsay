@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useSignUp, useClerk } from "@clerk/nextjs";
+import { useSignUp } from "@clerk/nextjs";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,7 +63,9 @@ export default function RegisterWithUsername() {
         password: values.password,
       });
     } catch (err: any) {
-      setError(err.errors?.[0]?.message || "An error occurred. Please try again.");
+      setError(
+        err.errors?.[0]?.message || "An error occurred. Please try again.",
+      );
     }
   }
 
@@ -73,19 +75,21 @@ export default function RegisterWithUsername() {
       strategy: "oauth_google",
       redirectUrl: "/sso-callback",
       redirectUrlComplete: "/home",
-    })
+    });
   };
 
   return (
-    <div className="flex min-h-[60vh] h-full w-full items-center justify-center px-4">
+    <div className="flex h-full min-h-[60vh] w-full items-center justify-center px-4">
       <div id="clerk-captcha"></div>
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Sign Up</CardTitle>
-          <CardDescription>Register using your username and password.</CardDescription>
+          <CardDescription>
+            Register using your username and password.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+          {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="grid gap-4">
@@ -97,7 +101,11 @@ export default function RegisterWithUsername() {
                     <FormItem className="grid gap-2">
                       <FormLabel htmlFor="username">Username</FormLabel>
                       <FormControl>
-                        <Input id="username" placeholder="your_username" {...field} />
+                        <Input
+                          id="username"
+                          placeholder="your_username"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -112,7 +120,11 @@ export default function RegisterWithUsername() {
                     <FormItem className="grid gap-2">
                       <FormLabel htmlFor="password">Password</FormLabel>
                       <FormControl>
-                        <PasswordInput id="password" placeholder="******" {...field} />
+                        <PasswordInput
+                          id="password"
+                          placeholder="******"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -125,9 +137,15 @@ export default function RegisterWithUsername() {
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                      <FormLabel htmlFor="confirmPassword">
+                        Confirm Password
+                      </FormLabel>
                       <FormControl>
-                        <PasswordInput id="confirmPassword" placeholder="******" {...field} />
+                        <PasswordInput
+                          id="confirmPassword"
+                          placeholder="******"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
