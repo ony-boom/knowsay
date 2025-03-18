@@ -30,7 +30,11 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} overflow-hidden font-sans antialiased`}
         >
-          <NextTopLoader showSpinner={false} shadow={false} color="#171717FF" />
+          <NextTopLoader
+            showSpinner={false}
+            shadow={false}
+            color="var(--primary)"
+          />
           <main>{children}</main>
         </body>
       </html>
