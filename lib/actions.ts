@@ -282,11 +282,11 @@ export async function getQuizStatus(id: string) {
     }
 
     // Validate the data against the schema
-    const validatedData = CategoryArraySchema.parse(data);
+    const validatedData = QuizSchema.parse(data);
 
-    return validatedData;
+    return validatedData.status;
   } catch (error) {
-    console.error("Validation failed:", error);
+    console.error("Failed to get quiz status:", error);
     throw error;
   }
 }
