@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SortableDragHandle } from "@/components/ui/sortable";
 import { Edit, GripVertical, Trash2 } from "lucide-react";
 import { SortableQuestionsSchema } from "../sortable-question-list";

@@ -8,7 +8,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { useState } from "react";
 
 export const BlocNote = () => {
-  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [, setBlocks] = useState<Block[]>([]);
 
   const editor = useCreateBlockNote();
 

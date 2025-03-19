@@ -10,7 +10,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
 
   return (
     <RadioGroup {...divProps} className={cn("w-full", props.className)}>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 xl:grid-cols-4">
         {answers.map((answer) => {
           return (
             <div

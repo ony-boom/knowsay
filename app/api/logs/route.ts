@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { LogSchema, type Log } from "@/schemas/logSchema";
+import { LogSchema } from "@/schemas/logSchema";
 import { z } from "zod";
 
 export async function GET() {
@@ -20,6 +20,7 @@ export async function GET() {
 
     return Response.json(validatedLogs.data, { status: 200 });
   } catch (error) {
+    console.error(error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

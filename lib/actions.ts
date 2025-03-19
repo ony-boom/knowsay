@@ -70,6 +70,7 @@ export async function createQuiz(
     // Redirect to the new quiz's page or back to the quizzes list
     redirect("/quizzes");
   } catch (error) {
+    console.error(error)
     return {
       message: "An unexpected error occurred",
       errors: {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function QuizControlButton(props: QuizControlButtonProps) {
   const pathname = usePathname();
@@ -25,8 +26,10 @@ export function QuizControlButton(props: QuizControlButtonProps) {
   };
 
   return (
-    <Button {...rest} asChild size="icon">
-      <Link href={createPageURL()}>
+    <Button {...rest} asChild size="icon" variant="secondary">
+      <Link className={cn({
+        "pointer-events-none opacity-60": (newPage === currentPage || rest.disabled),
+      })} href={createPageURL()}>
         {props.direction === "next" ? <ChevronRight /> : <ChevronLeft />}
       </Link>
     </Button>

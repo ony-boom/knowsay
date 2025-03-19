@@ -62,14 +62,17 @@ export default function RegisterWithUsername() {
         username: values.username,
         password: values.password,
       });
-    } catch (err: any) {
+    } catch (err) {
       setError(
-        err.errors?.[0]?.message || "An error occurred. Please try again.",
+        (err as {
+          errors?: { message: string }[];
+        }).errors?.[0]?.message || "An error occurred. Please try again.",
       );
     }
   }
 
   // Fonction pour l'inscription avec Google
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleGoogleSignUp = () => {
     signUp?.authenticateWithRedirect({
       strategy: "oauth_google",
