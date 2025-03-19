@@ -3,6 +3,7 @@
 import {
   CreateQuizSchema,
   QuizArraySchemaWithCategory,
+  QuizSchema,
 } from "@/schemas/quizSchema";
 import { supabase } from "@/lib/supabase";
 import { redirect } from "next/navigation";
