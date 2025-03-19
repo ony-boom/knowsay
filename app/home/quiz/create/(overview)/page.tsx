@@ -3,19 +3,19 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { CreateQuizForm } from "../../../../../components/quiz/create/create-quiz-form";
+import { CreateQuizForm } from "@/components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
-import { QuestionsManager } from "../../../../../components/quiz/create/question-manager";
+import { QuestionsManager } from "@/components/quiz/create/question-manager";
 import { getCategories, getQuizStatus } from "@/lib/actions";
 import { QuizStatus } from "@/components/quiz/create/quiz-status";
 
 export default async function CreateQuizPage(props: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  console.log("CreateQuizPage", props.params.id);
+  const { id } = await props.params;
   const categories = await getCategories();
-  const quizStatus = await getQuizStatus(props.params.id);
+  const quizStatus = await getQuizStatus(id);
 
   console.log("quizStatus", quizStatus);
   return (
