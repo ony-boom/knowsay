@@ -36,7 +36,7 @@ const MobileNavMenu = () => {
   const pathname = usePathname();
 
   const isLogin = pathname === "/auth/login";
-  const isSignup = pathname === "/auth/signup";
+  const isSignup = pathname === "/auth/sign-up";
 
   const handleMenuToggle = () => {
     setOpenMenu((prev) => !prev);

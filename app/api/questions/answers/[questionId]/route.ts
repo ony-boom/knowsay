@@ -1,5 +1,5 @@
-import { getAnswers } from "@/lib/actions";
 import { NextRequest } from "next/server";
+import { getAnswers } from "@/lib/actions";
 
 export async function GET(
   _: NextRequest,
