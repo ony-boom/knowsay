@@ -58,9 +58,11 @@ export async function POST(req: Request) {
       { status: 201 },
     );
   } catch (error) {
+    console.error(error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
 const ITEMS_PER_PAGE = 9;
 
 /**

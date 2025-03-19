@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 import { ReactNode } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const pathname = usePathname();

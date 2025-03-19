@@ -16,6 +16,7 @@ export default function QuizView(props: QuizViewProps) {
 }
 
 export type QuizViewProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialContent: any;
   questionId: string;
   questionType: z.infer<typeof QuestionSchema>["type"];

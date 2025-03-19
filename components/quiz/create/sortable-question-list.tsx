@@ -1,4 +1,3 @@
-// filepath: app/home/quiz/create/components/sortable-question-list.tsx
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";

@@ -57,7 +57,7 @@ export async function createQuiz(
   }
 
   try {
-    const { data: quizData, error } = await supabase
+    const { error } = await supabase
       .from("quizzes")
       .insert({
         title: validatedFields.data.title,
@@ -85,6 +85,7 @@ export async function createQuiz(
     // Redirect to the new quiz's page or back to the quizzes list
     redirect("/quizzes");
   } catch (error) {
+    console.error(error)
     return {
       message: "An unexpected error occurred",
       errors: {
