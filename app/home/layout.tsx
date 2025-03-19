@@ -54,9 +54,6 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
             <span className="text-sm text-accent-foreground font-medium md:inline-block">
               {user?.firstName}
             </span>
-            <span className="hidden text-sm font-medium md:inline-block">
-              (Learner)
-            </span>
           </div>
         </Button>
 
