@@ -12,8 +12,6 @@ export const BlocNote = () => {
 
   const editor = useCreateBlockNote();
 
-  console.log("Editor content:", blocks);
-
   return (
     <BlockNoteView
       editor={editor}

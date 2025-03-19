@@ -2,7 +2,7 @@ import { QuizView } from "./dynamic-quiz-view";
 import { getQuiz } from "@/app/api/quizzes/[id]/route";
 import { getQuestions } from "@/app/api/questions/route";
 import { mockData } from "@/app/home/quiz/[id]/mock-data";
-import { QuizControllButton } from "@/components/quiz/take/next-quiz-button";
+import { QuizControlButton } from "@/components/quiz/take/next-quiz-button";
 import { getAnswers } from "@/app/api/questions/answers/[questionId]/route";
 import { AnswerView } from "@/components/quiz/take/answer-view";
 
@@ -35,23 +35,27 @@ export default async function QuizPage(props: {
   const answers = await getAnswers(currentQuestion.id);
 
   return (
-    <div className="space-y-8">
-      <hgroup className="space-y-2">
-        {quiz.description && (
-          <p className="text-foreground/70 max-w-[45ch]">{quiz.description}</p>
-        )}
-      </hgroup>
+    <div className="flex h-full flex-col justify-between">
+      <div className="space-y-8">
+        <hgroup className="space-y-2">
+          {quiz.description && (
+            <p className="text-foreground/70 max-w-[45ch]">
+              {quiz.description}
+            </p>
+          )}
+        </hgroup>
 
-      <QuizView
-        initialContent={mockData}
-        questionId={currentQuestion.id}
-        questionType={currentQuestion.type}
-      />
+        <QuizView
+          initialContent={mockData}
+          questionId={currentQuestion.id}
+          questionType={currentQuestion.type}
+        />
 
-      <AnswerView answers={answers} questionType={currentQuestion.type} />
+        <AnswerView answers={answers} questionType={currentQuestion.type} />
+      </div>
 
       <div className="flex justify-center gap-4">
-        <QuizControllButton
+        <QuizControlButton
           size="icon"
           direction="prev"
           totalPages={totalCount}
@@ -59,7 +63,7 @@ export default async function QuizPage(props: {
           currentPage={currentPage}
         />
 
-        <QuizControllButton
+        <QuizControlButton
           size="icon"
           direction="next"
           totalPages={totalCount}

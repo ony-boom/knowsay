@@ -82,9 +82,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <Separator />
 
-      <ScrollArea className="h-full w-full pt-8">
+      <div className="h-full w-full py-8 overflow-y-auto">
         {children}
-      </ScrollArea>
+      </div>
     </div>
   );
 }
