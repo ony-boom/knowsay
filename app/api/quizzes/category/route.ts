@@ -22,6 +22,26 @@ export async function GET() {
   }
 }
 
+export async function getCategories() {
+  try {
+    // Fetch categories from the database
+    const { data, error } = await supabase.from("categories").select("*");
+
+    if (error) {
+      console.error("Error fetching categories:", error.message);
+      return [];
+    }
+
+    // Validate the data against the schema
+    const validatedData = CategoryArraySchema.parse(data);
+
+    return validatedData;
+  } catch (error) {
+    console.error("Validation failed:", error);
+    throw error;
+  }
+}
+
 export async function getCategoriesWithQuizCount() {
   try {
     // Fetch categories with the count of quizzes

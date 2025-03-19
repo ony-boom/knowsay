@@ -1,118 +1,207 @@
-export const CreateQuizForm = () => {
+"use client";
+
+import { createQuiz } from "@/lib/actions";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useActionState } from "react";
+import { Category } from "@/schemas/categorySchema";
+
+const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  categoryId: z.string().uuid("Please select a valid category"),
+  difficulty: z.enum(["EASY", "MEDIUM", "HARD"], {
+    errorMap: () => ({ message: "Please select a valid difficulty level" }),
+  }),
+  description: z.string().nullable(),
+  is_public: z.boolean().default(false),
+});
+
+type QuizFormValues = z.infer<typeof formSchema>;
+
+type CreateQuizFormProps = {
+  categories: Category[];
+};
+
+export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
+  const [state, formAction] = useActionState(createQuiz, {
+    errors: {},
+    message: null,
+  });
+
+  const form = useForm<QuizFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      categoryId: "",
+      difficulty: undefined,
+      description: "",
+      is_public: false,
+    },
+  });
+
   return (
-    <form className="mt-8 space-y-8">
-      <div className="grid gap-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-2">
-            <label
-              htmlFor="title"
-              className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Quiz Title
-            </label>
-            <input
-              id="title"
+    <Form {...form}>
+      <form action={formAction} className="mt-8 space-y-8">
+        <div className="grid gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
+            <FormField
+              control={form.control}
               name="title"
-              placeholder="Enter your quiz title"
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quiz Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your quiz title" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Choose a catchy title for your quiz that describes its
+                    content.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <p className="text-muted-foreground text-sm">
-              Choose a catchy title for your quiz that describes its content.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="space-y-2">
-            <label
-              htmlFor="category"
-              className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Category
-            </label>
-            <input
-              id="category"
-              name="category"
-              placeholder="e.g., Science, History, Pop Culture"
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            />
-            <p className="text-muted-foreground text-sm">
-              Select a category that best fits your quiz content.
-            </p>
           </div>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="difficulty"
-              className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Difficulty Level
-            </label>
-            <select
-              id="difficulty"
+          <div className="grid gap-6 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Select a category that best fits your quiz content.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="difficulty"
-              className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <option value="" disabled selected>
-                Select difficulty
-              </option>
-              <option value="EASY">Easy</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="HARD">Hard</option>
-            </select>
-            <p className="text-muted-foreground text-sm">
-              Choose how challenging your quiz will be for participants.
-            </p>
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Difficulty Level</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select difficulty" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="EASY">Easy</SelectItem>
+                      <SelectItem value="MEDIUM">Medium</SelectItem>
+                      <SelectItem value="HARD">Hard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Choose how challenging your quiz will be for participants.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-        </div>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="description"
-            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
+          <FormField
+            control={form.control}
             name="description"
-            placeholder="Provide details about what your quiz covers..."
-            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[120px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          ></textarea>
-          <p className="text-muted-foreground text-sm">
-            Give potential quiz takers an idea of what to expect.
-          </p>
-        </div>
-
-        <div className="flex flex-row items-start space-x-3 rounded-md border p-4">
-          <input
-            type="checkbox"
-            id="is_public"
-            name="is_public"
-            className="text-primary focus:ring-primary h-4 w-4 rounded border-gray-300 focus:ring-2"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Provide details about what your quiz covers..."
+                    className="min-h-[120px]"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Give potential quiz takers an idea of what to expect.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <div className="space-y-1 leading-none">
-            <label
-              htmlFor="is_public"
-              className="text-sm leading-none font-medium"
-            >
-              Public Quiz
-            </label>
-            <p className="text-muted-foreground text-sm">
-              Make your quiz available for everyone to discover and play.
-            </p>
+
+          <FormField
+            control={form.control}
+            name="is_public"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 rounded-md border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Public Quiz</FormLabel>
+                  <FormDescription>
+                    Make your quiz available for everyone to discover and play.
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          {state.errors?._form && (
+            <div className="text-destructive text-sm">
+              {state.errors._form.join(", ")}
+            </div>
+          )}
+
+          <div className="pt-2">
+            <Button type="submit" className="w-full sm:w-auto">
+              Create Quiz
+            </Button>
           </div>
         </div>
-
-        <div className="pt-2">
-          <button
-            type="submit"
-            className="ring-offset-background focus-visible:ring-ring bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-10 w-full items-center justify-center rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
-          >
-            Create Quiz
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };
