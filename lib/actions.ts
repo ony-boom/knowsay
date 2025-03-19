@@ -74,12 +74,6 @@ export async function createQuiz(
         },
       };
     }
-
-    // Revalidate the quizzes page to show the new quiz
-    revalidatePath("/home/quiz/create");
-
-    // Redirect to the new quiz's page or back to the quizzes list
-    redirect("/home/quiz/create");
   } catch (error) {
     console.error(error);
     return {
@@ -89,6 +83,9 @@ export async function createQuiz(
       },
     };
   }
+
+  revalidatePath("/home/quiz/create");
+  redirect("/home/quiz/create");
 }
 
 const ITEMS_PER_PAGE = 9;
