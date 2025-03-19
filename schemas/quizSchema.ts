@@ -6,7 +6,8 @@ export const QuizSchema = z.object({
   title: z.string().min(3, "Quiz title must be at least 3 characters"),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
   is_public: z.boolean().default(true),
-  description: z.string().nullable(), // Newly added column
+  description: z.string().nullable(),
+  status: z.enum(["draft", "in_progress", "ready", "published"]), // Newly added column
   created_by: z.string().nullable(),
   created_at: z.string(),
 });
@@ -29,6 +30,7 @@ export type QuizWithCategory = z.infer<typeof QuizSchemaWithCategory>;
 
 export const CreateQuizSchema = QuizSchema.omit({
   id: true,
+  status: true,
   created_at: true,
   created_by: true,
 }).extend({
