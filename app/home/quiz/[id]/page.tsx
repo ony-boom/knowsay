@@ -29,7 +29,14 @@ export default async function QuizPage(props: {
   const currentQuestion = questions[0];
 
   if (!currentQuestion) {
-    return null;
+    return (
+      <div className="flex justify-center py-8">
+        <p>
+          The creator of this quiz, hasn't added any questions yet. That's a
+          bummer. 😔
+        </p>
+      </div>
+    );
   }
 
   const answers = await getAnswers(currentQuestion.id);
