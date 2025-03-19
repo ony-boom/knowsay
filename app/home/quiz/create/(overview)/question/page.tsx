@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BlocNote } from "@/components/quiz/create/bloc-note/bloc-note";
+import { DynamicQuestionEditor } from "@/components/quiz/create/bloc-note/dynamic-editor";
 
 export default function CreateQuestionPage() {
   return (
@@ -27,7 +27,7 @@ export default function CreateQuestionPage() {
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div className="bg-background rounded-md">
-              <BlocNote />
+              <DynamicQuestionEditor />
             </div>
             <p className="text-muted-foreground text-xs">
               Use the rich text editor to format your question

@@ -5,7 +5,7 @@ import { Block } from "@blocknote/core";
 import { useCreateBlockNote } from "@blocknote/react";
 import { Editor } from "@/components/bloc-note/editor";
 
-export const BlocNote = () => {
+export default function QuestionEditor() {
   const [, setBlocks] = useState<Block[]>([]);
 
   const editor = useCreateBlockNote();
@@ -19,4 +19,4 @@ export const BlocNote = () => {
       }}
     />
   );
-};
+}
