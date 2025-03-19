@@ -7,17 +7,11 @@ import { CreateQuizForm } from "@/components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { QuestionsManager } from "@/components/quiz/create/question-manager";
-import { getCategories, getQuizStatus } from "@/lib/actions";
-import { QuizStatus } from "@/components/quiz/create/quiz-status";
+import { getCategories } from "@/lib/actions";
 
-export default async function CreateQuizPage(props: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await props.params;
+export default async function CreateQuizPage() {
   const categories = await getCategories();
-  const quizStatus = await getQuizStatus(id);
 
-  console.log("quizStatus", quizStatus);
   return (
     <div className="flex flex-col gap-6 px-6 py-8 pt-0">
       <hgroup className="space-y-4">
@@ -48,10 +42,7 @@ export default async function CreateQuizPage(props: {
       <Collapsible className="w-full rounded-lg border" defaultOpen>
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
-            <div className="flex items-center gap-3">
-              <span>Create Questions</span>
-              <QuizStatus status={quizStatus} />
-            </div>
+            <span>Create Questions</span>
             <Button variant="ghost" size="sm">
               <ChevronsUpDown className="h-4 w-4" />
               <span className="sr-only">Toggle</span>
