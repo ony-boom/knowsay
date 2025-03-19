@@ -58,11 +58,26 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
       description: "",
       is_public: false,
     },
+    mode: "onBlur", // Validate on blur for better UX
   });
+
+  const onSubmit = (data: QuizFormValues) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        formData.append(key, String(value));
+      }
+    });
+    formAction(formData);
+  };
 
   return (
     <Form {...form}>
-      <form action={formAction} className="mt-8 space-y-8">
+      <form
+        action={formAction}
+        className="mt-8 space-y-8"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <div className="grid gap-6">
           <div className="grid gap-6 md:grid-cols-2">
             <FormField
@@ -72,7 +87,11 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                 <FormItem>
                   <FormLabel>Quiz Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your quiz title" {...field} />
+                    <Input
+                      placeholder="Enter your quiz title"
+                      {...field}
+                      aria-invalid={!!form.formState.errors.title}
+                    />
                   </FormControl>
                   <FormDescription>
                     Choose a catchy title for your quiz that describes its
@@ -96,7 +115,13 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger
+                        className={
+                          form.formState.errors.categoryId
+                            ? "border-destructive"
+                            : ""
+                        }
+                      >
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                     </FormControl>
@@ -127,7 +152,13 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger
+                        className={
+                          form.formState.errors.difficulty
+                            ? "border-destructive"
+                            : ""
+                        }
+                      >
                         <SelectValue placeholder="Select difficulty" />
                       </SelectTrigger>
                     </FormControl>
@@ -190,16 +221,27 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
           />
 
           {state.errors?._form && (
-            <div className="text-destructive text-sm">
-              {state.errors._form.join(", ")}
+            <div className="bg-destructive/15 text-destructive rounded-md p-3 text-sm">
+              <p className="font-medium">Error</p>
+              <p>{state.errors._form.join(", ")}</p>
             </div>
           )}
 
-          <div className="pt-2">
-            <Button type="submit" className="w-full sm:w-auto">
-              Create Quiz
+          {form.formState.isSubmitting ? (
+            <Button disabled className="w-full sm:w-auto">
+              <span className="mr-2">Creating...</span>
             </Button>
-          </div>
+          ) : (
+            <div className="pt-2">
+              <Button
+                type="submit"
+                className="w-full sm:w-auto"
+                disabled={!form.formState.isValid && form.formState.isDirty}
+              >
+                Create Quiz
+              </Button>
+            </div>
+          )}
         </div>
       </form>
     </Form>
