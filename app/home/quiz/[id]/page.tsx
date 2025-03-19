@@ -32,7 +32,7 @@ export default async function QuizPage(props: {
     return (
       <div className="flex justify-center py-8">
         <p>
-          The creator of this quiz, hasn't added any questions yet. That's a
+          The creator of this quiz, hasn&#39;t added any questions yet. That&#39;s a
           bummer. 😔
         </p>
       </div>

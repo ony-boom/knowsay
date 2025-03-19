@@ -26,6 +26,7 @@ export async function GET(req: Request) {
 
     return Response.json(validatedQuestions.data, { status: 200 });
   } catch (error) {
+    console.error(error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
       { status: 201 },
     );
   } catch (error) {
+    console.error(error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
