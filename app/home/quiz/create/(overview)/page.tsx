@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { QuestionsManager } from "../../../../../components/quiz/create/question-manager";
 import { getCategories, getQuizStatus } from "@/lib/actions";
+import { QuizStatus } from "@/components/quiz/create/quiz-status";
 
 export default async function CreateQuizPage(props: {
   params: { id: string };
@@ -47,7 +48,10 @@ export default async function CreateQuizPage(props: {
       <Collapsible className="w-full rounded-lg border" defaultOpen>
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
-            <span>Create Questions</span>
+            <div className="flex items-center gap-3">
+              <span>Create Questions</span>
+              <QuizStatus status={quizStatus} />
+            </div>
             <Button variant="ghost" size="sm">
               <ChevronsUpDown className="h-4 w-4" />
               <span className="sr-only">Toggle</span>
