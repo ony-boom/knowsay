@@ -10,8 +10,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 import { ReactNode } from "react";
+import { useUser } from "@clerk/nextjs";
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
+  const { user } = useUser();
   const pathname = usePathname();
 
   const isAtHomeRoot = pathname === "/home";
@@ -44,14 +46,18 @@ export default function Layout({ children }: { children: ReactNode }) {
         {!isAtHomeRoot && <HomeBreadcrumb />}
 
         <Button variant="link" className="flex items-center gap-2 px-6">
-          {/* TODO: make avatar dynamic */}
           <Avatar>
-            <AvatarImage src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" />
+            <AvatarImage src={user?.imageUrl ?? "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span className="hidden text-sm font-medium md:inline-block">
-            Learner
-          </span>
+          <div className="flex flex-col justify-center items-center">
+            <span className="text-sm text-accent-foreground font-medium md:inline-block">
+              {user?.firstName}
+            </span>
+            <span className="hidden text-sm font-medium md:inline-block">
+              (Learner)
+            </span>
+          </div>
         </Button>
 
         {isAtHomeRoot && (
