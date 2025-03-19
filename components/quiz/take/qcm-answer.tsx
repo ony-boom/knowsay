@@ -10,11 +10,11 @@ export function QcmAnswer(props: QcmAnswerProps) {
 
   return (
     <RadioGroup {...divProps} className={cn("w-full", props.className)}>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-2">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
         {answers.map((answer) => {
           return (
             <div
-              className="hover:bg-muted/50 group has-[button[aria-checked='true']]:bg-accent/80 relative flex items-center justify-center rounded-md border transition-colors"
+              className="bg-muted hover:bg-blue-50 group has-[button[aria-checked='true']]:bg-blue-100 relative flex items-center justify-center rounded-md border border-none transition-colors"
               key={answer.id}
             >
               <RadioGroupItem
@@ -23,7 +23,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
                 className="hidden"
               />
               <Label
-                className="w-full justify-center cursor-pointer p-4 text-center text-lg font-medium"
+                className="w-full cursor-pointer justify-center p-6 text-center text-lg font-medium"
                 htmlFor={answer.id}
               >
                 {answer.content}
