@@ -7,16 +7,11 @@ import { CreateQuizForm } from "@/components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown } from "lucide-react";
 import { QuestionsManager } from "@/components/quiz/create/question-manager";
-import { getCategories, getQuizStatus } from "@/lib/actions";
+import { getCategories } from "@/lib/actions";
 
-export default async function CreateQuizPage(props: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await props.params;
+export default async function CreateQuizPage() {
   const categories = await getCategories();
-  const quizStatus = await getQuizStatus(id);
 
-  console.log("quizStatus", quizStatus);
   return (
     <div className="flex flex-col gap-6 px-6 py-8 pt-0">
       <hgroup className="space-y-4">

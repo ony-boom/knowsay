@@ -1,6 +1,6 @@
-import {QuizView} from "./dynamic-quiz-view";
-import {QuizControlButton} from "@/components/quiz/take/next-quiz-button";
-import {AnswerView} from "@/components/quiz/take/answer-view";
+import { QuizView } from "./dynamic-quiz-view";
+import { QuizControlButton } from "@/components/quiz/take/next-quiz-button";
+import { AnswerView } from "@/components/quiz/take/answer-view";
 import { getAnswers, getQuestions, getQuiz } from "@/lib/actions";
 
 export default async function QuizPage(props: {
@@ -11,13 +11,13 @@ export default async function QuizPage(props: {
     page?: number;
   }>;
 }) {
-  const {id} = await props.params;
+  const { id } = await props.params;
   const searchParams = await props.searchParams;
   const quiz = await getQuiz(id);
   const currentPage = Number(searchParams?.page) || 1;
   const PAGE_SIZE = 1;
 
-  const {questions, totalCount} = await getQuestions(
+  const { questions, totalCount } = await getQuestions(
     quiz.id,
     currentPage,
     PAGE_SIZE,
@@ -63,7 +63,7 @@ export default async function QuizPage(props: {
             },
             {
               type: "codeBlock",
-              props: {language: "javascript"},
+              props: { language: "javascript" },
               content: "console.log(1 + '1');",
             },
           ]}
@@ -71,7 +71,7 @@ export default async function QuizPage(props: {
           questionType={currentQuestion.type}
         />
 
-        <AnswerView answers={answers} questionType={currentQuestion.type}/>
+        <AnswerView answers={answers} questionType={currentQuestion.type} />
       </div>
 
       <div className="flex justify-center gap-4">

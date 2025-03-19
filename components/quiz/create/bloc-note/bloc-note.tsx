@@ -1,11 +1,9 @@
 "use client";
 
-import { Block } from "@blocknote/core";
-import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView } from "@blocknote/shadcn";
-import "@blocknote/shadcn/style.css";
-import { useCreateBlockNote } from "@blocknote/react";
 import { useState } from "react";
+import { Block } from "@blocknote/core";
+import { useCreateBlockNote } from "@blocknote/react";
+import { Editor } from "@/components/bloc-note/editor";
 
 export const BlocNote = () => {
   const [, setBlocks] = useState<Block[]>([]);
@@ -13,9 +11,8 @@ export const BlocNote = () => {
   const editor = useCreateBlockNote();
 
   return (
-    <BlockNoteView
+    <Editor
       editor={editor}
-      theme="light"
       onChange={() => {
         // Saves the document JSON to state.
         setBlocks(editor.document);
