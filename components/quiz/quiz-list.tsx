@@ -1,7 +1,7 @@
-import { fetchQuizzes } from "@/app/api/quizzes/route";
 import { QuizListItem } from "./quiz-list-item";
 import { Suspense } from "react";
 import { QuizListSkeleton } from "./quiz-list-skeleton";
+import { fetchQuizzes } from "@/lib/actions";
 
 interface QuizListProps {
   query: string;

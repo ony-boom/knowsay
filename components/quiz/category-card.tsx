@@ -2,9 +2,9 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { CategoryWithQuizCount } from "@/schemas/categorySchema";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getCategoriesWithQuizCount } from "@/app/api/quizzes/category/route";
 import { CategoryLink } from "./category-link";
 import { ClearCategoryFilter } from "./clear-category-filter";
+import { getCategoriesWithQuizCount } from "@/lib/actions";
 
 // Client component that receives data
 export async function CategoryCardList() {

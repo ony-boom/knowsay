@@ -126,17 +126,18 @@
   body {
     @apply bg-background text-foreground;
   }
-}
 
-.bn-editor {
-  padding: 0 !important;
-  padding-right: 8px !important;
 
-  .bn-block-group {
-    @apply space-y-3;
-  }
+  .bn-editor {
+    padding: 0 !important;
+    padding-right: 8px !important;
 
-  h1.bn-inline-content {
-    @apply text-3xl;
+    .bn-block-group {
+      @apply space-y-3;
+    }
+
+    h1.bn-inline-content {
+      @apply text-3xl;
+    }
   }
 }
