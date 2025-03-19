@@ -1,6 +1,6 @@
 "use client";
 
-import { createQuiz } from "@/lib/actions";
+import { createQuiz, State } from "@/lib/actions";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
 import { Category } from "@/schemas/categorySchema";
 
 const formSchema = z.object({
@@ -44,10 +44,9 @@ type CreateQuizFormProps = {
 };
 
 export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
-  const [state, formAction] = useActionState(createQuiz, {
-    errors: {},
-    message: null,
-  });
+  const [isPending, startTransition] = useTransition();
+  const initialState: State = { message: null, errors: {} };
+  const [state, formAction] = useActionState(createQuiz, initialState);
 
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(formSchema),
@@ -62,22 +61,20 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
   });
 
   const onSubmit = (data: QuizFormValues) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        formData.append(key, String(value));
-      }
+    startTransition(() => {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, String(value));
+        }
+      });
+      formAction(formData);
     });
-    formAction(formData);
   };
 
   return (
     <Form {...form}>
-      <form
-        action={formAction}
-        className="mt-8 space-y-8"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form className="mt-8 space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid gap-6">
           <div className="grid gap-6 md:grid-cols-2">
             <FormField
@@ -227,21 +224,17 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
             </div>
           )}
 
-          {form.formState.isSubmitting ? (
-            <Button disabled className="w-full sm:w-auto">
-              <span className="mr-2">Creating...</span>
+          <div className="pt-2">
+            <Button
+              type="submit"
+              className="w-full sm:w-auto"
+              disabled={
+                !form.formState.isValid || !form.formState.isDirty || isPending
+              }
+            >
+              {isPending ? "Creating..." : "Create Quiz"}
             </Button>
-          ) : (
-            <div className="pt-2">
-              <Button
-                type="submit"
-                className="w-full sm:w-auto"
-                disabled={!form.formState.isValid && form.formState.isDirty}
-              >
-                Create Quiz
-              </Button>
-            </div>
-          )}
+          </div>
         </div>
       </form>
     </Form>

@@ -1,26 +1,11 @@
 "use server";
 
-import { QuizSchema } from "@/schemas/quizSchema";
+import { CreateQuizSchema } from "@/schemas/quizSchema";
 import { supabase } from "@/lib/supabase";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
-const QuizFormSchema = QuizSchema.omit({
-  id: true,
-  created_at: true,
-  created_by: true,
-}).extend({
-  categoryId: z.string().uuid("Please select a valid category"),
-  title: z.string().min(1, "Title is required"),
-  description: z.string().nullable(),
-  difficulty: z.enum(["EASY", "MEDIUM", "HARD"], {
-    errorMap: () => ({ message: "Please select a valid difficulty level" }),
-  }),
-  is_public: z.boolean().optional(),
-});
-
-type FormState = {
+export type State = {
   errors?: {
     title?: string[];
     description?: string[];
@@ -33,9 +18,9 @@ type FormState = {
 };
 
 export async function createQuiz(
-  prevState: FormState,
+  prevState: State,
   data: FormData,
-): Promise<FormState> {
+): Promise<State> {
   // Extract form data
   const formData = {
     title: data.get("title") as string,
@@ -47,7 +32,7 @@ export async function createQuiz(
   };
 
   // Validate input
-  const validatedFields = QuizFormSchema.safeParse(formData);
+  const validatedFields = CreateQuizSchema.safeParse(formData);
 
   if (!validatedFields.success) {
     return {
@@ -57,7 +42,7 @@ export async function createQuiz(
   }
 
   try {
-    const { data: quizData, error } = await supabase
+    const { error } = await supabase
       .from("quizzes")
       .insert({
         title: validatedFields.data.title,

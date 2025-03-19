@@ -26,3 +26,17 @@ export const QuizArraySchemaWithCategory = z.array(QuizSchemaWithCategory);
 export type Quiz = z.infer<typeof QuizSchema>;
 
 export type QuizWithCategory = z.infer<typeof QuizSchemaWithCategory>;
+
+export const CreateQuizSchema = QuizSchema.omit({
+  id: true,
+  created_at: true,
+  created_by: true,
+}).extend({
+  categoryId: z.string().uuid("Please select a valid category"),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().nullable(),
+  difficulty: z.enum(["EASY", "MEDIUM", "HARD"], {
+    errorMap: () => ({ message: "Please select a valid difficulty level" }),
+  }),
+  is_public: z.boolean().optional(),
+});
