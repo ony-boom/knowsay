@@ -1,7 +1,7 @@
-import { QuizView } from "./dynamic-quiz-view";
 import { QuizControlButton } from "@/components/quiz/take/next-quiz-button";
 import { AnswerView } from "@/components/quiz/take/answer-view";
 import { getAnswers, getQuestions, getQuiz } from "@/lib/actions";
+import { QuizView } from "./quiz-view";
 
 export default async function QuizPage(props: {
   params: Promise<{
