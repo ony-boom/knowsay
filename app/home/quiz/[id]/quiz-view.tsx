@@ -6,6 +6,12 @@ import "@blocknote/shadcn/style.css";
 import { BlockNoteView } from "@blocknote/shadcn";
 import { QuestionSchema } from "@/schemas/questionSchema";
 import { z } from "zod";
+import {
+  BlockNoteEditorOptions,
+  DefaultBlockSchema,
+  DefaultInlineContentSchema,
+  DefaultStyleSchema,
+} from "@blocknote/core";
 
 export default function QuizView(props: QuizViewProps) {
   const editor = useCreateBlockNote({
@@ -16,8 +22,13 @@ export default function QuizView(props: QuizViewProps) {
 }
 
 export type QuizViewProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialContent: any;
+  initialContent: Partial<
+    BlockNoteEditorOptions<
+      DefaultBlockSchema,
+      DefaultInlineContentSchema,
+      DefaultStyleSchema
+    >
+  >["initialContent"];
   questionId: string;
   questionType: z.infer<typeof QuestionSchema>["type"];
 };

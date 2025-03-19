@@ -1,10 +1,9 @@
-import { QuizView } from "./dynamic-quiz-view";
-import { getQuiz } from "@/app/api/quizzes/[id]/route";
-import { getQuestions } from "@/app/api/questions/route";
-import { mockData } from "@/app/home/quiz/[id]/mock-data";
-import { QuizControlButton } from "@/components/quiz/take/next-quiz-button";
-import { getAnswers } from "@/app/api/questions/answers/[questionId]/route";
-import { AnswerView } from "@/components/quiz/take/answer-view";
+import {QuizView} from "./dynamic-quiz-view";
+import {getQuiz} from "@/app/api/quizzes/[id]/route";
+import {getQuestions} from "@/app/api/questions/route";
+import {QuizControlButton} from "@/components/quiz/take/next-quiz-button";
+import {getAnswers} from "@/app/api/questions/answers/[questionId]/route";
+import {AnswerView} from "@/components/quiz/take/answer-view";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -14,13 +13,13 @@ export default async function QuizPage(props: {
     page?: number;
   }>;
 }) {
-  const { id } = await props.params;
+  const {id} = await props.params;
   const searchParams = await props.searchParams;
   const quiz = await getQuiz(id);
   const currentPage = Number(searchParams?.page) || 1;
   const PAGE_SIZE = 1;
 
-  const { questions, totalCount } = await getQuestions(
+  const {questions, totalCount} = await getQuestions(
     quiz.id,
     currentPage,
     PAGE_SIZE,
@@ -32,8 +31,8 @@ export default async function QuizPage(props: {
     return (
       <div className="flex justify-center py-8">
         <p>
-          The creator of this quiz, hasn&#39;t added any questions yet. That&#39;s a
-          bummer. 😔
+          The creator of this quiz, hasn&#39;t added any questions yet.
+          That&#39;s a bummer. 😔
         </p>
       </div>
     );
@@ -52,13 +51,29 @@ export default async function QuizPage(props: {
           )}
         </hgroup>
 
+        {/*TODO: use content from db */}
         <QuizView
-          initialContent={mockData}
+          initialContent={[
+            {
+              type: "heading",
+              content: "Question 1: Multiple Choice",
+            },
+            {
+              type: "paragraph",
+              content:
+                "What will be the output of the following JavaScript code?",
+            },
+            {
+              type: "codeBlock",
+              props: {language: "javascript"},
+              content: "console.log(1 + '1');",
+            },
+          ]}
           questionId={currentQuestion.id}
           questionType={currentQuestion.type}
         />
 
-        <AnswerView answers={answers} questionType={currentQuestion.type} />
+        <AnswerView answers={answers} questionType={currentQuestion.type}/>
       </div>
 
       <div className="flex justify-center gap-4">
