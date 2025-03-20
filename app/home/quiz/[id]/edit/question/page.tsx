@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +9,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DynamicQuestionEditor } from "@/components/quiz/create/bloc-note/dynamic-editor";
+import { Block } from "@blocknote/core";
 
 export default function CreateQuestionPage() {
+  const handleChange = (value: Block[]) => {
+    // Handle the change event here
+    console.log("Question content changed:", value);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -27,7 +35,7 @@ export default function CreateQuestionPage() {
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div className="bg-background rounded-md">
-              <DynamicQuestionEditor />
+              <DynamicQuestionEditor onChange={handleChange} />
             </div>
             <p className="text-muted-foreground text-xs">
               Use the rich text editor to format your question
