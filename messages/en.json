@@ -1,0 +1,11 @@
+{
+  "home": {
+    "toolbar": {
+      "buttons": {
+        "createQuiz": "Create quiz",
+        "createChallenge": "Create challenge",
+        "createTest": "Create test"
+      }
+    }
+  }
+}
