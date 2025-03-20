@@ -19,7 +19,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
         <HomeNavMenu />
       </nav>
 
-      <div className="py-2 grow">{children}</div>
+      <div className="grow py-2">{children}</div>
     </Container>
   );
 }
