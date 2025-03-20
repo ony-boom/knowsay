@@ -164,7 +164,7 @@ export async function getQuestions(
     .from("questions")
     .select("*", { count: "exact" })
     .eq("quiz_id", quizId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: true });
 
   if (paginate) {
     query = query.range(start, end);

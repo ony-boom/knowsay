@@ -84,7 +84,7 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
 
       <Separator />
 
-      <div className="h-full w-full py-8 overflow-y-auto">
+      <div className="h-full w-full py-8 pr-3 overflow-y-auto">
         {children}
       </div>
     </div>
