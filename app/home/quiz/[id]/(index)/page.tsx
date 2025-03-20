@@ -1,6 +1,6 @@
 import { QuizControlButton } from "@/components/quiz/take/next-quiz-button";
 import { AnswerView } from "@/components/quiz/take/answer-view";
-import { getAnswers, getQuestions, getQuiz } from "@/lib/actions";
+import { getAnswers, getQuestions, getQuizById } from "@/lib/actions";
 import { QuizView } from "./quiz-view";
 
 export default async function QuizPage(props: {
@@ -13,12 +13,12 @@ export default async function QuizPage(props: {
 }) {
   const { id } = await props.params;
   const searchParams = await props.searchParams;
-  const quiz = await getQuiz(id);
+  const quiz = await getQuizById(id);
   const currentPage = Number(searchParams?.page) || 1;
   const PAGE_SIZE = 1;
 
   const { questions, totalCount } = await getQuestions(
-    quiz.id,
+    quiz?.id || "0",
     currentPage,
     PAGE_SIZE,
   );
@@ -42,7 +42,7 @@ export default async function QuizPage(props: {
     <div className="flex h-full flex-col justify-between">
       <div className="space-y-8">
         <hgroup className="space-y-2">
-          {quiz.description && (
+          {quiz?.description && (
             <p className="text-foreground/70 max-w-[45ch]">
               {quiz.description}
             </p>

@@ -1,7 +1,7 @@
 "use server";
 
 import {
-  CreateQuizSchema,
+  StoreQuizSchema,
   QuizArraySchemaWithCategory,
   QuizSchema,
 } from "@/schemas/quizSchema";
@@ -32,18 +32,19 @@ export async function createQuiz(
   prevState: State,
   data: FormData,
 ): Promise<State> {
+  let id;
   // Extract form data
   const formData = {
     title: data.get("title") as string,
     description: (data.get("description") as string) || null,
     difficulty: data.get("difficulty") as "EASY" | "MEDIUM" | "HARD",
-    categoryId: data.get("categoryId") as string,
+    category_id: data.get("category_id") as string,
     is_public:
       data.get("is_public") === "on" || data.get("is_public") === "true",
   };
 
   // Validate input
-  const validatedFields = CreateQuizSchema.safeParse(formData);
+  const validatedFields = StoreQuizSchema.safeParse(formData);
 
   if (!validatedFields.success) {
     return {
@@ -53,18 +54,21 @@ export async function createQuiz(
   }
 
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("quizzes")
       .insert({
         title: validatedFields.data.title,
         description: validatedFields.data.description,
         difficulty: validatedFields.data.difficulty,
         is_public: validatedFields.data.is_public,
-        // Link to the selected category
-        category_id: validatedFields.data.categoryId,
+        category_id: validatedFields.data.category_id,
       })
       .select()
       .single();
+
+    if (data) {
+      id = data.id;
+    }
 
     if (error) {
       return {
@@ -84,8 +88,68 @@ export async function createQuiz(
     };
   }
 
-  revalidatePath("/home/quiz/create");
-  redirect("/home/quiz/create");
+  revalidatePath(`/home/quiz/${id}/edit`);
+  redirect(`/home/quiz/${id}/edit`);
+}
+
+export async function updateQuiz(
+  id: string,
+  prevState: State,
+  formData: FormData,
+): Promise<State> {
+  // Extract form data
+  const data = {
+    title: formData.get("title") as string,
+    description: (formData.get("description") as string) || null,
+    difficulty: formData.get("difficulty") as "EASY" | "MEDIUM" | "HARD",
+    category_id: formData.get("category_id") as string,
+    is_public:
+      formData.get("is_public") === "on" ||
+      formData.get("is_public") === "true",
+  };
+
+  // Validate input
+  const validatedFields = StoreQuizSchema.safeParse(data);
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Invalid input. Please check the form for errors.",
+    };
+  }
+
+  try {
+    const { error } = await supabase
+      .from("quizzes")
+      .update({
+        title: validatedFields.data.title,
+        description: validatedFields.data.description,
+        difficulty: validatedFields.data.difficulty,
+        is_public: validatedFields.data.is_public,
+        category_id: validatedFields.data.category_id,
+      })
+      .eq("id", id);
+
+    if (error) {
+      return {
+        message: error.message,
+        errors: {
+          _form: ["Database error: Failed to update quiz"],
+        },
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "An unexpected error occurred",
+      errors: {
+        _form: ["Failed to update quiz. Please try again."],
+      },
+    };
+  }
+
+  revalidatePath(`/home/quiz/${id}/edit`);
+  redirect(`/home/quiz/${id}/edit`);
 }
 
 const ITEMS_PER_PAGE = 9;
@@ -264,12 +328,12 @@ export async function getAnswers(questionId: string) {
   return validatedData.data;
 }
 
-export async function getQuizStatus(id: string) {
+export async function getQuizById(id: string) {
   try {
     // Fetch quiz status from the database
     const { data, error } = await supabase
       .from("quizzes")
-      .select("status")
+      .select("*")
       .eq("id", id)
       .single();
 
@@ -281,22 +345,9 @@ export async function getQuizStatus(id: string) {
     // Validate the data against the schema
     const validatedData = QuizSchema.parse(data);
 
-    return validatedData.status;
+    return validatedData;
   } catch (error) {
-    console.error("Failed to get quiz status:", error);
+    console.error("Failed to get quiz details:", error);
     throw error;
   }
-}
-
-export async function getQuiz(id: string) {
-  const { data, error } = await supabase
-    .from("quizzes")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) throw error;
-  if (!data) throw Error("Quiz not found");
-
-  return QuizSchema.parse(data);
 }
