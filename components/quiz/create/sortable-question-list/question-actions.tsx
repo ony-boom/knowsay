@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SortableDragHandle } from "@/components/ui/sortable";
-import { Edit, GripVertical, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { SortableQuestionsSchema } from "../sortable-question-list";
 import { QuestionAnswersSheet } from "./question-answers-sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -27,10 +26,6 @@ export const QuestionActions: React.FC<QuestionActionsProps> = ({
         <QuestionAnswersSheet question={question} />
       </DialogContent>
     </Dialog>
-
-    <SortableDragHandle className="hover:bg-accent hover:text-accent-foreground flex h-7 w-7 items-center justify-center rounded-full">
-      <GripVertical className="h-3.5 w-3.5" aria-hidden="true" />
-    </SortableDragHandle>
 
     <Button
       variant="ghost"

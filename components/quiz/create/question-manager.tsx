@@ -5,9 +5,23 @@ import { Question } from "../../../app/home/quiz/create/types";
 import { SortableQuestionList } from "./sortable-question-list";
 import { AddQuestionButton } from "./add-question-button";
 import { usePathname } from "next/navigation";
+import {
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 export function QuestionsManager() {
   const pathname = usePathname();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const [questions, setQuestions] = useState<Question[]>([
     {
@@ -70,6 +84,7 @@ export function QuestionsManager() {
 
       <div className="mt-8">
         <SortableQuestionList
+          sensors={sensors}
           initialQuestions={questions.map((q) => ({ ...q, type: "QCM" }))}
           onEdit={handleEditQuestion}
           onDelete={handleDeleteQuestion}
