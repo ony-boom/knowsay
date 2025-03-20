@@ -2,6 +2,7 @@ import { QuizControlButton } from "@/components/quiz/take/next-quiz-button";
 import { AnswerView } from "@/components/quiz/take/answer-view";
 import { getAnswers, getQuestions, getQuiz } from "@/lib/actions";
 import { QuizView } from "./quiz-view";
+import { useMemo } from "react";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -36,6 +37,19 @@ export default async function QuizPage(props: {
     );
   }
 
+  const content = (() => {
+    try {
+      return JSON.parse(currentQuestion.content);
+    } catch {
+      return [
+        {
+          type: "text",
+          content: "This question has no content",
+        },
+      ];
+    }
+  })();
+
   const answers = await getAnswers(currentQuestion.id);
 
   return (
@@ -43,30 +57,13 @@ export default async function QuizPage(props: {
       <div className="space-y-8">
         <hgroup className="space-y-2">
           {quiz.description && (
-            <p className="text-foreground/70 max-w-[45ch]">
-              {quiz.description}
-            </p>
+            <p className="text-foreground/70">{quiz.description}</p>
           )}
         </hgroup>
 
         {/*TODO: use content from db */}
         <QuizView
-          initialContent={[
-            {
-              type: "heading",
-              content: "Question 1: Multiple Choice",
-            },
-            {
-              type: "paragraph",
-              content:
-                "What will be the output of the following JavaScript code?",
-            },
-            {
-              type: "codeBlock",
-              props: { language: "javascript" },
-              content: "console.log(1 + '1');",
-            },
-          ]}
+          initialContent={content}
           questionId={currentQuestion.id}
           questionType={currentQuestion.type}
         />

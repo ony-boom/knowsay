@@ -177,6 +177,7 @@ export async function getQuestions(
   // Validate data against schema
   const validatedData = z.array(QuestionSchema).safeParse(data);
   if (!validatedData.success) {
+    console.log(data)
     console.log(validatedData.error);
 
     throw new Error("Invalid data returned from database");

@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import useSWR from "swr";
-import { swrFetcher } from "@/lib/utils";
+import { cn, swrFetcher } from "@/lib/utils";
 import { ChallengeSchema } from "@/schemas/challengeSchema";
 import { QuizSchema } from "@/schemas/quizSchema";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -81,15 +81,19 @@ export function HomeBreadcrumb() {
                 <BreadcrumbItem className={isLast ? "font-medium" : ""}>
                   <BreadcrumbLink
                     asChild
-                    className={isLast ? "pointer-events-none" : ""}
+                    className={cn(
+                      {
+                        "pointer-events-none": isLast,
+                      },
+                      "max-w-18 md:max-w-max overflow-hidden",
+                    )}
                   >
                     <Link
                       href={href}
-                      className={
-                        isLast
-                          ? "text-foreground"
-                          : "text-muted-foreground hover:text-foreground transition-colors"
-                      }
+                      className={cn(
+                        isLast ? "text-foreground" : "text-muted-foreground",
+                        "hover:text-foreground text-nowrap overflow-ellipsis transition-colors",
+                      )}
                       aria-current={isLast ? "page" : undefined}
                     >
                       {renderBreadcrumbContent(segment, isId)}
