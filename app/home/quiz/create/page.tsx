@@ -5,8 +5,7 @@ import {
 } from "@/components/ui/collapsible";
 import { CreateQuizForm } from "@/components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown } from "lucide-react";
-import { QuestionsManager } from "@/components/quiz/create/question-manager";
+import { ChevronsUpDown, Flame, Plus } from "lucide-react";
 import { getCategories } from "@/lib/actions";
 
 export default async function CreateQuizPage() {
@@ -39,24 +38,23 @@ export default async function CreateQuizPage() {
       </Collapsible>
 
       {/* create questions */}
-      <Collapsible className="w-full rounded-lg border" defaultOpen>
-        <CollapsibleTrigger asChild>
-          <div className="flex w-full items-center justify-between p-4 font-medium">
-            <span>Create Questions</span>
-            <Button variant="ghost" size="sm">
-              <ChevronsUpDown className="h-4 w-4" />
-              <span className="sr-only">Toggle</span>
-            </Button>
+      <div className="bg-muted/40 w-full rounded-lg border">
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+          <div className="bg-primary/10 mb-4 rounded-full p-3">
+            <Flame className="text-primary h-6 w-6" />
           </div>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="border-t p-4 pt-0">
-          <p className="text-foreground/80 mt-4 text-lg">
-            Create questions for your quiz. You can add multiple questions and
-            customize them as needed.
+          <h3 className="mb-2 text-xl font-semibold">Create Your Quiz First</h3>
+          <p className="text-foreground/70 mb-6 max-w-md">
+            Please fill out the quiz details in the section above. Once
+            you&apos;ve created your quiz, you&apos;ll be able to add and
+            customize questions on the next page.
           </p>
-          <QuestionsManager />
-        </CollapsibleContent>
-      </Collapsible>
+          <Button disabled variant="outline" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Questions After Creating Quiz
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
