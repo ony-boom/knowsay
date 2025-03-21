@@ -8,7 +8,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { QuestionSchema } from "@/schemas/questionSchema";
+import { QuestionSchema, StoreQuestionSchema } from "@/schemas/questionSchema";
 import {
   CategoryArraySchema,
   CategoryWithQuizCountArraySchema,
@@ -238,7 +238,7 @@ export async function getQuestions(
   // Validate data against schema
   const validatedData = z.array(QuestionSchema).safeParse(data);
   if (!validatedData.success) {
-    console.log(data)
+    console.log(data);
     console.log(validatedData.error);
 
     throw new Error("Invalid data returned from database");
@@ -353,13 +353,11 @@ export async function getQuizById(id: string) {
   }
 }
 
-type QuestionState = {
+export type QuestionState = {
   errors?: {
     content?: string[];
     type?: string[];
     quiz_id?: string[];
-    image_url?: string[];
-    timer?: string[];
     _form?: string[];
   };
   message?: string | null;
@@ -377,12 +375,10 @@ export async function createQuestion(
     content: (formData.get("content") as string) || "New question",
     type:
       (formData.get("type") as "QCM" | "OPEN" | "ORDER", "MATCHING") || "QCM",
-    image_url: (formData.get("image_url") as string) || null,
-    timer: Number(formData.get("timer")) || 30,
   };
 
   // Validate input using Zod schema
-  const validatedFields = QuestionSchema.safeParse(questionData);
+  const validatedFields = StoreQuestionSchema.safeParse(questionData);
 
   if (!validatedFields.success) {
     return {
@@ -395,7 +391,11 @@ export async function createQuestion(
     // Insert the question into the database
     const { data, error } = await supabase
       .from("questions")
-      .insert(validatedFields.data)
+      .insert({
+        quiz_id: validatedFields.data.quiz_id,
+        content: validatedFields.data.content,
+        type: validatedFields.data.type,
+      })
       .select()
       .single();
 

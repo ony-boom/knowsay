@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createQuestion, State } from "@/lib/actions";
+import { createQuestion, QuestionState } from "@/lib/actions";
 import { StoreQuestion, StoreQuestionSchema } from "@/schemas/questionSchema";
 import { Quiz } from "@/schemas/quizSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +22,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type CreateQuestionFormProps = {
   initialData: Quiz;
@@ -29,7 +36,7 @@ type CreateQuestionFormProps = {
 
 export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: State = { message: null, errors: {} };
+  const initialState: QuestionState = { message: null, errors: {} };
 
   const createQuestionWithId = createQuestion.bind(null, initialData.id);
 
@@ -43,7 +50,6 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
     defaultValues: {
       content: "",
       type: "QCM",
-      timer: undefined,
       quiz_id: initialData.id,
     },
     mode: "onBlur",
@@ -63,28 +69,55 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
 
   return (
     <>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div className="space-y-2">
-          <CardTitle>Create New Question</CardTitle>
-          <CardDescription>
-            Add a question to your quiz. Make sure to provide multiple options
-            and select the correct answer.
-          </CardDescription>
-        </div>
-        <Button
-          type="submit"
-          form="question-form"
-          disabled={
-            !form.formState.isValid || !form.formState.isDirty || isPending
-          }
-        >
-          {isPending ? "Saving..." : "Save Question"}
-        </Button>
-      </CardHeader>
-
       <Form {...form}>
         <form id="question-form" onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-6">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="space-y-2">
+              <CardTitle>Create New Question</CardTitle>
+              <CardDescription>
+                Add a question to your quiz. Make sure to provide multiple
+                options and select the correct answer.
+              </CardDescription>
+            </div>
+            <div className="mr-4 flex flex-1 flex-row items-center justify-end gap-6">
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a question type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="QCM">Multiple Choice</SelectItem>
+                        <SelectItem value="OPEN">Open Answer</SelectItem>
+                        <SelectItem value="ORDER">Ordering</SelectItem>
+                        <SelectItem value="MATCHING">Matching</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button
+              type="submit"
+              form="question-form"
+              disabled={
+                !form.formState.isValid || !form.formState.isDirty || isPending
+              }
+            >
+              {isPending ? "Saving..." : "Save Question"}
+            </Button>
+          </CardHeader>
+
+          <CardContent className="mt-4 space-y-6">
             <div className="space-y-4">
               <FormField
                 control={form.control}
