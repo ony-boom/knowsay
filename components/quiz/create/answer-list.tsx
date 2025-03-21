@@ -1,4 +1,4 @@
-import { Answer } from "@/app/home/quiz/create/(overview)/answer/page";
+import { Answer } from "@/app/home/quiz/[id]/edit/answer/page";
 import {
   closestCenter,
   DndContext,

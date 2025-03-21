@@ -2,10 +2,14 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Sortable, SortableItem } from "@/components/ui/sortable";
 import { EmptyQuestionState } from "./sortable-question-list/empty-question-state";
 import { QuestionCard } from "./sortable-question-list/question-card";
+import { closestCenter, DndContext, useSensors } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { SortableItem } from "./sortable-item";
 
 // Schema for the form
 const sortableQuestionsSchema = z.object({
@@ -32,6 +36,7 @@ interface SortableQuestionListProps {
   onEdit: (question: SortableQuestionsSchema["questions"][0]) => void;
   onDelete: (id: string) => void;
   onReorder: (questions: SortableQuestionsSchema["questions"]) => void;
+  sensors: ReturnType<typeof useSensors>;
 }
 
 export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
@@ -39,7 +44,8 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
   onEdit,
   onDelete,
   onReorder,
-}) => {
+  sensors,
+}: SortableQuestionListProps) => {
   const form = useForm<SortableQuestionsSchema>({
     resolver: zodResolver(sortableQuestionsSchema),
     defaultValues: {
@@ -69,29 +75,35 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
   }
 
   return (
-    <Sortable
-      value={fields}
-      onMove={handleMove}
-      overlay={
-        <Card className="border-l-primary border-l-4 opacity-60">
-          <CardContent className="p-2">
-            <div className="bg-muted/30 h-10 animate-pulse rounded-md"></div>
-          </CardContent>
-        </Card>
-      }
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={(event) => {
+        const { active, over } = event;
+        if (over && active.id !== over.id) {
+          const activeIndex = fields.findIndex((q) => q.id === active.id);
+          const overIndex = fields.findIndex((q) => q.id === over.id);
+          handleMove({ activeIndex, overIndex });
+        }
+      }}
     >
-      <div className="space-y-2">
-        {fields.map((question, index) => (
-          <SortableItem key={question.id} value={question.id}>
-            <QuestionCard
-              question={question}
-              index={index}
-              onEdit={() => onEdit(question)}
-              onDelete={() => onDelete(question.id)}
-            />
-          </SortableItem>
-        ))}
-      </div>
-    </Sortable>
+      <SortableContext
+        items={fields.map((q) => q.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="space-y-2">
+          {fields.map((question, index) => (
+            <SortableItem key={question.id} id={question.id}>
+              <QuestionCard
+                question={question}
+                index={index}
+                onEdit={() => onEdit(question)}
+                onDelete={() => onDelete(question.id)}
+              />
+            </SortableItem>
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 };

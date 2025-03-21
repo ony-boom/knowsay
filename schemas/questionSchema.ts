@@ -5,7 +5,6 @@ export const QuestionSchema = z.object({
   quiz_id: z.string().uuid(),
   type: z.enum(["QCM", "OPEN", "ORDER", "MATCHING"]),
   content: z.string().min(5, "Question must have at least 5 characters"),
-  image_url: z.string().url().optional().nullable(),
   timer: z.number().positive().optional(),
   order_position: z.number().int().positive(),
   created_at: z.coerce.date(),

@@ -11,24 +11,30 @@ import { usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 import { ReactNode } from "react";
 import { useUser } from "@clerk/nextjs";
+import { LanguageSwitch } from "@/components/language-switch";
+import { useTranslations } from "next-intl";
 
-export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
+export default function Layout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const { user } = useUser();
   const pathname = usePathname();
+  const t = useTranslations();
 
   const isAtHomeRoot = pathname === "/home";
 
   return (
     <div className="container mx-auto flex h-screen flex-col px-4">
-      <header className="bg-background flex items-center justify-between border-b p-6">
+      <header className="bg-background flex items-center justify-between border-b py-4 sm:p-6">
         <div aria-labelledby="logo" className="flex items-center gap-1">
           <Logo />
 
-          <Link href="/" className="text-2xl font-bold">
+          <Link href="/" className="text-lg font-bold sm:text-2xl">
             knowsay
           </Link>
         </div>
-        <nav className="flex items-center">
+        <nav className="flex items-center gap-2 md:gap-4">
+          <LanguageSwitch />
           <div className="hidden md:flex">
             <AccountMenu />
           </div>
@@ -42,16 +48,21 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
         </nav>
       </header>
 
-      <section className="bg-neutral-50-50 flex justify-between py-4">
+      <section className="bg-neutral-50-50 flex items-center justify-between py-4">
         {!isAtHomeRoot && <HomeBreadcrumb />}
 
         <Button variant="link" className="flex items-center gap-2 px-6">
           <Avatar>
-            <AvatarImage src={user?.imageUrl ?? "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"} />
+            <AvatarImage
+              src={
+                user?.imageUrl ??
+                "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
+              }
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col justify-center items-center">
-            <span className="text-sm text-accent-foreground font-medium md:inline-block">
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-accent-foreground text-sm font-medium md:inline-block">
               {user?.firstName}
             </span>
           </div>
@@ -64,19 +75,21 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
               variant="outline"
               className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
             >
-              <Link href="/home/quiz/create">Create Quiz</Link>
+              <Link href="/home/quiz/create">
+                {t("home.toolbar.buttons.createQuiz")}
+              </Link>
             </Button>
             <Button
               variant="outline"
               className="hover:cursor-pointe border-2 border-dashed border-neutral-300 p-4"
             >
-              Create Challenge
+              {t("home.toolbar.buttons.createChallenge")}
             </Button>
             <Button
               variant="outline"
               className="border-neutral-50-300 border-2 border-dashed p-4 hover:cursor-pointer"
             >
-              Create Test
+              {t("home.toolbar.buttons.createTest")}
             </Button>
           </div>
         )}
@@ -84,7 +97,7 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
 
       <Separator />
 
-      <div className="h-full w-full py-8 overflow-y-auto">
+      <div className="h-full w-full overflow-y-auto py-8 pr-3">
         {children}
       </div>
     </div>

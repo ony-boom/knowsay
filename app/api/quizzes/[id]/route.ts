@@ -1,4 +1,4 @@
-import { getQuiz } from "@/lib/actions";
+import { getQuizById } from "@/lib/actions";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const data = await getQuiz(id);
+    const data = await getQuizById(id);
     return Response.json(data, { status: 200 });
   } catch (error) {
     console.error("GET error:", error);

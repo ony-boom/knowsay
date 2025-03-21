@@ -1,12 +1,15 @@
 "use client";
 
-import { createQuiz, State } from "@/lib/actions";
+import { updateQuiz, State } from "@/lib/actions";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useActionState, useTransition } from "react";
+import { Category } from "@/schemas/categorySchema";
+
 import {
   Form,
   FormControl,
@@ -16,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import {
   Select,
   SelectContent,
@@ -23,29 +27,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useActionState, useTransition } from "react";
-import { Category } from "@/schemas/categorySchema";
-import { StoreQuiz, StoreQuizSchema } from "@/schemas/quizSchema";
+import { Quiz, StoreQuiz, StoreQuizSchema } from "@/schemas/quizSchema";
 
-type CreateQuizFormProps = {
+type EditQuizFormProps = {
   categories: Category[];
+  initialData: Quiz;
 };
 
-export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
+export const EditQuizForm = ({
+  categories,
+  initialData,
+}: EditQuizFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createQuiz, initialState);
+  const updateQuizWithId = updateQuiz.bind(null, initialData.id);
+  const [state, formAction] = useActionState(updateQuizWithId, initialState);
 
   const form = useForm<StoreQuiz>({
     resolver: zodResolver(StoreQuizSchema),
     defaultValues: {
-      title: "",
-      category_id: "",
-      difficulty: undefined,
-      description: "",
-      is_public: false,
+      title: initialData.title,
+      category_id: initialData.category_id,
+      difficulty: initialData.difficulty,
+      description: initialData.description || "",
+      is_public: initialData.is_public,
     },
-    mode: "onBlur", // Validate on blur for better UX
+    mode: "onBlur",
   });
 
   const onSubmit = (data: StoreQuiz) => {
@@ -220,7 +227,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                 !form.formState.isValid || !form.formState.isDirty || isPending
               }
             >
-              {isPending ? "Creating..." : "Create Quiz"}
+              {isPending ? "Updating..." : "Update Quiz"}
             </Button>
           </div>
         </div>

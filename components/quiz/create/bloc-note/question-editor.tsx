@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Block } from "@blocknote/core";
 import { useCreateBlockNote } from "@blocknote/react";
 import { Editor } from "@/components/bloc-note/editor";
+import { QuestionEditorProps } from "./dynamic-editor";
 
-export default function QuestionEditor() {
+export default function QuestionEditor({ onChange }: QuestionEditorProps) {
   const [, setBlocks] = useState<Block[]>([]);
 
   const editor = useCreateBlockNote();
@@ -15,7 +16,11 @@ export default function QuestionEditor() {
       editor={editor}
       onChange={() => {
         // Saves the document JSON to state.
-        setBlocks(editor.document);
+        const blocks = editor.document;
+        setBlocks(blocks);
+        if (onChange) {
+          onChange(blocks);
+        }
       }}
     />
   );

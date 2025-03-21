@@ -1,4 +1,4 @@
-import { Answer } from "@/app/home/quiz/create/(overview)/answer/page";
+import { Answer } from "@/app/home/quiz/[id]/edit/answer/page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
