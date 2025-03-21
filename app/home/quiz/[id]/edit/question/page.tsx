@@ -1,6 +1,6 @@
 import { EditQuestionForm } from "@/components/quiz/edit/edit-question-form";
 import { Card } from "@/components/ui/card";
-import { getQuizById } from "@/lib/actions";
+import { getQuizById } from "@/lib/actions/fetch-quiz";
 
 export default async function CreateQuestionPage(props: {
   params: Promise<{

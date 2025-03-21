@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createQuestion, QuestionState } from "@/lib/actions";
+import { QuestionState } from "@/lib/actions/types";
 import { StoreQuestion, StoreQuestionSchema } from "@/schemas/questionSchema";
 import { Quiz } from "@/schemas/quizSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {createQuestion} from "@/lib/actions/create-question";
 
 type CreateQuestionFormProps = {
   initialData: Quiz;

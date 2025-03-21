@@ -6,7 +6,7 @@ import { QuizList } from "@/components/quiz/quiz-list";
 import { QuizListSkeleton } from "@/components/quiz/quiz-list-skeleton";
 import { CategoryCardList } from "@/components/quiz/category-card";
 import { CategoryCardSkeleton } from "@/components/quiz/category-card-skeleton";
-import { fetchQuizzes } from "@/lib/actions";
+import { fetchQuizzes } from "@/lib/actions/fetch-quiz";
 
 export default async function Page(props: {
   searchParams?: Promise<{

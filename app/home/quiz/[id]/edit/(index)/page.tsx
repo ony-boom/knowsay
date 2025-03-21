@@ -6,8 +6,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { getCategories, getQuestionsByQuiz, getQuizById } from "@/lib/actions";
 import { ChevronsUpDown } from "lucide-react";
+import { getQuizById } from "@/lib/actions/fetch-quiz";
+import { getCategories } from "@/lib/actions/get-categories";
+import { getQuestionsByQuiz } from "@/lib/actions/get-questions";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

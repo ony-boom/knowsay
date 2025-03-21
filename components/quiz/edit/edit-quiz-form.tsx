@@ -1,6 +1,6 @@
 "use client";
 
-import { updateQuiz, State } from "@/lib/actions";
+import { State } from "@/lib/actions/types";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Quiz, StoreQuiz, StoreQuizSchema } from "@/schemas/quizSchema";
+import { updateQuiz } from "@/lib/actions/update-quiz";
 
 type EditQuizFormProps = {
   categories: Category[];
