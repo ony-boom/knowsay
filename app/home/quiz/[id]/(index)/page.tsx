@@ -1,6 +1,5 @@
-import { getQuestions, getQuiz } from "@/lib/actions";
-import { Separator } from "@/components/ui/separator";
-import { QuizViewContainer } from "./quiz-view/quiz-view-container";
+import { getQuestions, getQuizById } from "@/lib/actions";
+import { QuizViewContainer } from "../quiz-view/quiz-view-container";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -11,10 +10,10 @@ export default async function QuizPage(props: {
   }>;
 }) {
   const { id } = await props.params;
-  const quiz = await getQuiz(id);
+  const quiz = await getQuizById(id);
 
   const { questions } = await getQuestions(
-    quiz.id,
+    quiz?.id || "0",
     undefined,
     undefined,
     false,
@@ -34,8 +33,8 @@ export default async function QuizPage(props: {
   return (
     <>
       <hgroup className="space-y-2">
-        <h2 className="text-2xl font-bold">{quiz.title}</h2>
-        {quiz.description && (
+        <h2 className="text-2xl font-bold">{quiz?.title}</h2>
+        {quiz?.description && (
           <p className="text-foreground/70 text-sm leading-relaxed text-balance">
             {quiz.description}
           </p>

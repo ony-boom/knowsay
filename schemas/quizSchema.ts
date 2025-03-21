@@ -3,6 +3,7 @@ import { CategorySchema } from "./categorySchema";
 
 export const QuizSchema = z.object({
   id: z.string().uuid(),
+  category_id: z.string().uuid("Please select a valid category"),
   title: z.string().min(3, "Quiz title must be at least 3 characters"),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
   is_public: z.boolean().default(true),
@@ -28,13 +29,12 @@ export type Quiz = z.infer<typeof QuizSchema>;
 
 export type QuizWithCategory = z.infer<typeof QuizSchemaWithCategory>;
 
-export const CreateQuizSchema = QuizSchema.omit({
+export const StoreQuizSchema = QuizSchema.omit({
   id: true,
   status: true,
   created_at: true,
   created_by: true,
 }).extend({
-  categoryId: z.string().uuid("Please select a valid category"),
   title: z.string().min(1, "Title is required"),
   description: z.string().nullable(),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"], {
@@ -42,3 +42,5 @@ export const CreateQuizSchema = QuizSchema.omit({
   }),
   is_public: z.boolean().optional(),
 });
+
+export type StoreQuiz = z.infer<typeof StoreQuizSchema>;
