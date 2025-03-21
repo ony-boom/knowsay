@@ -7,5 +7,20 @@
         "createTest": "Créer un test"
       }
     }
+  },
+  "quiz": {
+    "edit": {
+      "title": "Modifier le Quiz",
+      "description": "Mettez à jour les détails et les questions de votre quiz pour améliorer l'expérience de vos participants.",
+      "notFound": {
+        "title": "Données Non Trouvées",
+        "description": "Les données que vous essayez de modifier n'existent pas ou ont été supprimées."
+      },
+      "sections": {
+        "details": "Détails du Quiz",
+        "questions": "Modifier les Questions",
+        "questionsDescription": "Mettez à jour vos questions ou ajoutez-en de nouvelles. Les modifications sont enregistrées automatiquement."
+      }
+    }
   }
 }

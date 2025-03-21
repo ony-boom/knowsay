@@ -7,5 +7,20 @@
         "createTest": "Create test"
       }
     }
+  },
+  "quiz": {
+    "edit": {
+      "title": "Edit Quiz",
+      "description": "Update your quiz details and questions to improve the experience for your participants.",
+      "notFound": {
+        "title": "Data Not Found",
+        "description": "The data you're trying to edit doesn't exist or was deleted."
+      },
+      "sections": {
+        "details": "Quiz Details",
+        "questions": "Edit Questions",
+        "questionsDescription": "Update your quiz questions or add new ones. Changes are saved automatically."
+      }
+    }
   }
 }
