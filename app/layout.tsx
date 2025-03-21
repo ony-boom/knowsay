@@ -33,7 +33,7 @@ export default async function RootLayout({
     <ClerkProvider>
       <html lang={locale}>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} overflow-hidden font-sans antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
         >
           <NextIntlClientProvider messages={messages}>
             <NextTopLoader

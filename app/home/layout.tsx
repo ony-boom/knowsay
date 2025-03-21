@@ -25,11 +25,11 @@ export default function Layout({
 
   return (
     <div className="container mx-auto flex h-screen flex-col px-4">
-      <header className="bg-background flex items-center justify-between border-b p-6">
+      <header className="bg-background flex items-center justify-between border-b py-4 sm:p-6">
         <div aria-labelledby="logo" className="flex items-center gap-1">
           <Logo />
 
-          <Link href="/" className="text-2xl font-bold">
+          <Link href="/" className="text-lg font-bold sm:text-2xl">
             knowsay
           </Link>
         </div>
@@ -48,7 +48,7 @@ export default function Layout({
         </nav>
       </header>
 
-      <section className="bg-neutral-50-50 flex justify-between py-4">
+      <section className="bg-neutral-50-50 flex items-center justify-between py-4">
         {!isAtHomeRoot && <HomeBreadcrumb />}
 
         <Button variant="link" className="flex items-center gap-2 px-6">
@@ -97,7 +97,9 @@ export default function Layout({
 
       <Separator />
 
-      <div className="h-full w-full overflow-y-auto py-8 pr-3">{children}</div>
+      <div className="h-full w-full overflow-y-auto py-8 pr-3">
+        {children}
+      </div>
     </div>
   );
 }

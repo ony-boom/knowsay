@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 import { QuestionSchema } from "@/schemas/questionSchema";
 import { DynamicQuestionView } from "./dynamic-question-view";
 import { AnswerView } from "@/components/quiz/take/answer-view";
-import { QuizControl } from "@/components/quiz/take/quiz-control";
+import { QuizScoreDisplay } from "@/components/quiz/take/quiz-score-display";
 import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
+import { Button } from "@/components/ui/button";
 
 export function QuizViewContainer(props: QuizViewContainerProps) {
   const { setState } = useTakeQuizState;
@@ -27,8 +28,9 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
   const { questions, ...containerProps } = props;
 
   useLayoutEffect(() => {
+    reset();
     setState({ totalQuestions: questions.length });
-  }, [questions.length, setState]);
+  }, [questions.length, setState, reset]);
 
   useEffect(() => {
     if (questionRefs.current[currentQuestion]) {
@@ -47,14 +49,12 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
 
   return (
     <div className="space-y-8">
-      <QuizControl
-        onReset={reset}
-        onNext={nextQuestion}
-        onPrevious={previousQuestion}
+      <QuizScoreDisplay
         score={score}
         totalQuestions={questions.length}
         currentQuestion={currentQuestion + 1}
       />
+
       <div
         {...containerProps}
         ref={questionsContainerRef}
@@ -72,7 +72,12 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
               }}
               className="w-full min-w-full flex-shrink-0 snap-center space-y-8 px-2"
             >
-              <DynamicQuestionView initialContent={question.content} />
+              <div className="space-y-4">
+                <p className="text-foreground/70 text-sm">
+                  Question {index + 1}
+                </p>
+                <DynamicQuestionView initialContent={question.content} />
+              </div>
               <AnswerView
                 questionId={question.id}
                 questionType={question.type}
@@ -84,6 +89,22 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
             </div>
           );
         })}
+      </div>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+        <Button
+          onClick={previousQuestion}
+          variant="outline"
+          disabled={currentQuestion === 0}
+        >
+          Previous
+        </Button>
+        <Button
+          onClick={nextQuestion}
+          disabled={currentQuestion === questions.length - 1}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );
