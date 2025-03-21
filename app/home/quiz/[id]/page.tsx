@@ -22,7 +22,7 @@ export default async function QuizPage(props: {
 
   if (questions.length === 0) {
     return (
-      <div className="flex justify-center py-8">
+      <div className="flex justify-center">
         <p>
           The creator of this quiz, hasn&#39;t added any questions yet.
           That&#39;s a bummer. 😔
@@ -32,16 +32,17 @@ export default async function QuizPage(props: {
   }
 
   return (
-    <div className="space-y-8">
+    <>
       <hgroup className="space-y-2">
+        <h2 className="text-2xl font-bold">{quiz.title}</h2>
         {quiz.description && (
-          <p className="text-foreground/70 leading-relaxed text-balance">{quiz.description}</p>
+          <p className="text-foreground/70 text-sm leading-relaxed text-balance">
+            {quiz.description}
+          </p>
         )}
       </hgroup>
 
-      <Separator />
-
       <QuizViewContainer questions={questions} />
-    </div>
+    </>
   );
 }

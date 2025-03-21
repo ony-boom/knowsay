@@ -9,11 +9,11 @@ import React, { useState } from "react";
 import { swrFetcher } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
-import { Button } from "@/components/ui/button";
 
 export function QcmAnswer(props: QcmAnswerProps) {
   const [value, setValue] = useState<string>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { questionId, onAnswerSubmitted, ...divProps } = props;
   const { data: answers, isLoading } = useSWR<Answer[]>(
     `/api/questions/answers/${questionId}`,
@@ -49,11 +49,6 @@ export function QcmAnswer(props: QcmAnswerProps) {
     setValue(value);
   };
 
-  const handleSubmit = () => {
-    const isCorrect = correctAnswer?.content === value;
-    onAnswerSubmitted(isCorrect);
-  };
-
   return (
     <div className="flex flex-col items-end gap-8">
       <RadioGroup
@@ -63,35 +58,47 @@ export function QcmAnswer(props: QcmAnswerProps) {
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {answers?.map((answer) => {
+            const isSelected = value === answer.content;
+            const isCorrectAnswer = correctAnswer?.content === answer.content;
+            const isIncorrectSelection =
+              isSelected && !isCorrectAnswer && props.readOnly;
+            const isCorrectSelection =
+              isSelected && isCorrectAnswer && props.readOnly;
+
             return (
               <div
                 className={cn(
-                  "hover:bg-accent group has-[button[aria-checked='true']]:bg-primary/5 has-[button[aria-checked='true']]:border-primary border-border bg-card relative flex items-center gap-4 rounded-md border p-3 transition-all",
+                  "border-border hover:bg-secondary relative flex cursor-pointer items-center rounded-md border p-4 transition-all",
                   {
-                    "!border-green-800 !bg-green-800/10":
-                      props.readOnly &&
-                      correctAnswer?.content === answer.content,
-                  },
-                  {
-                    "!border-red-800 !bg-red-800/10":
-                      props.readOnly &&
-                      correctAnswer?.content !== answer.content &&
-                      value === answer.content,
+                    "bg-secondary border-ring": isSelected && !props.readOnly,
+                    "border-green-600 bg-green-50 dark:bg-green-950/20":
+                      isCorrectSelection,
+                    "border-red-600 bg-red-50 dark:bg-red-950/20":
+                      isIncorrectSelection,
                   },
                 )}
                 key={answer.id}
+                onClick={() => !props.readOnly && handleCheck(answer.content)}
               >
-                <RadioGroupItem
-                  disabled={props.readOnly}
-                  value={answer.content}
-                  id={answer.id}
-                  className={cn({
-                    "fill-green-800 text-primary": props.readOnly && correctAnswer?.content === answer.content,
-                    "fill-red-800 text-primary": props.readOnly && correctAnswer?.content !== answer.content && value === answer.content,
-                  })}
-                />
+                <div
+                  className={cn(
+                    "border-muted-foreground relative mr-3.5 h-5 w-5 flex-shrink-0 rounded-full border",
+                    {
+                      "border-ring border-4": isSelected && !props.readOnly,
+                      "border-4 border-green-600": isCorrectSelection,
+                      "border-4 border-red-600": isIncorrectSelection,
+                    },
+                  )}
+                >
+                  <RadioGroupItem
+                    className="sr-only"
+                    disabled={props.readOnly}
+                    value={answer.content}
+                    id={answer.id}
+                  />
+                </div>
                 <Label
-                  className={cn("w-full cursor-pointer font-medium", {
+                  className={cn("w-full cursor-pointer font-normal", {
                     "pointer-events-none": props.readOnly,
                   })}
                   htmlFor={answer.id}
@@ -103,16 +110,6 @@ export function QcmAnswer(props: QcmAnswerProps) {
           })}
         </div>
       </RadioGroup>
-
-      <Button
-        disabled={props.readOnly}
-        className="w-full sm:w-max"
-        onClick={handleSubmit}
-      >
-        {props.readOnly ? "Answered" : "Submit"}
-      </Button>
-
-      {props.readOnly && <small>Reset the quiz to answer again</small>}
     </div>
   );
 }
