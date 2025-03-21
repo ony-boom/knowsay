@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { z } from "zod";
-import { QuestionSchema } from "@/schemas/questionSchema";
+import { QuestionArraySchema, QuestionSchema } from "@/schemas/questionSchema";
 
 export async function getQuestions(
   quizId: string,
@@ -57,4 +57,30 @@ export async function getQuestion(id: string) {
   }
 
   return validatedData.data;
+}
+
+export async function getQuestionsByQuiz(quizId: string) {
+  try {
+    if (!quizId) {
+      throw new Error("Quiz ID is required");
+    }
+
+    // Fetch questions ordered by order_position
+    const { data: questions, error } = await supabase
+      .from("questions")
+      .select("id, content, type, order_position, created_at, quiz_id")
+      .eq("quiz_id", quizId)
+      .order("order_position", { ascending: true });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const validatedData = QuestionArraySchema.parse(questions);
+
+    return validatedData;
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    return [];
+  }
 }

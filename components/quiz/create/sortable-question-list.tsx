@@ -10,32 +10,19 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableItem } from "./sortable-item";
-
+import { QuestionSchema, Question } from "@/schemas/questionSchema";
 // Schema for the form
 const sortableQuestionsSchema = z.object({
-  questions: z.array(
-    z.object({
-      id: z.string().uuid(),
-      question: z.string().min(5, "Question must have at least 5 characters"),
-      type: z.enum(["QCM", "OPEN", "ORDER", "MATCHING"]).default("QCM"),
-      answers: z.array(
-        z.object({
-          id: z.string(),
-          text: z.string(),
-          isCorrect: z.boolean(),
-        }),
-      ),
-    }),
-  ),
+  questions: z.array(QuestionSchema),
 });
 
 export type SortableQuestionsSchema = z.infer<typeof sortableQuestionsSchema>;
 
 interface SortableQuestionListProps {
-  initialQuestions: SortableQuestionsSchema["questions"];
-  onEdit: (question: SortableQuestionsSchema["questions"][0]) => void;
+  initialQuestions: Question[];
+  onEdit: (question: Question) => void;
   onDelete: (id: string) => void;
-  onReorder: (questions: SortableQuestionsSchema["questions"]) => void;
+  onReorder: (questions: Question[]) => void;
   sensors: ReturnType<typeof useSensors>;
 }
 

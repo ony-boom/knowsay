@@ -9,22 +9,26 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { getQuizById } from "@/lib/actions/fetch-quiz";
 import { getCategories } from "@/lib/actions/get-categories";
+import { getQuestionsByQuiz } from "@/lib/actions/get-questions";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const id = params.id;
 
-  const [quiz, categories] = await Promise.all([
+  const [quiz, categories, questions] = await Promise.all([
     getQuizById(id),
     getCategories(),
+    getQuestionsByQuiz(id),
   ]);
 
-  if (!quiz) {
+  console.log("questions", questions);
+
+  if (!quiz || !questions) {
     return (
       <div className="flex flex-col gap-6 px-6 py-8 pt-0">
-        <h1 className="text-3xl font-black lg:text-5xl">Quiz Not Found</h1>
+        <h1 className="text-3xl font-black lg:text-5xl">Data Not Found</h1>
         <p className="text-foreground/80 text-lg">
-          The quiz you&apos;re trying to edit doesn&apos;t exist or was deleted.
+          The data you&apos;re trying to edit doesn&apos;t exist or was deleted.
         </p>
       </div>
     );
@@ -72,7 +76,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             Update your quiz questions or add new ones. Changes are saved
             automatically.
           </p>
-          <QuestionsManager />
+          <QuestionsManager initialQuestions={questions} />
         </CollapsibleContent>
       </Collapsible>
     </div>
