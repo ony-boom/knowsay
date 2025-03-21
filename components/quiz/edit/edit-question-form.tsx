@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {createQuestion} from "@/lib/actions/create-question";
+import { createQuestion } from "@/lib/actions/create-question";
 
 type CreateQuestionFormProps = {
   initialData: Quiz;
@@ -51,6 +51,7 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
     defaultValues: {
       content: "",
       type: "QCM",
+      timer: 20,
       quiz_id: initialData.id,
     },
     mode: "onBlur",
@@ -61,6 +62,13 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
+          if (key === "content") {
+            const filteredValue = JSON.parse(value as never).filter(
+              (block: { content?: unknown[] }) => block.content?.length,
+            );
+            formData.append(key, JSON.stringify(filteredValue));
+            return;
+          }
           formData.append(key, String(value));
         }
       });

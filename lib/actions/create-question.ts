@@ -14,7 +14,7 @@ export async function createQuestion(
     quiz_id: quizId,
     content: (formData.get("content") as string) || "New question",
     type:
-      (formData.get("type") as "QCM" | "OPEN" | "ORDER", "MATCHING") || "QCM",
+      (formData.get("type") as "QCM" | "OPEN" | "ORDER" | "MATCHING") || "QCM",
   };
 
   // Validate input using Zod schema
@@ -35,6 +35,7 @@ export async function createQuestion(
         quiz_id: validatedFields.data.quiz_id,
         content: validatedFields.data.content,
         type: validatedFields.data.type,
+        timer: validatedFields.data.timer ?? 30,
       })
       .select()
       .single();
