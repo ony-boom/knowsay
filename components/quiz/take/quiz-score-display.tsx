@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import React from "react";
 
 export function QuizScoreDisplay(props: QuizScoreDisplayProps) {
+  const progress = (props.currentQuestion / props.totalQuestions) * 100;
   return (
     <div className="bg-background border-border sticky -top-9 z-20 flex flex-col gap-4 border-b py-4 sm:flex-row sm:items-start">
       <div className="w-full space-y-2">
@@ -12,7 +13,7 @@ export function QuizScoreDisplay(props: QuizScoreDisplayProps) {
         </small>
         <Progress
           className="bg-primary-foreground"
-          value={props.currentQuestion * 100}
+          value={progress}
           max={props.totalQuestions}
         />
       </div>

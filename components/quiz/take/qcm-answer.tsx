@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { swrFetcher } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
+import {Button} from "@/components/ui/button";
 
 export function QcmAnswer(props: QcmAnswerProps) {
   const [value, setValue] = useState<string>();
@@ -47,6 +48,12 @@ export function QcmAnswer(props: QcmAnswerProps) {
 
   const handleCheck = (value: string) => {
     setValue(value);
+  };
+
+
+  const handleSubmit = () => {
+    const isCorrect = correctAnswer?.content === value;
+    onAnswerSubmitted(isCorrect);
   };
 
   return (
@@ -110,6 +117,10 @@ export function QcmAnswer(props: QcmAnswerProps) {
           })}
         </div>
       </RadioGroup>
+
+      <Button variant="secondary" className="w-full sm:w-max" onClick={handleSubmit}>
+        Check
+      </Button>
     </div>
   );
 }
