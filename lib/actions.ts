@@ -362,6 +362,7 @@ export type QuestionState = {
   };
   message?: string | null;
   questionId?: string;
+  success?: boolean;
 };
 
 export async function createQuestion(
@@ -413,6 +414,7 @@ export async function createQuestion(
     return {
       message: "Question created successfully",
       questionId: data.id,
+      success: true,
     };
   } catch (error) {
     console.error("Error creating question:", error);

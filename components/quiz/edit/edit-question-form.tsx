@@ -110,10 +110,17 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
               type="submit"
               form="question-form"
               disabled={
-                !form.formState.isValid || !form.formState.isDirty || isPending
+                !form.formState.isValid ||
+                !form.formState.isDirty ||
+                isPending ||
+                state.success
               }
             >
-              {isPending ? "Saving..." : "Save Question"}
+              {isPending
+                ? "Saving..."
+                : state.success === true
+                  ? "Saved"
+                  : "Save Question"}
             </Button>
           </CardHeader>
 
