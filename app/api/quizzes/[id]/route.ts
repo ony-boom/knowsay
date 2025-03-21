@@ -1,4 +1,4 @@
-import { getQuizById } from "@/lib/actions";
+import { getQuizById } from "@/lib/actions/fetch-quiz";
 import { NextRequest } from "next/server";
 
 export async function GET(

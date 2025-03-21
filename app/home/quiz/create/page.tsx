@@ -6,7 +6,7 @@ import {
 import { CreateQuizForm } from "@/components/quiz/create/create-quiz-form";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Flame, Plus } from "lucide-react";
-import { getCategories } from "@/lib/actions";
+import { getCategories } from "@/lib/actions/get-categories";
 
 export default async function CreateQuizPage() {
   const categories = await getCategories();

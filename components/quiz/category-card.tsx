@@ -4,7 +4,7 @@ import { CategoryWithQuizCount } from "@/schemas/categorySchema";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CategoryLink } from "./category-link";
 import { ClearCategoryFilter } from "./clear-category-filter";
-import { getCategoriesWithQuizCount } from "@/lib/actions";
+import { getCategoriesWithQuizCount } from "@/lib/actions/get-categories";
 
 // Client component that receives data
 export async function CategoryCardList() {

@@ -1,5 +1,6 @@
-import { getQuestions, getQuizById } from "@/lib/actions";
+import { getQuizById } from "@/lib/actions/fetch-quiz";
 import { QuizViewContainer } from "./quiz-view/quiz-view-container";
+import { getQuestions } from "@/lib/actions/get-questions";
 
 export default async function QuizPage(props: {
   params: Promise<{

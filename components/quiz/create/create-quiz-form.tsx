@@ -1,6 +1,6 @@
 "use client";
 
-import { createQuiz, State } from "@/lib/actions";
+import { State } from "@/lib/actions/types";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,6 +26,7 @@ import {
 import { useActionState, useTransition } from "react";
 import { Category } from "@/schemas/categorySchema";
 import { StoreQuiz, StoreQuizSchema } from "@/schemas/quizSchema";
+import {createQuiz} from "@/lib/actions/create-quiz";
 
 type CreateQuizFormProps = {
   categories: Category[];
