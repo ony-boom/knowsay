@@ -403,52 +403,6 @@ export async function createQuestion(
       })
       .select()
       .single();
-export type QuestionState = {
-  errors?: {
-    content?: string[];
-    type?: string[];
-    quiz_id?: string[];
-    _form?: string[];
-  };
-  message?: string | null;
-  questionId?: string;
-  success?: boolean;
-};
-
-export async function createQuestion(
-  quizId: string,
-  prevState: QuestionState,
-  formData: FormData,
-): Promise<QuestionState> {
-  // Extract form data
-  const questionData = {
-    quiz_id: quizId,
-    content: (formData.get("content") as string) || "New question",
-    type:
-      (formData.get("type") as "QCM" | "OPEN" | "ORDER", "MATCHING") || "QCM",
-  };
-
-  // Validate input using Zod schema
-  const validatedFields = StoreQuestionSchema.safeParse(questionData);
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Invalid input. Please check the form for errors.",
-    };
-  }
-
-  try {
-    // Insert the question into the database
-    const { data, error } = await supabase
-      .from("questions")
-      .insert({
-        quiz_id: validatedFields.data.quiz_id,
-        content: validatedFields.data.content,
-        type: validatedFields.data.type,
-      })
-      .select()
-      .single();
 
     if (error) {
       console.error("Failed to create question:", error);
