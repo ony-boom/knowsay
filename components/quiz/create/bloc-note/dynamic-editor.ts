@@ -4,6 +4,7 @@ import { Block } from "@blocknote/core";
 import dynamic from "next/dynamic";
 
 export type QuestionEditorProps = {
+  value?: Block[];
   onChange: (value: Block[]) => void;
 };
 

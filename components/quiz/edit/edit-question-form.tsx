@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CardContent,
   CardDescription,
@@ -72,7 +74,9 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
         <Button
           type="submit"
           form="question-form"
-          disabled={!form.formState.isValid || isPending}
+          disabled={
+            !form.formState.isValid || !form.formState.isDirty || isPending
+          }
         >
           {isPending ? "Saving..." : "Save Question"}
         </Button>
@@ -91,7 +95,9 @@ export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
                     <FormControl>
                       <div className="bg-background rounded-md">
                         <DynamicQuestionEditor
-                          onChange={(value) => field.onChange(value)}
+                          onChange={(value) => {
+                            field.onChange(JSON.stringify(value));
+                          }}
                         />
                       </div>
                     </FormControl>
