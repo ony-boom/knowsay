@@ -25,7 +25,7 @@ export default function Layout({
 
   return (
     <div className="container mx-auto flex h-screen flex-col px-4">
-      <div className="sticky top-0 bg-background">
+      <div className="sticky top-0 bg-background z-50">
         <header className="flex items-center justify-between border-b py-4 sm:p-6">
           <div aria-labelledby="logo" className="flex items-center gap-1">
             <Logo />
