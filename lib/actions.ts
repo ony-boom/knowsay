@@ -225,7 +225,7 @@ export async function getQuestions(
     .from("questions")
     .select("*", { count: "exact" })
     .eq("quiz_id", quizId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: true });
 
   if (paginate) {
     query = query.range(start, end);
@@ -238,6 +238,7 @@ export async function getQuestions(
   // Validate data against schema
   const validatedData = z.array(QuestionSchema).safeParse(data);
   if (!validatedData.success) {
+    console.log(data)
     console.log(validatedData.error);
 
     throw new Error("Invalid data returned from database");

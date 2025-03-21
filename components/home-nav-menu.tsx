@@ -7,14 +7,16 @@ import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { LanguageSwitch } from "@/components/language-switch";
 
 export function HomeNavMenu() {
   const pathname = usePathname();
   const isLogin = pathname === "/auth/login";
   const isSignup = pathname === "/auth/sign-up";
   return (
-    <div>
+    <>
       <div id="desktop-nav" className="hidden items-center gap-4 md:flex">
+        <LanguageSwitch />
         <Button asChild className={cn({ hidden: isSignup })}>
           <Link href="/auth/sign-up">Sign up</Link>
         </Button>
@@ -24,10 +26,11 @@ export function HomeNavMenu() {
         </Button>
       </div>
 
-      <div className="md:hidden">
+      <div className="md:hidden flex items-center gap-4">
+        <LanguageSwitch />
         <MobileNavMenu />
       </div>
-    </div>
+    </>
   );
 }
 
@@ -87,6 +90,7 @@ const MobileNavMenu = () => {
             >
               <Link href="/auth/login">Login</Link>
             </Button>
+
           </motion.div>
         )}
       </AnimatePresence>
