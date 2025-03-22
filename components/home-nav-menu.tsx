@@ -8,25 +8,29 @@ import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LanguageSwitch } from "@/components/language-switch";
+import { useTranslations } from "next-intl";
 
 export function HomeNavMenu() {
   const pathname = usePathname();
   const isLogin = pathname === "/auth/login";
   const isSignup = pathname === "/auth/sign-up";
+
+  const t = useTranslations("global");
+
   return (
     <>
       <div id="desktop-nav" className="hidden items-center gap-4 md:flex">
         <LanguageSwitch />
         <Button asChild className={cn({ hidden: isSignup })}>
-          <Link href="/auth/sign-up">Sign up</Link>
+          <Link href="/auth/sign-up">{t("signUp")}</Link>
         </Button>
 
         <Button asChild variant="outline" className={cn({ hidden: isLogin })}>
-          <Link href="/auth/login">Login</Link>
+          <Link href="/auth/login">{t("login")}</Link>
         </Button>
       </div>
 
-      <div className="md:hidden flex items-center gap-4">
+      <div className="flex items-center gap-4 md:hidden">
         <LanguageSwitch />
         <MobileNavMenu />
       </div>
@@ -40,6 +44,7 @@ const MobileNavMenu = () => {
 
   const isLogin = pathname === "/auth/login";
   const isSignup = pathname === "/auth/sign-up";
+  const t = useTranslations("global");
 
   const handleMenuToggle = () => {
     setOpenMenu((prev) => !prev);
@@ -80,7 +85,7 @@ const MobileNavMenu = () => {
                 hidden: isSignup,
               })}
             >
-              <Link href="/auth/signup">Sign up</Link>
+              <Link href="/auth/sign-up">{t("signUp")}</Link>
             </Button>
 
             <Button
@@ -88,9 +93,8 @@ const MobileNavMenu = () => {
               variant="outline"
               className={cn("w-full", { hidden: isLogin })}
             >
-              <Link href="/auth/login">Login</Link>
+              <Link href="/auth/login">{t("login")}</Link>
             </Button>
-
           </motion.div>
         )}
       </AnimatePresence>

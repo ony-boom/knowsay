@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { State } from "./types";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function createQuiz(
   prevState: State,
@@ -12,7 +13,16 @@ export async function createQuiz(
 ): Promise<State> {
   let id;
   // Extract form data
+  const user = await currentUser();
+
+  if (!user) {
+    redirect("/auth/login");
+  }
+
+  console.log(user);
+
   const formData = {
+    created_by: user.id,
     title: data.get("title") as string,
     description: (data.get("description") as string) || null,
     difficulty: data.get("difficulty") as "EASY" | "MEDIUM" | "HARD",

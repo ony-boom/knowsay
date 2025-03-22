@@ -1,4 +1,14 @@
 {
+  "global": {
+    "login": "Login",
+    "signOut": "Sign out",
+    "signUp": "Sign up"
+  },
+  "index": {
+    "title": "Create, share, and discover knowledge with Knowsay.",
+    "description": "Knowsay is a platform for sharing knowledge in the form of questions and answers(Quizzes). Join us on this journey to make learning fun and interactive.",
+    "cta": "Get started"
+  },
   "home": {
     "toolbar": {
       "buttons": {

@@ -4,24 +4,22 @@ import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { AuthButtons } from "@/components/auth";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
   const { isSignedIn } = useAuth();
+  const t = useTranslations("index");
   if (isSignedIn) redirect("/home");
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-20 md:flex-row md:justify-between lg:gap-32">
       <hgroup className="space-y-4 md:max-w-lg lg:space-y-6">
         <h1 className="text-3xl font-black lg:text-5xl lg:leading-12">
-          Create, share, and discover knowledge with Knowsay.
+          {t("title")}
         </h1>
-        <p className="text-foreground/80 text-lg">
-          Knowsay is a platform for sharing knowledge in the form of questions
-          and answers(Quizzes). Join us on this journey to make learning fun and
-          interactive.
-        </p>
+        <p className="text-foreground/80 text-lg">{t("description")}</p>
 
-        <AuthButtons />
+        <AuthButtons>{t("cta")}</AuthButtons>
       </hgroup>
 
       <div className="relative flex gap-12 md:grow">

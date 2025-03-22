@@ -1,4 +1,14 @@
 {
+  "global": {
+    "login": "Se connecter",
+    "signOut": "Se déconnecter",
+    "signUp": "S'inscrire"
+  },
+  "index": {
+    "title": "Créez, partagez et découvrez des connaissances avec Knowsay.",
+    "description": "Knowsay est une plateforme de partage de connaissances sous forme de questions et réponses (Quiz). Rejoignez-nous dans cette aventure pour rendre l'apprentissage amusant et interactif.",
+    "cta": "Commencer"
+  },
   "home": {
     "toolbar": {
       "buttons": {

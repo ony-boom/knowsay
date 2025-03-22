@@ -2,15 +2,14 @@
 
 import { Logo } from "@/components/logo";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { AccountMenu } from "@/components/account-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 import { ReactNode } from "react";
-import { useUser } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import { LanguageSwitch } from "@/components/language-switch";
 import { useTranslations } from "next-intl";
 
@@ -25,7 +24,7 @@ export default function Layout({
 
   return (
     <div className="container mx-auto flex h-screen flex-col px-4">
-      <div className="sticky top-0 bg-background z-50">
+      <div className="bg-background sticky top-0 z-50">
         <header className="flex items-center justify-between border-b py-4 sm:p-6">
           <div aria-labelledby="logo" className="flex items-center gap-1">
             <Logo />
@@ -37,7 +36,11 @@ export default function Layout({
           <nav className="flex items-center gap-2 md:gap-4">
             <LanguageSwitch />
             <div className="hidden md:flex">
-              <AccountMenu />
+              <SignOutButton>
+                <Button size="icon"  variant="ghost" className="p-0">
+                  <LogOut />
+                </Button>
+              </SignOutButton>
             </div>
             <Button
               variant="ghost"

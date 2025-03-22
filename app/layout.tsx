@@ -1,10 +1,12 @@
+import "./globals.css";
+import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { frFR, enUS } from "@clerk/localizations";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +32,15 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        layout: {
+          unsafe_disableDevelopmentModeWarnings:
+            process.env.NODE_ENV === "production",
+        },
+      }}
+      localization={locale === "en" ? enUS : frFR}
+    >
       <html lang={locale}>
         <body
           className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
