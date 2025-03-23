@@ -3,12 +3,15 @@
 import { StoreQuestionSchema } from "@/schemas/questionSchema";
 import { supabase } from "@/lib/supabase";
 import { QuestionState } from "./types";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function createQuestion(
   quizId: string,
   prevState: QuestionState,
   formData: FormData,
 ): Promise<QuestionState> {
+  let rowId;
   // Extract form data
   const questionData = {
     quiz_id: quizId,
@@ -50,12 +53,7 @@ export async function createQuestion(
       };
     }
 
-    // Return the created question ID for further operations
-    return {
-      message: "Question created successfully",
-      questionId: data.id,
-      success: true,
-    };
+    rowId = data.id;
   } catch (error) {
     console.error("Error creating question:", error);
     return {
@@ -65,4 +63,7 @@ export async function createQuestion(
       },
     };
   }
+
+  revalidatePath(`/home/quiz/${quizId}/edit/question/${rowId}/edit`);
+  redirect(`/home/quiz/${quizId}/edit/question/${rowId}/edit`);
 }
