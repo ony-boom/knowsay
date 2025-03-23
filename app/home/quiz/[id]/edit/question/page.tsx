@@ -1,4 +1,4 @@
-import { EditQuestionForm } from "@/components/quiz/edit/edit-question-form";
+import { CreateQuestionForm } from "@/components/quiz/edit/create-question-form";
 import { Card } from "@/components/ui/card";
 import { getQuizById } from "@/lib/actions/fetch-quiz";
 
@@ -24,7 +24,7 @@ export default async function CreateQuestionPage(props: {
 
   return (
     <Card>
-      <EditQuestionForm initialData={quiz} />
+      <CreateQuestionForm initialData={quiz} />
     </Card>
   );
 }

@@ -35,7 +35,9 @@ type CreateQuestionFormProps = {
   initialData: Quiz;
 };
 
-export const EditQuestionForm = ({ initialData }: CreateQuestionFormProps) => {
+export const CreateQuestionForm = ({
+  initialData,
+}: CreateQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: QuestionState = { message: null, errors: {} };
 
