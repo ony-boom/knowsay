@@ -23,8 +23,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     getQuestionsByQuiz(id),
   ]);
 
-  console.log("questions", questions);
-
   if (!quiz || !questions) {
     return (
       <div className="flex flex-col gap-6 px-6 py-8 pt-0">

@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { QuestionState } from "@/lib/actions/types";
 import { StoreQuestion, StoreQuestionSchema } from "@/schemas/questionSchema";
-import { Quiz } from "@/schemas/quizSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -32,16 +31,14 @@ import {
 import { createQuestion } from "@/lib/actions/create-question";
 
 type CreateQuestionFormProps = {
-  initialData: Quiz;
+  quizId: string;
 };
 
-export const CreateQuestionForm = ({
-  initialData,
-}: CreateQuestionFormProps) => {
+export const CreateQuestionForm = ({ quizId }: CreateQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: QuestionState = { message: null, errors: {} };
 
-  const createQuestionWithId = createQuestion.bind(null, initialData.id);
+  const createQuestionWithId = createQuestion.bind(null, quizId);
 
   const [state, formAction] = useActionState(
     createQuestionWithId,
@@ -54,7 +51,7 @@ export const CreateQuestionForm = ({
       content: "",
       type: "QCM",
       timer: 20,
-      quiz_id: initialData.id,
+      quiz_id: quizId,
     },
     mode: "onBlur",
   });

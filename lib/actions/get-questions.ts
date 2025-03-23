@@ -30,9 +30,6 @@ export async function getQuestions(
   // Validate data against schema
   const validatedData = z.array(QuestionSchema).safeParse(data);
   if (!validatedData.success) {
-    console.log(data);
-    console.log(validatedData.error);
-
     throw new Error("Invalid data returned from database");
   }
 
@@ -46,17 +43,18 @@ export async function getQuestion(id: string) {
   const { data, error } = await supabase
     .from("questions")
     .select("*")
-    .eq("id", id);
+    .eq("id", id)
+    .single();
 
   if (error) throw new Error(error.message);
 
   // Validate data against schema
-  const validatedData = QuestionSchema.safeParse(data);
-  if (!validatedData.success) {
+  const validatedData = QuestionSchema.parse(data);
+  if (!validatedData) {
     throw new Error("Invalid data returned from database");
   }
 
-  return validatedData.data;
+  return validatedData;
 }
 
 export async function getQuestionsByQuiz(quizId: string) {

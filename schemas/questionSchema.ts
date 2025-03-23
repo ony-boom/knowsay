@@ -5,9 +5,9 @@ export const QuestionSchema = z.object({
   quiz_id: z.string().uuid(),
   type: z.enum(["QCM", "OPEN", "ORDER", "MATCHING"]),
   content: z.string().min(5, "Question must have at least 5 characters"),
-  timer: z.number().positive().optional(),
+  timer: z.number().positive().optional().nullable(),
   order_position: z.number().int().positive(),
-  created_at: z.coerce.date(),
+  created_at: z.string(),
 });
 
 export const StoreQuestionSchema = QuestionSchema.omit({

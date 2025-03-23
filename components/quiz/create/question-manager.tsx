@@ -29,14 +29,6 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
 
   const [questions, setQuestions] = useState<Question[]>(initialQuestions);
 
-  const [, setCurrentQuestion] = useState<Question | null>(null);
-  const [, setIsEditing] = useState(false);
-
-  const handleEditQuestion = (question: Question) => {
-    setCurrentQuestion({ ...question });
-    setIsEditing(true);
-  };
-
   const handleDeleteQuestion = (id: string) => {
     setQuestions(questions.filter((q) => q.id !== id));
   };
@@ -53,7 +45,6 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
         <SortableQuestionList
           sensors={sensors}
           initialQuestions={questions}
-          onEdit={handleEditQuestion}
           onDelete={handleDeleteQuestion}
           onReorder={(reorderedQuestions) => {
             setQuestions(reorderedQuestions);

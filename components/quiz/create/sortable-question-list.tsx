@@ -20,7 +20,6 @@ export type SortableQuestionsSchema = z.infer<typeof sortableQuestionsSchema>;
 
 interface SortableQuestionListProps {
   initialQuestions: Question[];
-  onEdit: (question: Question) => void;
   onDelete: (id: string) => void;
   onReorder: (questions: Question[]) => void;
   sensors: ReturnType<typeof useSensors>;
@@ -28,7 +27,6 @@ interface SortableQuestionListProps {
 
 export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
   initialQuestions,
-  onEdit,
   onDelete,
   onReorder,
   sensors,
@@ -43,6 +41,7 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
   const { fields, move } = useFieldArray({
     control: form.control,
     name: "questions",
+    keyName: "_id",
   });
 
   const handleMove = ({
@@ -84,7 +83,6 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
               <QuestionCard
                 question={question}
                 index={index}
-                onEdit={() => onEdit(question)}
                 onDelete={() => onDelete(question.id)}
               />
             </SortableItem>

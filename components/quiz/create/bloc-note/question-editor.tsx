@@ -6,10 +6,15 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { Editor } from "@/components/bloc-note/editor";
 import { QuestionEditorProps } from "./dynamic-editor";
 
-export default function QuestionEditor({ onChange }: QuestionEditorProps) {
+export default function QuestionEditor({
+  onChange,
+  value,
+}: QuestionEditorProps) {
   const [, setBlocks] = useState<Block[]>([]);
 
-  const editor = useCreateBlockNote();
+  const editor = useCreateBlockNote({
+    initialContent: value,
+  });
 
   return (
     <Editor

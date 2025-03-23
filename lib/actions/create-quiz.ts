@@ -19,8 +19,6 @@ export async function createQuiz(
     redirect("/auth/login");
   }
 
-  console.log(user);
-
   const formData = {
     created_by: user.id,
     title: data.get("title") as string,
