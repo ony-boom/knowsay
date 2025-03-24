@@ -7,7 +7,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";

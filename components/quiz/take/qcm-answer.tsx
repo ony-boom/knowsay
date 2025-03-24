@@ -14,7 +14,7 @@ import {Button} from "@/components/ui/button";
 export function QcmAnswer(props: QcmAnswerProps) {
   const [value, setValue] = useState<string>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const { questionId, onAnswerSubmitted, ...divProps } = props;
   const { data: answers, isLoading } = useSWR<Answer[]>(
     `/api/questions/answers/${questionId}`,
