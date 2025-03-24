@@ -15,8 +15,8 @@ import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import useSWR from "swr";
 import { cn, swrFetcher } from "@/lib/utils";
-import { ChallengeSchema } from "@/schemas/challengeSchema";
-import { QuizSchema } from "@/schemas/quizSchema";
+import { challengeSchema } from "@/schemas/challengeSchema";
+import { quizSchema } from "@/schemas/quizSchema";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomeBreadcrumb() {
@@ -85,7 +85,7 @@ export function HomeBreadcrumb() {
                       {
                         "pointer-events-none": isLast,
                       },
-                      "max-w-18 md:max-w-max overflow-hidden",
+                      "max-w-18 overflow-hidden md:max-w-max",
                     )}
                   >
                     <Link
@@ -120,10 +120,10 @@ function renderBreadcrumbContent(pathname: string, isId: boolean) {
 function IdContent({ id }: { id: string }) {
   const pathname = usePathname();
   const isQuizPath = pathname.includes("/quiz");
-  const path = isQuizPath ? "quizzes" : "challenges";
+  const path = isQuizPath ? "quiz" : "challenges";
 
   const { data, isLoading } = useSWR<
-    z.infer<typeof ChallengeSchema> | z.infer<typeof QuizSchema>
+    z.infer<typeof challengeSchema> | z.infer<typeof quizSchema>
   >(`/api/${path}/${id}`, swrFetcher);
 
   if (isLoading) return <Skeleton className="h-4 w-32" />;

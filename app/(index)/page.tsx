@@ -25,7 +25,7 @@ export default function Home() {
       <div className="relative flex gap-12 md:grow">
         <div className="relative flex gap-4 overflow-hidden md:gap-6">
           <Image
-            alt="Interactive quizzes"
+            alt="Interactive quiz"
             src="/home-hero.png"
             width={400}
             height={400}
@@ -33,7 +33,7 @@ export default function Home() {
           />
 
           <Image
-            alt="Interactive quizzes"
+            alt="Interactive quiz"
             src="/home-hero-2.png"
             width={400}
             height={400}

@@ -1,6 +1,6 @@
 "use server";
 
-import { StoreQuizSchema } from "@/schemas/quizSchema";
+import { storeQuizSchema } from "@/schemas/quizSchema";
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -30,7 +30,7 @@ export async function createQuiz(
   };
 
   // Validate input
-  const validatedFields = StoreQuizSchema.safeParse(formData);
+  const validatedFields = storeQuizSchema.safeParse(formData);
 
   if (!validatedFields.success) {
     return {
@@ -41,7 +41,7 @@ export async function createQuiz(
 
   try {
     const { data, error } = await supabase
-      .from("quizzes")
+      .from("quiz")
       .insert({
         title: validatedFields.data.title,
         description: validatedFields.data.description,

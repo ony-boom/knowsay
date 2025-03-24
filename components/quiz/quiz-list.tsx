@@ -25,8 +25,8 @@ export async function QuizList({
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {quizzes.map((quiz) => (
             <QuizListItem
-              key={quiz.id}
-              quizId={quiz.id}
+              key={quiz.quiz_id}
+              quizId={quiz.quiz_id}
               title={quiz.title}
               description={quiz.description || "No description available"}
               category={quiz.categories.name}

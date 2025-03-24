@@ -26,10 +26,10 @@ export async function getCategories() {
 
 export async function getCategoriesWithQuizCount() {
   try {
-    // Fetch categories with the count of quizzes
+    // Fetch categories with the count of quiz
     const { data, error } = await supabase
       .from("categories")
-      .select("*, quizzes_count: quizzes(count)");
+      .select("*, quizzes_count: quiz(count)");
 
     if (error) {
       console.error(

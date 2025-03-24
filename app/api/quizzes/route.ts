@@ -1,15 +1,15 @@
 import { supabase } from "@/lib/supabase";
-import { QuizSchema, QuizArraySchema } from "@/schemas/quizSchema";
+import { quizSchema, quizArraySchema } from "@/schemas/quizSchema";
 
 export async function GET() {
   try {
-    const { data, error } = await supabase.from("quizzes").select("*");
+    const { data, error } = await supabase.from("quiz").select("*");
 
     if (error) return Response.json({ error: error.message }, { status: 400 });
 
     // Validate the data against the schema
     // ✅ Validate and parse the response using Zod
-    const validatedData = QuizArraySchema.parse(data);
+    const validatedData = quizArraySchema.parse(data);
 
     return Response.json(validatedData, { status: 200 });
   } catch (error) {
@@ -23,8 +23,8 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     // Create a submission schema without required fields that DB generates
-    const QuizSubmissionSchema = QuizSchema.omit({
-      id: true,
+    const QuizSubmissionSchema = quizSchema.omit({
+      quiz_id: true,
       created_at: true,
     });
 
@@ -34,14 +34,14 @@ export async function POST(req: Request) {
       return Response.json({ error: result.error.format() }, { status: 400 });
     }
 
-    const { title, difficulty, created_by, is_public, description } =
+    const { title, difficulty, creator_id, is_public, description } =
       result.data;
 
-    const { data, error } = await supabase.from("quizzes").insert([
+    const { data, error } = await supabase.from("quiz").insert([
       {
         title,
         difficulty,
-        created_by,
+        creator_id,
         is_public,
         description,
       },

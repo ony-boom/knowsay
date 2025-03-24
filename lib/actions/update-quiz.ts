@@ -1,9 +1,9 @@
 "use server";
 
-import {StoreQuizSchema} from "@/schemas/quizSchema";
-import {supabase} from "@/lib/supabase";
-import {revalidatePath} from "next/cache";
-import {redirect} from "next/navigation";
+import { storeQuizSchema } from "@/schemas/quizSchema";
+import { supabase } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { State } from "./types";
 
 export async function updateQuiz(
@@ -23,7 +23,7 @@ export async function updateQuiz(
   };
 
   // Validate input
-  const validatedFields = StoreQuizSchema.safeParse(data);
+  const validatedFields = storeQuizSchema.safeParse(data);
 
   if (!validatedFields.success) {
     return {
@@ -34,7 +34,7 @@ export async function updateQuiz(
 
   try {
     const { error } = await supabase
-      .from("quizzes")
+      .from("quiz")
       .update({
         title: validatedFields.data.title,
         description: validatedFields.data.description,

@@ -1,7 +1,7 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { QuizArraySchemaWithCategory, QuizSchema } from "@/schemas/quizSchema";
+import { quizArraySchemaWithCategory, quizSchema } from "@/schemas/quizSchema";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -20,7 +20,7 @@ export async function fetchQuizzes(
   try {
     // Start with a query that joins categories table
     let queryBuilder = supabase
-      .from("quizzes")
+      .from("quiz")
       .select("*, categories!inner(*)", { count: "exact" });
 
     // Apply title filter if query exists
@@ -47,7 +47,7 @@ export async function fetchQuizzes(
     if (error) throw new Error(error.message);
 
     // Validate data against schema
-    const validatedData = QuizArraySchemaWithCategory.safeParse(data);
+    const validatedData = quizArraySchemaWithCategory.safeParse(data);
     if (!validatedData.success) {
       throw new Error("Invalid data returned from database");
     }
@@ -67,7 +67,7 @@ export async function getQuizById(id: string) {
   try {
     // Fetch quiz status from the database
     const { data, error } = await supabase
-      .from("quizzes")
+      .from("quiz")
       .select("*")
       .eq("id", id)
       .single();
@@ -78,7 +78,7 @@ export async function getQuizById(id: string) {
     }
 
     // Validate the data against the schema
-    const validatedData = QuizSchema.parse(data);
+    const validatedData = quizSchema.parse(data);
 
     return validatedData;
   } catch (error) {

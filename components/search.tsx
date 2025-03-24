@@ -33,7 +33,7 @@ export const SearchInput = () => {
       <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
       <Input
         type="search"
-        placeholder="Search quizzes..."
+        placeholder="Search quiz..."
         className="pl-8"
         defaultValue={searchParams.get("query")?.toString()}
         onChange={(e) => {
