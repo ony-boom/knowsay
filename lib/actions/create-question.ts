@@ -17,7 +17,7 @@ export async function createQuestion(
     quiz_id: quizId,
     content: (formData.get("content") as string) || "New question",
     type:
-      (formData.get("type") as "QCM" | "OPEN" | "ORDER" | "MATCHING") || "QCM",
+      (formData.get("type") as "QCM" | "OPEN") || "QCM",
   };
 
   // Validate input using Zod schema

@@ -1,21 +1,16 @@
 "use client";
 
+import React from "react";
 import { z } from "zod";
 import { QcmAnswer } from "./qcm-answer";
-import { OrderAnswer } from "./order-answer";
-import { MatchAnswer } from "./match-answer";
+import { OpenAnswer } from "./open-answer";
 import { QuestionSchema } from "@/schemas/questionSchema";
-import React from "react";
 
 export function AnswerView(props: AnswerViewProps) {
   const { questionType } = props;
 
-  if (questionType === "MATCHING") {
-    return <MatchAnswer />;
-  }
-
-  if (questionType === "ORDER") {
-    return <OrderAnswer />;
+  if (questionType === "OPEN") {
+    return <OpenAnswer />;
   }
 
   return (
