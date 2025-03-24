@@ -1,11 +1,15 @@
 import { z } from "zod";
 
-export const ChallengeSchema = z.object({
-  id: z.string().uuid(),
-  title: z.string().min(3, "Challenge title must be at least 3 characters"),
-  start_date: z.string().datetime(),
-  end_date: z.string().datetime(),
-  created_by: z.string().uuid(),
+export const challengeSchema = z.object({
+  challenge_id: z.string().uuid(),
+  creator_id: z.string().uuid().nullable(),
+  title: z.string(),
+  description: z.string().nullable(),
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+  is_team_based: z.boolean().default(false),
+  created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
 });
 
-export type Challenge = z.infer<typeof ChallengeSchema>;
+export type Challenge = z.infer<typeof challengeSchema>;

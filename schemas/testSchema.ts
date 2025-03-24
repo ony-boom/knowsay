@@ -1,11 +1,14 @@
 import { z } from "zod";
 
-export const TestSchema = z.object({
-  id: z.string().uuid(),
-  title: z.string().min(3, "Test title must be at least 3 characters"),
-  quiz_id: z.string().uuid(),
-  corrector_id: z.string().uuid().optional(),
+export const testSchema = z.object({
+  test_id: z.string().uuid(),
+  creator_id: z.string().uuid().nullable(),
+  title: z.string(),
+  description: z.string().nullable(),
+  start_time: z.string().datetime().nullable(),
+  end_time: z.string().datetime().nullable(),
   created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
 });
 
-export type Test = z.infer<typeof TestSchema>;
+export type Test = z.infer<typeof testSchema>;
