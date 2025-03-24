@@ -1,3 +1,6 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CalendarIcon, Medal, Trophy, UserCircle, Users } from "lucide-react";
+import { ReactNode } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,12 +12,384 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarIcon, Medal, Trophy, UserCircle, Users } from "lucide-react";
+
+// Types
+interface User {
+  id: string;
+  name: string;
+  score: number;
+  avatar: string;
+  rank: number;
+  quizzes: number;
+  tests: number;
+  challenges: number;
+}
+
+interface Quiz {
+  id: string;
+  title: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
+  status: string;
+  score: number;
+}
+
+interface Challenge {
+  id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  participants: number;
+  rank: number;
+}
+
+interface Test {
+  id: string;
+  title: string;
+  created_at: string;
+  score: number;
+}
+
+interface AssignedTest {
+  id: string;
+  title: string;
+  student: string;
+  submitted_at: string;
+  status: "pending" | "in_progress" | "completed";
+  deadline: string;
+}
+
+// Helper Components
+const StatCard = ({
+  title,
+  description,
+  value,
+}: {
+  title: string;
+  description: string;
+  value: ReactNode;
+}) => (
+  <Card>
+    <CardHeader className="pb-2">
+      <CardTitle>{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="text-4xl font-bold">{value}</div>
+    </CardContent>
+  </Card>
+);
+
+const LeaderboardItem = ({ user }: { user: User }) => (
+  <div
+    className={`flex items-center justify-between rounded-lg p-4 ${
+      user.rank === 1
+        ? "border border-amber-200 bg-amber-50"
+        : user.rank === 2
+          ? "border border-slate-200 bg-slate-50"
+          : user.rank === 3
+            ? "border border-orange-200 bg-orange-50"
+            : ""
+    }`}
+  >
+    <div className="flex items-center space-x-4">
+      <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
+        {user.rank === 1 ? (
+          <Trophy className="h-5 w-5 text-amber-500" />
+        ) : user.rank === 2 ? (
+          <Medal className="h-5 w-5 text-slate-400" />
+        ) : user.rank === 3 ? (
+          <Medal className="h-5 w-5 text-orange-500" />
+        ) : (
+          <span className="text-muted-foreground font-bold">{user.rank}</span>
+        )}
+      </div>
+      <Avatar className="h-10 w-10">
+        <UserCircle className="h-10 w-10" />
+      </Avatar>
+      <div>
+        <p className="font-medium">{user.name}</p>
+        <div className="text-muted-foreground flex items-center text-sm">
+          <span className="mr-2">Quizzes: {user.quizzes}</span>•
+          <span className="mx-2">Tests: {user.tests}</span>•
+          <span className="ml-2">Challenges: {user.challenges}</span>
+        </div>
+      </div>
+    </div>
+    <div className="font-bold">{user.score} pts</div>
+  </div>
+);
+
+const QuizItem = ({ quiz }: { quiz: Quiz }) => (
+  <div className="flex items-center justify-between rounded-lg border p-4">
+    <div>
+      <p className="font-medium">{quiz.title}</p>
+      <div className="mt-1 flex items-center gap-2">
+        <Badge
+          variant={
+            quiz.difficulty === "EASY"
+              ? "outline"
+              : quiz.difficulty === "MEDIUM"
+                ? "secondary"
+                : "destructive"
+          }
+        >
+          {quiz.difficulty}
+        </Badge>
+        <span className="text-muted-foreground text-sm">{quiz.status}</span>
+      </div>
+    </div>
+    <div className="text-lg font-bold">{quiz.score}%</div>
+  </div>
+);
+
+const ChallengeItem = ({
+  challenge,
+  formatDate,
+}: {
+  challenge: Challenge;
+  formatDate: (date: string) => string;
+}) => (
+  <div className="rounded-lg border p-4">
+    <div className="flex items-center justify-between">
+      <h3 className="font-medium">{challenge.title}</h3>
+      <Badge variant="outline" className="ml-2">
+        Rank #{challenge.rank}
+      </Badge>
+    </div>
+    <div className="text-muted-foreground mt-2 flex items-center gap-4 text-sm">
+      <div className="flex items-center gap-1"></div>
+      <CalendarIcon className="h-4 w-4" />
+      <span>
+        {formatDate(challenge.start_date)} - {formatDate(challenge.end_date)}
+      </span>
+    </div>
+    <div className="flex items-center gap-1">
+      <Users className="h-4 w-4" />
+      <span>{challenge.participants} participants</span>
+    </div>
+  </div>
+);
+
+const TestItem = ({
+  test,
+  formatDate,
+}: {
+  test: Test;
+  formatDate: (date: string) => string;
+}) => (
+  <div className="flex items-center justify-between rounded-lg border p-4">
+    <div>
+      <p className="font-medium">{test.title}</p>
+      <p className="text-muted-foreground text-sm">
+        Taken on {formatDate(test.created_at)}
+      </p>
+    </div>
+    <div className="text-lg font-bold">{test.score}%</div>
+  </div>
+);
+
+const AssignedTestItem = ({
+  assignment,
+  formatDate,
+}: {
+  assignment: AssignedTest;
+  formatDate: (date: string) => string;
+}) => (
+  <div className="flex items-center justify-between rounded-lg border p-4">
+    <div>
+      <p className="font-medium">{assignment.title}</p>
+      <div className="mt-1 flex items-center gap-2">
+        <UserCircle className="text-muted-foreground h-4 w-4" />
+        <span className="text-muted-foreground text-sm">
+          {assignment.student}
+        </span>
+      </div>
+      <p className="text-muted-foreground mt-1 text-sm">
+        Submitted on {formatDate(assignment.submitted_at)}
+      </p>
+    </div>
+    <div className="flex flex-col items-end gap-2">
+      <Badge
+        className={
+          assignment.status === "completed"
+            ? "bg-green-100 text-green-800 hover:bg-green-200"
+            : assignment.status === "in_progress"
+              ? "bg-blue-100 text-blue-800 hover:bg-blue-200"
+              : ""
+        }
+      >
+        {assignment.status === "pending"
+          ? "Pending"
+          : assignment.status === "in_progress"
+            ? "In Progress"
+            : "Completed"}
+      </Badge>
+      <p className="text-muted-foreground text-xs">
+        Due: {formatDate(assignment.deadline)}
+      </p>
+    </div>
+  </div>
+);
+
+// Tab content components
+const QuizzesTab = ({ quizzes }: { quizzes: Quiz[] }) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Recent Quizzes</CardTitle>
+      <CardDescription>Your recently completed quizzes</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {quizzes.map((quiz) => (
+          <QuizItem key={quiz.id} quiz={quiz} />
+        ))}
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button variant="outline" className="w-full">
+        View All Quizzes
+      </Button>
+    </CardFooter>
+  </Card>
+);
+
+const ChallengesTab = ({
+  challenges,
+  formatDate,
+}: {
+  challenges: Challenge[];
+  formatDate: (date: string) => string;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Active Challenges</CardTitle>
+      <CardDescription>
+        Challenges you&apos;re currently participating in
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {challenges.map((challenge) => (
+          <ChallengeItem
+            key={challenge.id}
+            challenge={challenge}
+            formatDate={formatDate}
+          />
+        ))}
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button variant="outline" className="w-full">
+        View All Challenges
+      </Button>
+    </CardFooter>
+  </Card>
+);
+
+const TestsTab = ({
+  tests,
+  formatDate,
+}: {
+  tests: Test[];
+  formatDate: (date: string) => string;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Recent Tests</CardTitle>
+      <CardDescription>Tests you&apos;ve recently taken</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {tests.map((test) => (
+          <TestItem key={test.id} test={test} formatDate={formatDate} />
+        ))}
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button variant="outline" className="w-full">
+        View All Tests
+      </Button>
+    </CardFooter>
+  </Card>
+);
+
+const AssignedTestsTab = ({
+  assignments,
+  formatDate,
+}: {
+  assignments: AssignedTest[];
+  formatDate: (date: string) => string;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>Assigned Tests</CardTitle>
+      <CardDescription>Tests assigned to you for correction</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {assignments.map((assignment) => (
+          <AssignedTestItem
+            key={assignment.id}
+            assignment={assignment}
+            formatDate={formatDate}
+          />
+        ))}
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button variant="outline" className="w-full">
+        View All Assigned Tests
+      </Button>
+    </CardFooter>
+  </Card>
+);
+
+// Leaderboard component
+const Leaderboard = ({ users }: { users: User[] }) => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="text-2xl">Leaderboard</CardTitle>
+      <CardDescription>Top performers this month</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {users.map((user) => (
+          <LeaderboardItem key={user.id} user={user} />
+        ))}
+      </div>
+    </CardContent>
+    <CardFooter>
+      <Button variant="outline" className="w-full">
+        View Complete Leaderboard
+      </Button>
+    </CardFooter>
+  </Card>
+);
+
+// Stats overview component
+const StatsOverview = () => (
+  <div className="grid gap-6 md:grid-cols-3">
+    <StatCard
+      title="Total Quizzes"
+      description="You've completed 15 quizzes"
+      value="15"
+    />
+    <StatCard
+      title="Challenges Joined"
+      description="You're participating in 3 challenges"
+      value="3"
+    />
+    <StatCard
+      title="Your Rank"
+      description="You're in the top 10%"
+      value="#1"
+    />
+  </div>
+);
 
 export default function Home() {
   // Mock data based on the provided schemas
-  const mockUsers = [
+  const mockUsers: User[] = [
     {
       id: "1",
       name: "Alex Johnson",
@@ -67,7 +442,7 @@ export default function Home() {
     },
   ];
 
-  const mockQuizzes = [
+  const mockQuizzes: Quiz[] = [
     {
       id: "q1",
       title: "JavaScript Fundamentals",
@@ -91,7 +466,7 @@ export default function Home() {
     },
   ];
 
-  const mockChallenges = [
+  const mockChallenges: Challenge[] = [
     {
       id: "c1",
       title: "30 Days of Coding",
@@ -110,7 +485,7 @@ export default function Home() {
     },
   ];
 
-  const mockTests = [
+  const mockTests: Test[] = [
     {
       id: "t1",
       title: "Front-end Skills Assessment",
@@ -131,6 +506,41 @@ export default function Home() {
     },
   ];
 
+  const mockAssignedTests: AssignedTest[] = [
+    {
+      id: "at1",
+      title: "JavaScript Advanced Concepts",
+      student: "Ryan Garcia",
+      submitted_at: "2023-07-12T10:30:00Z",
+      status: "pending",
+      deadline: "2023-07-15T23:59:59Z",
+    },
+    {
+      id: "at2",
+      title: "React Component Patterns",
+      student: "Emily Chen",
+      submitted_at: "2023-07-10T14:15:00Z",
+      status: "in_progress",
+      deadline: "2023-07-14T23:59:59Z",
+    },
+    {
+      id: "at3",
+      title: "TypeScript Fundamentals",
+      student: "Michael Brown",
+      submitted_at: "2023-07-08T09:45:00Z",
+      status: "pending",
+      deadline: "2023-07-13T23:59:59Z",
+    },
+    {
+      id: "at4",
+      title: "CSS Animation Techniques",
+      student: "Sophie Williams",
+      submitted_at: "2023-07-05T16:20:00Z",
+      status: "completed",
+      deadline: "2023-07-12T23:59:59Z",
+    },
+  ];
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -143,225 +553,35 @@ export default function Home() {
     <div className="container space-y-8 py-10">
       <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Total Quizzes</CardTitle>
-            <CardDescription>You&apos;ve completed 15 quizzes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">15</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Challenges Joined</CardTitle>
-            <CardDescription>
-              You&apos;re participating in 3 challenges
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">3</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Your Rank</CardTitle>
-            <CardDescription>You&apos;re in the top 10%</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-4xl font-bold">#1</div>
-          </CardContent>
-        </Card>
-      </div>
+      <StatsOverview />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Leaderboard</CardTitle>
-          <CardDescription>Top performers this month</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {mockUsers.map((user) => (
-              <div
-                key={user.id}
-                className={`flex items-center justify-between rounded-lg p-4 ${
-                  user.rank === 1
-                    ? "border border-amber-200 bg-amber-50"
-                    : user.rank === 2
-                      ? "border border-slate-200 bg-slate-50"
-                      : user.rank === 3
-                        ? "border border-orange-200 bg-orange-50"
-                        : ""
-                }`}
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
-                    {user.rank === 1 ? (
-                      <Trophy className="h-5 w-5 text-amber-500" />
-                    ) : user.rank === 2 ? (
-                      <Medal className="h-5 w-5 text-slate-400" />
-                    ) : user.rank === 3 ? (
-                      <Medal className="h-5 w-5 text-orange-500" />
-                    ) : (
-                      <span className="text-muted-foreground font-bold">
-                        {user.rank}
-                      </span>
-                    )}
-                  </div>
-                  <Avatar className="h-10 w-10">
-                    <UserCircle className="h-10 w-10" />
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">{user.name}</p>
-                    <div className="text-muted-foreground flex items-center text-sm">
-                      <span className="mr-2">Quizzes: {user.quizzes}</span>•
-                      <span className="mx-2">Tests: {user.tests}</span>•
-                      <span className="ml-2">
-                        Challenges: {user.challenges}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="font-bold">{user.score} pts</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button variant="outline" className="w-full">
-            View Complete Leaderboard
-          </Button>
-        </CardFooter>
-      </Card>
+      <Leaderboard users={mockUsers} />
 
       <Tabs defaultValue="quizzes" className="w-full">
-        <TabsList className="mb-4 grid grid-cols-3">
+        <TabsList className="mb-4 grid grid-cols-4">
           <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
           <TabsTrigger value="challenges">Challenges</TabsTrigger>
           <TabsTrigger value="tests">Tests</TabsTrigger>
+          <TabsTrigger value="assigned">Assigned Tests</TabsTrigger>
         </TabsList>
 
         <TabsContent value="quizzes" className="mt-0">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Quizzes</CardTitle>
-              <CardDescription>Your recently completed quizzes</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {mockQuizzes.map((quiz) => (
-                  <div
-                    key={quiz.id}
-                    className="flex items-center justify-between rounded-lg border p-4"
-                  >
-                    <div>
-                      <p className="font-medium">{quiz.title}</p>
-                      <div className="mt-1 flex items-center gap-2">
-                        <Badge
-                          variant={
-                            quiz.difficulty === "EASY"
-                              ? "outline"
-                              : quiz.difficulty === "MEDIUM"
-                                ? "secondary"
-                                : "destructive"
-                          }
-                        >
-                          {quiz.difficulty}
-                        </Badge>
-                        <span className="text-muted-foreground text-sm">
-                          {quiz.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-lg font-bold">{quiz.score}%</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">
-                View All Quizzes
-              </Button>
-            </CardFooter>
-          </Card>
+          <QuizzesTab quizzes={mockQuizzes} />
         </TabsContent>
 
         <TabsContent value="challenges" className="mt-0">
-          <Card>
-            <CardHeader>
-              <CardTitle>Active Challenges</CardTitle>
-              <CardDescription>
-                Challenges you&apos;re currently participating in
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {mockChallenges.map((challenge) => (
-                  <div key={challenge.id} className="rounded-lg border p-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-medium">{challenge.title}</h3>
-                      <Badge variant="outline" className="ml-2">
-                        Rank #{challenge.rank}
-                      </Badge>
-                    </div>
-                    <div className="text-muted-foreground mt-2 flex items-center gap-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <CalendarIcon className="h-4 w-4" />
-                        <span>
-                          {formatDate(challenge.start_date)} -{" "}
-                          {formatDate(challenge.end_date)}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        <span>{challenge.participants} participants</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">
-                View All Challenges
-              </Button>
-            </CardFooter>
-          </Card>
+          <ChallengesTab challenges={mockChallenges} formatDate={formatDate} />
         </TabsContent>
 
         <TabsContent value="tests" className="mt-0">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Tests</CardTitle>
-              <CardDescription>
-                Tests you&apos;ve recently taken
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {mockTests.map((test) => (
-                  <div
-                    key={test.id}
-                    className="flex items-center justify-between rounded-lg border p-4"
-                  >
-                    <div>
-                      <p className="font-medium">{test.title}</p>
-                      <p className="text-muted-foreground text-sm">
-                        Taken on {formatDate(test.created_at)}
-                      </p>
-                    </div>
-                    <div className="text-lg font-bold">{test.score}%</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">
-                View All Tests
-              </Button>
-            </CardFooter>
-          </Card>
+          <TestsTab tests={mockTests} formatDate={formatDate} />
+        </TabsContent>
+
+        <TabsContent value="assigned" className="mt-0">
+          <AssignedTestsTab
+            assignments={mockAssignedTests}
+            formatDate={formatDate}
+          />
         </TabsContent>
       </Tabs>
     </div>
