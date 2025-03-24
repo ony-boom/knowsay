@@ -29,10 +29,6 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
 
   const [questions, setQuestions] = useState<Question[]>(initialQuestions);
 
-  const handleDeleteQuestion = (id: string) => {
-    setQuestions(questions.filter((q) => q.id !== id));
-  };
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -45,7 +41,6 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
         <SortableQuestionList
           sensors={sensors}
           initialQuestions={questions}
-          onDelete={handleDeleteQuestion}
           onReorder={(reorderedQuestions) => {
             setQuestions(reorderedQuestions);
           }}

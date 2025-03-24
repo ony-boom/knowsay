@@ -6,18 +6,21 @@ import { SortableQuestionsSchema } from "../sortable-question-list";
 import { QuestionAnswersSheet } from "./question-answers-sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import { DeleteQuestionDialog } from "./delete-question-dialog";
+import { useState } from "react";
 
 interface QuestionActionsProps {
   question: SortableQuestionsSchema["questions"][0];
-  onDelete: () => void;
 }
 
 export const QuestionActions: React.FC<QuestionActionsProps> = ({
   question,
-  onDelete,
 }) => {
+  const { id: quizId } = useParams();
   const pathname = usePathname();
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   return (
     <div className="mt-2 flex shrink-0 space-x-2 self-end sm:mt-0 sm:space-x-3 sm:self-auto">
@@ -40,15 +43,25 @@ export const QuestionActions: React.FC<QuestionActionsProps> = ({
         <span className="sr-only">Edit question</span>
       </Link>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onDelete}
-        className="text-destructive hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full"
-      >
-        <Trash2 className="h-3.5 w-3.5" />
-        <span className="sr-only">Delete question</span>
-      </Button>
+      <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            <span className="sr-only">Delete question</span>
+          </Button>
+        </DialogTrigger>
+        <DeleteQuestionDialog
+          id={question.id}
+          quizId={quizId as string}
+          onClose={() => {
+            setOpenDeleteDialog(false);
+          }}
+        />
+      </Dialog>
     </div>
   );
 };
