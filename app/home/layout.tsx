@@ -6,7 +6,7 @@ import { Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 import { ReactNode } from "react";
 import { SignOutButton, useUser } from "@clerk/nextjs";
@@ -55,7 +55,7 @@ export default function Layout({
         <section className="bg-neutral-50-50 flex items-center justify-between py-4">
           {!isAtHomeRoot && <HomeBreadcrumb />}
 
-          <Button variant="link" className="flex items-center gap-2 px-6">
+          <Button variant="link" className="flex items-center gap-2 px-6" onClick={() => redirect("/home/account")}>
             <Avatar>
               <AvatarImage
                 src={
