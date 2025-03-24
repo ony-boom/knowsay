@@ -11,6 +11,8 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableItem } from "./sortable-item";
 import { QuestionSchema, Question } from "@/schemas/questionSchema";
+import { updateQuestionOrder } from "@/lib/actions/update-question-order";
+
 // Schema for the form
 const sortableQuestionsSchema = z.object({
   questions: z.array(QuestionSchema),
@@ -42,16 +44,27 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
     keyName: "_id",
   });
 
-  const handleMove = ({
+  const handleMove = async ({
     activeIndex,
     overIndex,
+    questionId,
   }: {
     activeIndex: number;
     overIndex: number;
+    questionId: string;
   }) => {
+    // Update local state
     move(activeIndex, overIndex);
     const updatedQuestions = form.getValues().questions;
     onReorder(updatedQuestions);
+
+    // Update on server
+    const result = await updateQuestionOrder(questionId, overIndex + 1);
+
+    if (!result.success) {
+      console.error("Failed to update question order:", result.error);
+      // You could add toast notification here
+    }
   };
 
   if (fields.length === 0) {
@@ -67,7 +80,11 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
         if (over && active.id !== over.id) {
           const activeIndex = fields.findIndex((q) => q.id === active.id);
           const overIndex = fields.findIndex((q) => q.id === over.id);
-          handleMove({ activeIndex, overIndex });
+          handleMove({
+            activeIndex,
+            overIndex,
+            questionId: active.id as string,
+          });
         }
       }}
     >
