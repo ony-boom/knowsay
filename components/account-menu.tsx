@@ -10,15 +10,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export const AccountMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="gap-2" asChild>
-        <Button variant="outline" className="py-4">
+        <Link href="/home/account" className="py-4">
           Account
           <ChevronDown className="h-4 w-4" />
-        </Button>
+        </Link>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 p-2">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
