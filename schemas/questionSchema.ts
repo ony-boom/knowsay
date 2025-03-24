@@ -3,7 +3,7 @@ import { z } from "zod";
 export const QuestionSchema = z.object({
   id: z.string().uuid(),
   quiz_id: z.string().uuid(),
-  type: z.enum(["QCM", "OPEN", "ORDER", "MATCHING"]),
+  type: z.enum(["QCM", "OPEN"]),
   content: z.string().min(5, "Question must have at least 5 characters"),
   timer: z.number().positive().optional().nullable(),
   order_position: z.number().int().positive(),
