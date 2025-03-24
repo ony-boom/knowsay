@@ -1,20 +1,18 @@
 "use client";
 
-import { z } from "zod";
 import { Label } from "@/components/ui/label";
-import { AnswerSchema } from "@/schemas/answerSchema";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { swrFetcher } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Answer } from "@/schemas/answerSchema";
 
 export function QcmAnswer(props: QcmAnswerProps) {
   const [value, setValue] = useState<string>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { questionId, onAnswerSubmitted, ...divProps } = props;
   const { data: answers, isLoading } = useSWR<Answer[]>(
     `/api/questions/answers/${questionId}`,
@@ -49,7 +47,6 @@ export function QcmAnswer(props: QcmAnswerProps) {
   const handleCheck = (value: string) => {
     setValue(value);
   };
-
 
   const handleSubmit = () => {
     const isCorrect = correctAnswer?.content === value;
@@ -118,14 +115,16 @@ export function QcmAnswer(props: QcmAnswerProps) {
         </div>
       </RadioGroup>
 
-      <Button variant="secondary" className="w-full sm:w-max" onClick={handleSubmit}>
+      <Button
+        variant="secondary"
+        className="w-full sm:w-max"
+        onClick={handleSubmit}
+      >
         Check
       </Button>
     </div>
   );
 }
-
-type Answer = z.infer<typeof AnswerSchema>;
 
 export type QcmAnswerProps = React.ComponentProps<typeof RadioGroup> & {
   questionId: string;
