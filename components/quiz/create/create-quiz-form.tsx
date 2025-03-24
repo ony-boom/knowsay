@@ -25,8 +25,8 @@ import {
 } from "@/components/ui/select";
 import { useActionState, useTransition } from "react";
 import { Category } from "@/schemas/categorySchema";
-import { StoreQuiz, StoreQuizSchema } from "@/schemas/quizSchema";
-import {createQuiz} from "@/lib/actions/create-quiz";
+import { StoreQuiz, storeQuizSchema } from "@/schemas/quizSchema";
+import { createQuiz } from "@/lib/actions/create-quiz";
 
 type CreateQuizFormProps = {
   categories: Category[];
@@ -38,7 +38,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
   const [state, formAction] = useActionState(createQuiz, initialState);
 
   const form = useForm<StoreQuiz>({
-    resolver: zodResolver(StoreQuizSchema),
+    resolver: zodResolver(storeQuizSchema),
     defaultValues: {
       title: "",
       category_id: "",

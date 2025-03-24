@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Quiz, StoreQuiz, StoreQuizSchema } from "@/schemas/quizSchema";
+import { Quiz, StoreQuiz, storeQuizSchema } from "@/schemas/quizSchema";
 import { updateQuiz } from "@/lib/actions/update-quiz";
 
 type EditQuizFormProps = {
@@ -41,11 +41,11 @@ export const EditQuizForm = ({
 }: EditQuizFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: State = { message: null, errors: {} };
-  const updateQuizWithId = updateQuiz.bind(null, initialData.id);
+  const updateQuizWithId = updateQuiz.bind(null, initialData.quiz_id);
   const [state, formAction] = useActionState(updateQuizWithId, initialState);
 
   const form = useForm<StoreQuiz>({
-    resolver: zodResolver(StoreQuizSchema),
+    resolver: zodResolver(storeQuizSchema),
     defaultValues: {
       title: initialData.title,
       category_id: initialData.category_id,

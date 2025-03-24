@@ -14,7 +14,7 @@ export default async function QuizPage(props: {
   const quiz = await getQuizById(id);
 
   const { questions } = await getQuestions(
-    quiz?.id || "0",
+    quiz?.quiz_id || "0",
     undefined,
     undefined,
     false,

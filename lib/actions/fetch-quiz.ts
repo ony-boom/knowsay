@@ -69,7 +69,7 @@ export async function getQuizById(id: string) {
     const { data, error } = await supabase
       .from("quiz")
       .select("*")
-      .eq("id", id)
+      .eq("quiz_id", id)
       .single();
 
     if (error) {
