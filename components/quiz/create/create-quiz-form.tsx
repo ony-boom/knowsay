@@ -26,7 +26,7 @@ import {
 import { useActionState, useTransition } from "react";
 import { Category } from "@/schemas/categorySchema";
 import { StoreQuiz, storeQuizSchema } from "@/schemas/quizSchema";
-import { createQuiz } from "@/lib/actions/create-quiz";
+import { createQuizFormAction } from "@/lib/actions/create-quiz";
 
 type CreateQuizFormProps = {
   categories: Category[];
@@ -35,7 +35,7 @@ type CreateQuizFormProps = {
 export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createQuiz, initialState);
+  const [state, formAction] = useActionState(createQuizFormAction, initialState);
 
   const form = useForm<StoreQuiz>({
     resolver: zodResolver(storeQuizSchema),
