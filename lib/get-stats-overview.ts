@@ -2,13 +2,16 @@
 
 import { supabase } from "@/lib/supabase";
 import { currentUser } from "@clerk/nextjs/server";
+import {redirect} from "next/navigation";
 
 const getCompletedQuiz = async () => {
-  const { id } = await currentUser();
+  const user = await currentUser();
+
+  if(!user) redirect('/auth/login');
   const { count } = await supabase
     .from("results")
     .select("*", { count: "exact" })
-    .eq("user_id", id);
+    .eq("user_id", user.id);
 
   return count;
 };

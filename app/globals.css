@@ -141,3 +141,12 @@
     }
   }
 }
+
+
+.cl-userProfile-root {
+  width: 100%;
+  .cl-cardBox {
+    box-shadow: none;
+    width: 100%;
+  }
+}
