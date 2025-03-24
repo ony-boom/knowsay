@@ -21,8 +21,8 @@ export const QuestionInfo: React.FC<QuestionInfoProps> = ({
       <div className="bg-primary/10 text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium">
         {index + 1}
       </div>
-      <h4 className="line-clamp-1 text-sm font-medium">
-        {firstContent.text ?? ""}
+      <h4 className="line-clamp-1 max-w-[300px] overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap">
+        {firstContent?.text ?? ""}
       </h4>
       <div className="text-muted-foreground ml-1 shrink-0 text-xs">
         {question.type}
