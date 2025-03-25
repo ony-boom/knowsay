@@ -102,7 +102,7 @@ export default function Layout({
         <Separator />
       </div>
 
-      <div className="w-full py-8 pr-3">{children}</div>
+      <div className="w-full py-6">{children}</div>
     </div>
   );
 }

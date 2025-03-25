@@ -1,7 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarIcon, Medal, Trophy, UserCircle, Users } from "lucide-react";
-import { ReactNode } from "react";
-import { Avatar } from "@/components/ui/avatar";
+import { CalendarIcon, UserCircle, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { LeaderboardItem } from "@/components/dashboard/leaderboard-item";
+import Link from "next/link";
+import {StatsOverview} from "@/components/dashboard/stats-overview";
 
 // Types
 interface User {
@@ -57,67 +58,6 @@ interface AssignedTest {
   status: "pending" | "in_progress" | "completed";
   deadline: string;
 }
-
-// Helper Components
-const StatCard = ({
-  title,
-  description,
-  value,
-}: {
-  title: string;
-  description: string;
-  value: ReactNode;
-}) => (
-  <Card>
-    <CardHeader className="pb-2">
-      <CardTitle>{title}</CardTitle>
-      <CardDescription>{description}</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="text-4xl font-bold">{value}</div>
-    </CardContent>
-  </Card>
-);
-
-const LeaderboardItem = ({ user }: { user: User }) => (
-  <div
-    className={`flex items-center justify-between rounded-lg p-4 ${
-      user.rank === 1
-        ? "border border-amber-200 bg-amber-50"
-        : user.rank === 2
-          ? "border border-slate-200 bg-slate-50"
-          : user.rank === 3
-            ? "border border-orange-200 bg-orange-50"
-            : ""
-    }`}
-  >
-    <div className="flex items-center space-x-4">
-      <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
-        {user.rank === 1 ? (
-          <Trophy className="h-5 w-5 text-amber-500" />
-        ) : user.rank === 2 ? (
-          <Medal className="h-5 w-5 text-slate-400" />
-        ) : user.rank === 3 ? (
-          <Medal className="h-5 w-5 text-orange-500" />
-        ) : (
-          <span className="text-muted-foreground font-bold">{user.rank}</span>
-        )}
-      </div>
-      <Avatar className="h-10 w-10">
-        <UserCircle className="h-10 w-10" />
-      </Avatar>
-      <div>
-        <p className="font-medium">{user.name}</p>
-        <div className="text-muted-foreground flex items-center text-sm">
-          <span className="mr-2">Quizzes: {user.quizzes}</span>•
-          <span className="mx-2">Tests: {user.tests}</span>•
-          <span className="ml-2">Challenges: {user.challenges}</span>
-        </div>
-      </div>
-    </div>
-    <div className="font-bold">{user.score} pts</div>
-  </div>
-);
 
 const QuizItem = ({ quiz }: { quiz: Quiz }) => (
   <div className="flex items-center justify-between rounded-lg border p-4">
@@ -246,8 +186,8 @@ const QuizzesTab = ({ quizzes }: { quizzes: Quiz[] }) => (
       </div>
     </CardContent>
     <CardFooter>
-      <Button variant="outline" className="w-full">
-        View All Quizzes
+      <Button asChild variant="outline" className="w-full">
+        <Link className="w-fulll" href="/home/quiz">View All Quizzes</Link>
       </Button>
     </CardFooter>
   </Card>
@@ -344,7 +284,6 @@ const AssignedTestsTab = ({
   </Card>
 );
 
-// Leaderboard component
 const Leaderboard = ({ users }: { users: User[] }) => (
   <Card>
     <CardHeader>
@@ -364,27 +303,6 @@ const Leaderboard = ({ users }: { users: User[] }) => (
       </Button>
     </CardFooter>
   </Card>
-);
-
-// Stats overview component
-const StatsOverview = () => (
-  <div className="grid gap-6 md:grid-cols-3">
-    <StatCard
-      title="Total Quizzes"
-      description="You've completed 15 quizzes"
-      value="15"
-    />
-    <StatCard
-      title="Challenges Joined"
-      description="You're participating in 3 challenges"
-      value="3"
-    />
-    <StatCard
-      title="Your Rank"
-      description="You're in the top 10%"
-      value="#1"
-    />
-  </div>
 );
 
 export default function Home() {
@@ -550,9 +468,7 @@ export default function Home() {
   };
 
   return (
-    <div className="container space-y-8 py-10">
-      <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
-
+    <div className="container space-y-8">
       <StatsOverview />
 
       <Leaderboard users={mockUsers} />

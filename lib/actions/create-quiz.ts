@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { State } from "./types";
 import { currentUser } from "@clerk/nextjs/server";
 
-export async function createQuiz(
+export async function createQuizFormAction(
   prevState: State,
   data: FormData,
 ): Promise<State> {
@@ -20,7 +20,6 @@ export async function createQuiz(
   }
 
   const formData = {
-    created_by: user.id,
     title: data.get("title") as string,
     description: (data.get("description") as string) || null,
     difficulty: data.get("difficulty") as "EASY" | "MEDIUM" | "HARD",
@@ -43,6 +42,7 @@ export async function createQuiz(
     const { data, error } = await supabase
       .from("quiz")
       .insert({
+        // creator_id: user.id,
         title: validatedFields.data.title,
         description: validatedFields.data.description,
         difficulty: validatedFields.data.difficulty,
@@ -53,7 +53,7 @@ export async function createQuiz(
       .single();
 
     if (data) {
-      id = data.id;
+      id = data.quiz_id;
     }
 
     if (error) {
