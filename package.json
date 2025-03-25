@@ -44,7 +44,7 @@
     "embla-carousel-react": "^8.5.2",
     "lucide-react": "^0.479.0",
     "motion": "^12.5.0",
-    "next": "15.2.2",
+    "next": ">=15.2.3",
     "next-intl": "^4.0.2",
     "nextjs-toploader": "^3.7.15",
     "react": "^19.0.0",

@@ -6,7 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 export async function getStatsOverviewData() {
   const clerkUser = await currentUser();
   if (!clerkUser) {
-    throw new Error("Not authenticated");
+    return;
   }
 
   const { data: user } = await supabase
