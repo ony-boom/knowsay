@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useActionState, useTransition } from "react";
-import { Category } from "@/schemas/categorySchema";
 
 import {
   Form,
@@ -27,8 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Quiz, StoreQuiz, storeQuizSchema } from "@/schemas/quizSchema";
 import { updateQuiz } from "@/lib/actions/update-quiz";
+import { Category, Quiz, StoreQuiz, storeQuizSchema } from "@/lib/definitions";
 
 type EditQuizFormProps = {
   categories: Category[];

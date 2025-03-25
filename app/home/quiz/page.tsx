@@ -24,37 +24,39 @@ export default async function Page(props: {
   const { totalPages } = await fetchQuizzes(query, currentPage, category);
 
   return (
-    <div className="flex w-full flex-col gap-6 md:flex-row">
-      <aside className="w-full shrink-0 space-y-6 md:w-64">
-        <Card className="gap-2">
-          <CardHeader>
-            <CardTitle>Search</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SearchInput />
-          </CardContent>
-        </Card>
+    <div className="space-y-4">
+      <div className="flex w-full flex-col gap-6 md:flex-row">
+        <aside className="w-full shrink-0 space-y-6 md:w-64">
+          <Card className="gap-2">
+            <CardHeader>
+              <CardTitle>Search</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SearchInput />
+            </CardContent>
+          </Card>
 
-        <Suspense fallback={<CategoryCardSkeleton />}>
-          <CategoryCardList />
-        </Suspense>
-      </aside>
+          <Suspense fallback={<CategoryCardSkeleton />}>
+            <CategoryCardList />
+          </Suspense>
+        </aside>
 
-      <main className="flex-1">
-        <Suspense
-          key={query + currentPage + category}
-          fallback={<QuizListSkeleton />}
-        >
-          <QuizList
-            query={query}
-            currentPage={currentPage}
-            categorySlug={category}
-          />
-        </Suspense>
-        <div className="mt-8">
-          <Pagination totalPages={totalPages} />
-        </div>
-      </main>
+        <main className="flex-1">
+          <Suspense
+            key={query + currentPage + category}
+            fallback={<QuizListSkeleton />}
+          >
+            <QuizList
+              query={query}
+              currentPage={currentPage}
+              categorySlug={category}
+            />
+          </Suspense>
+          <div className="mt-8">
+            <Pagination totalPages={totalPages} />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

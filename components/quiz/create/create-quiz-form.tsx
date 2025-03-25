@@ -24,18 +24,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useActionState, useTransition } from "react";
-import { Category } from "@/schemas/categorySchema";
-import { StoreQuiz, storeQuizSchema } from "@/schemas/quizSchema";
 import { createQuizFormAction } from "@/lib/actions/create-quiz";
+import { StoreQuiz, storeQuizSchema } from "@/lib/definitions";
 
 type CreateQuizFormProps = {
-  categories: Category[];
+  categories: { id: string; name: string }[];
 };
 
 export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createQuizFormAction, initialState);
+  const [state, formAction] = useActionState(
+    createQuizFormAction,
+    initialState,
+  );
 
   const form = useForm<StoreQuiz>({
     resolver: zodResolver(storeQuizSchema),

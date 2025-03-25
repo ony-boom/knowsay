@@ -1,7 +1,6 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { quizArraySchemaWithCategory, quizSchema } from "@/schemas/quizSchema";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -46,14 +45,8 @@ export async function fetchQuizzes(
 
     if (error) throw new Error(error.message);
 
-    // Validate data against schema
-    const validatedData = quizArraySchemaWithCategory.safeParse(data);
-    if (!validatedData.success) {
-      throw new Error("Invalid data returned from database");
-    }
-
     return {
-      quizzes: validatedData.data,
+      quizzes: data,
       totalPages: Math.ceil((count || 0) / ITEMS_PER_PAGE),
       totalCount: count || 0,
     };
@@ -77,10 +70,7 @@ export async function getQuizById(id: string) {
       return null;
     }
 
-    // Validate the data against the schema
-    const validatedData = quizSchema.parse(data);
-
-    return validatedData;
+    return data;
   } catch (error) {
     console.error("Failed to get quiz details:", error);
     throw error;

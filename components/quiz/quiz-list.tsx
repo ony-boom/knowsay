@@ -29,9 +29,11 @@ export async function QuizList({
               quizId={quiz.quiz_id}
               title={quiz.title}
               description={quiz.description || "No description available"}
-              category={quiz.categories.name}
-              difficulty={quiz.difficulty}
-              createdAt={new Date(quiz.created_at).toLocaleDateString()}
+              category={quiz.categories!.name}
+              difficulty={quiz.difficulty ?? "MEDIUM"}
+              createdAt={new Date(
+                quiz.created_at || Date.now(),
+              ).toLocaleDateString()}
             />
           ))}
         </div>

@@ -28,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createQuestion } from "@/lib/actions/create-question";
+import { createQuestionActionForm } from "@/lib/actions/create-question-action-form";
 
 type CreateQuestionFormProps = {
   quizId: string;
@@ -38,7 +38,7 @@ export const CreateQuestionForm = ({ quizId }: CreateQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: QuestionState = { message: null, errors: {} };
 
-  const createQuestionWithId = createQuestion.bind(null, quizId);
+  const createQuestionWithId = createQuestionActionForm.bind(null, quizId);
 
   const [state, formAction] = useActionState(
     createQuestionWithId,

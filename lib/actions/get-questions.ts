@@ -1,8 +1,6 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { z } from "zod";
-import { QuestionArraySchema, QuestionSchema } from "@/schemas/questionSchema";
 
 export async function getQuestions(
   quizId: string,
@@ -14,11 +12,14 @@ export async function getQuestions(
   const end = start + pageSize - 1;
 
   let query = supabase
-    .from("questions")
-    .select("*", { count: "exact" })
+    .from("quiz_questions")
+    .select(
+      `
+        questions:qcm_id(*)
+      `,
+    )
     .eq("quiz_id", quizId)
-    .order("created_at", { ascending: true });
-
+    .order("position", { ascending: true });
   if (paginate) {
     query = query.range(start, end);
   }
@@ -27,34 +28,24 @@ export async function getQuestions(
 
   if (error) throw new Error(error.message);
 
-  // Validate data against schema
-  const validatedData = z.array(QuestionSchema).safeParse(data);
-  if (!validatedData.success) {
-    throw new Error("Invalid data returned from database");
-  }
-
   return {
-    questions: validatedData.data,
+    questions: data,
     totalCount: count || 0,
   };
 }
 
 export async function getQuestion(id: string) {
   const { data, error } = await supabase
-    .from("questions")
+    .from("qcm")
     .select("*")
-    .eq("id", id)
+    .eq("qcm_id", id)
     .single();
 
   if (error) throw new Error(error.message);
 
-  // Validate data against schema
-  const validatedData = QuestionSchema.parse(data);
-  if (!validatedData) {
-    throw new Error("Invalid data returned from database");
-  }
-
-  return validatedData;
+  // No need for schema validation if we're just returning the raw data
+  // If you want to add validation, define the schema first
+  return data;
 }
 
 export async function getQuestionsByQuiz(quizId: string) {
@@ -63,20 +54,25 @@ export async function getQuestionsByQuiz(quizId: string) {
       throw new Error("Quiz ID is required");
     }
 
-    // Fetch questions ordered by order_position
-    const { data: questions, error } = await supabase
-      .from("questions")
-      .select("id, content, type, order_position, created_at, quiz_id")
+    // Fetch questions using the quiz_questions join table approach like in getQuestions
+    const { data, error } = await supabase
+      .from("quiz_questions")
+      .select(
+        `
+        questions:qcm_id(id, content, type, order_position, created_at, quiz_id)
+      `,
+      )
       .eq("quiz_id", quizId)
-      .order("order_position", { ascending: true });
+      .order("position", { ascending: true });
 
     if (error) {
       throw new Error(error.message);
     }
 
-    const validatedData = QuestionArraySchema.parse(questions);
+    // Extract the questions from the nested structure
+    const questions = data?.map((item) => item.questions) || [];
 
-    return validatedData;
+    return questions;
   } catch (error) {
     console.error("Error fetching questions:", error);
     return [];

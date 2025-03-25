@@ -1,23 +1,43 @@
 "use server";
 
-import { storeQuizSchema } from "@/schemas/quizSchema";
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { State } from "./types";
 import { currentUser } from "@clerk/nextjs/server";
+import { StoreQuiz, storeQuizSchema } from "@/lib/definitions";
+
+export async function createQuiz(
+  quizData: StoreQuiz & {
+    creator_id: string;
+  },
+) {
+  return supabase.from("quiz").insert(quizData).select().single();
+}
 
 export async function createQuizFormAction(
-  prevState: State,
+  _: State,
   data: FormData,
 ): Promise<State> {
-  let id;
-  // Extract form data
-  const user = await currentUser();
+  let quizId: string;
+
+  const clerkUser = await currentUser();
+
+  if (!clerkUser) {
+    redirect("/auth/login");
+  }
+
+  const { data: user } = await supabase
+    .from("users")
+    .select("*")
+    .eq("clerk_id", clerkUser.id)
+    .single();
 
   if (!user) {
     redirect("/auth/login");
   }
+
+  quizId = user.id;
 
   const formData = {
     title: data.get("title") as string,
@@ -39,22 +59,10 @@ export async function createQuizFormAction(
   }
 
   try {
-    const { data, error } = await supabase
-      .from("quiz")
-      .insert({
-        // creator_id: user.id,
-        title: validatedFields.data.title,
-        description: validatedFields.data.description,
-        difficulty: validatedFields.data.difficulty,
-        is_public: validatedFields.data.is_public,
-        category_id: validatedFields.data.category_id,
-      })
-      .select()
-      .single();
-
-    if (data) {
-      id = data.quiz_id;
-    }
+    const { error } = await createQuiz({
+      ...validatedFields.data,
+      creator_id: user.id,
+    });
 
     if (error) {
       return {
@@ -74,6 +82,6 @@ export async function createQuizFormAction(
     };
   }
 
-  revalidatePath(`/home/quiz/${id}/edit`);
-  redirect(`/home/quiz/${id}/edit`);
+  revalidatePath(`/home/quiz/${quizId}/edit`);
+  redirect(`/home/quiz/${quizId}/edit`);
 }

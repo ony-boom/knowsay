@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useLayoutEffect, useRef, useEffect } from "react";
-import { z } from "zod";
 import { cn } from "@/lib/utils";
-import { QuestionSchema } from "@/schemas/questionSchema";
 import { DynamicQuestionView } from "./dynamic-question-view";
 import { AnswerView } from "@/components/quiz/take/answer-view";
 import { QuizScoreDisplay } from "@/components/quiz/take/quiz-score-display";
@@ -121,5 +119,9 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
 }
 
 export type QuizViewContainerProps = React.ComponentProps<"div"> & {
-  questions: Array<z.infer<typeof QuestionSchema>>;
+  questions: {
+    id: string;
+    content: string;
+    type: string;
+  }[];
 };

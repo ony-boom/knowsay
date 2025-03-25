@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:seed": "tsx --env-file=.env.local lib/supabase/seed/seed.ts"
   },
   "dependencies": {
     "@blocknote/core": "^0.25.2",
@@ -77,12 +78,14 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.14",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@clerk/shared",
       "bcrypt",
+      "esbuild",
       "sharp"
     ],
     "overrides": {

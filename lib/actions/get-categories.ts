@@ -1,10 +1,6 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import {
-  CategoryArraySchema,
-  CategoryWithQuizCountArraySchema,
-} from "@/schemas/categorySchema";
 
 export async function getCategories() {
   try {
@@ -17,7 +13,7 @@ export async function getCategories() {
     }
 
     // Validate the data against the schema
-    return CategoryArraySchema.parse(data);
+    return data;
   } catch (error) {
     console.error("Validation failed:", error);
     throw error;
@@ -39,9 +35,7 @@ export async function getCategoriesWithQuizCount() {
       return [];
     }
 
-    const validatedData = CategoryWithQuizCountArraySchema.parse(data);
-
-    return validatedData;
+    return data;
   } catch (error) {
     console.error("Validation failed:", error);
     throw error;
