@@ -11,7 +11,6 @@ export const quizSchema = z.object({
   category_id: z.string().uuid("Please select a valid category"),
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
   is_public: z.boolean().default(true),
-  status: z.enum(["draft", "in_progress", "ready", "published"]),
 });
 
 export const quizSchemaWithCategory = quizSchema.extend({
@@ -33,7 +32,6 @@ export type QuizWithCategory = z.infer<typeof quizSchemaWithCategory>;
 export const storeQuizSchema = quizSchema
   .omit({
     quiz_id: true,
-    status: true,
     created_at: true,
     updated_at: true,
     creator_id: true,
