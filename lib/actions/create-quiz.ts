@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import { State } from "./types";
 import { currentUser } from "@clerk/nextjs/server";
 
-
 export async function createQuizFormAction(
   prevState: State,
   data: FormData,
@@ -43,7 +42,7 @@ export async function createQuizFormAction(
     const { data, error } = await supabase
       .from("quiz")
       .insert({
-        creator_id: user.id,
+        // creator_id: user.id,
         title: validatedFields.data.title,
         description: validatedFields.data.description,
         difficulty: validatedFields.data.difficulty,
@@ -54,7 +53,7 @@ export async function createQuizFormAction(
       .single();
 
     if (data) {
-      id = data.id;
+      id = data.quiz_id;
     }
 
     if (error) {
