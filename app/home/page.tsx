@@ -10,22 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LeaderboardItem } from "@/components/dashboard/leaderboard-item";
 import Link from "next/link";
-import {StatsOverview} from "@/components/dashboard/stats-overview";
+import { StatsOverview } from "@/components/dashboard/stats-overview";
+import { Leaderboard } from "@/components/dashboard/leaderboard";
 
 // Types
-interface User {
-  id: string;
-  name: string;
-  score: number;
-  avatar: string;
-  rank: number;
-  quizzes: number;
-  tests: number;
-  challenges: number;
-}
-
 interface Quiz {
   id: string;
   title: string;
@@ -187,7 +176,9 @@ const QuizzesTab = ({ quizzes }: { quizzes: Quiz[] }) => (
     </CardContent>
     <CardFooter>
       <Button asChild variant="outline" className="w-full">
-        <Link className="w-fulll" href="/home/quiz">View All Quizzes</Link>
+        <Link className="w-fulll" href="/home/quiz">
+          View All Quizzes
+        </Link>
       </Button>
     </CardFooter>
   </Card>
@@ -284,30 +275,9 @@ const AssignedTestsTab = ({
   </Card>
 );
 
-const Leaderboard = ({ users }: { users: User[] }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle className="text-2xl">Leaderboard</CardTitle>
-      <CardDescription>Top performers this month</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-4">
-        {users.map((user) => (
-          <LeaderboardItem key={user.id} user={user} />
-        ))}
-      </div>
-    </CardContent>
-    <CardFooter>
-      <Button variant="outline" className="w-full">
-        View Complete Leaderboard
-      </Button>
-    </CardFooter>
-  </Card>
-);
-
 export default function Home() {
   // Mock data based on the provided schemas
-  const mockUsers: User[] = [
+  const mockUsers = [
     {
       id: "1",
       name: "Alex Johnson",

@@ -100,6 +100,55 @@ export type Database = {
         }
         Relationships: []
       }
+      challenge_attempts: {
+        Row: {
+          attempt_date: string | null
+          challenge_id: string | null
+          id: string
+          status: string
+          team_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attempt_date?: string | null
+          challenge_id?: string | null
+          id?: string
+          status?: string
+          team_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempt_date?: string | null
+          challenge_id?: string | null
+          id?: string
+          status?: string
+          team_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_attempts_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["challenge_id"]
+          },
+          {
+            foreignKeyName: "challenge_attempts_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["team_id"]
+          },
+          {
+            foreignKeyName: "challenge_attempts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       challenge_invitations: {
         Row: {
           accepted_at: string | null
@@ -975,7 +1024,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_completed_attempts: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: {
+          id: string
+          user_id: string
+          team_id: string
+          status: string
+        }[]
+      }
     }
     Enums: {
       quiz_status: "IN_PROGRESS" | "PAUSED" | "DONE" | "NOT_STARTED"
