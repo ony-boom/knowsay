@@ -1,6 +1,6 @@
 import { getQuizById } from "@/lib/actions/fetch-quiz";
 import { QuizViewContainer } from "./quiz-view/quiz-view-container";
-import { getQuestions } from "@/lib/actions/get-questions";
+import { getAllQuizQuestions } from "@/lib/actions/get-quiz-question";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -13,12 +13,7 @@ export default async function QuizPage(props: {
   const { id } = await props.params;
   const quiz = await getQuizById(id);
 
-  const { questions } = await getQuestions(
-    quiz?.quiz_id || "0",
-    undefined,
-    undefined,
-    false,
-  );
+  const questions = await getAllQuizQuestions(id);
 
   if (questions.length === 0) {
     return (

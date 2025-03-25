@@ -1,6 +1,6 @@
 "use client";
 
-import { generatePagination } from "@/lib/utils";
+import { cn, generatePagination } from "@/lib/utils";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useMemo } from "react";
 import {
@@ -35,9 +35,12 @@ export const Pagination = ({ totalPages }: PaginationProps) => {
     <nav className="my-8 flex w-full items-center justify-center">
       <div className="flex items-center gap-1">
         {/* Previous button */}
-        {currentPage > 1 && (
-          <PaginationPrevious href={createPageURL(currentPage - 1)} />
-        )}
+        <PaginationPrevious
+          className={cn({
+            "pointer-events-none opacity-50": currentPage <= 1,
+          })}
+          href={createPageURL(currentPage - 1)}
+        />
 
         {/* Pages */}
         {allPages.map((page, index) => {
@@ -59,9 +62,12 @@ export const Pagination = ({ totalPages }: PaginationProps) => {
         })}
 
         {/* Next button */}
-        {currentPage < totalPages && (
-          <PaginationNext href={createPageURL(currentPage + 1)} />
-        )}
+        <PaginationNext
+          className={cn({
+            "pointer-events-none opacity-50": currentPage === totalPages,
+          })}
+          href={createPageURL(currentPage + 1)}
+        />
       </div>
     </nav>
   );

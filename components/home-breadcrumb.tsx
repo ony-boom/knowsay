@@ -15,8 +15,6 @@ import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import useSWR from "swr";
 import { cn, swrFetcher } from "@/lib/utils";
-import { challengeSchema } from "@/schemas/challengeSchema";
-import { quizSchema } from "@/schemas/quizSchema";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomeBreadcrumb() {
@@ -67,13 +65,8 @@ export function HomeBreadcrumb() {
           {segments.map((segment, index) => {
             const isLast = index === segments.length - 1;
             const isId = z.string().uuid().safeParse(segment).success;
-            const isSpecialPath =
-              segment === "quiz" || segment === "challenges";
 
-            // Build the href based on the current position in the path
-            const href = isSpecialPath
-              ? "/home"
-              : `/home/${segments.slice(0, index + 1).join("/")}`;
+            const href = `/home/${segments.slice(0, index + 1).join("/")}`;
 
             return (
               <Fragment key={`${segment}-${index}`}>
@@ -120,11 +113,12 @@ function renderBreadcrumbContent(pathname: string, isId: boolean) {
 function IdContent({ id }: { id: string }) {
   const pathname = usePathname();
   const isQuizPath = pathname.includes("/quiz");
-  const path = isQuizPath ? "quizzes" : "challenges";
+  const path = isQuizPath ? "quiz" : "challenges";
 
-  const { data, isLoading } = useSWR<
-    z.infer<typeof challengeSchema> | z.infer<typeof quizSchema>
-  >(`/api/${path}/${id}`, swrFetcher);
+  const { data, isLoading } = useSWR<{ title: string }>(
+    `/api/${path}/${id}`,
+    swrFetcher,
+  );
 
   if (isLoading) return <Skeleton className="h-4 w-32" />;
 
