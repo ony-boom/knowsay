@@ -1,4 +1,4 @@
-import { CreateQuestionForm } from "@/components/quiz/edit/create-question-form";
+import { CreateQCMForm } from "@/components/quiz/edit/create-qcm-form";
 import { Card } from "@/components/ui/card";
 
 export default async function CreateQuestionPage(props: {
@@ -10,7 +10,7 @@ export default async function CreateQuestionPage(props: {
 
   return (
     <Card>
-      <CreateQuestionForm quizId={id} />
+      <CreateQCMForm quizId={id} />
     </Card>
   );
 }

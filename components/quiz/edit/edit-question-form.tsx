@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { QuestionState } from "@/lib/actions/types";
+import { QcmState } from "@/lib/actions/types";
 import {
   Question,
   StoreQuestion,
@@ -44,7 +44,7 @@ export const EditQuestionForm = ({
   initialData,
 }: EditQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: QuestionState = { message: null, errors: {} };
+  const initialState: QcmState = { message: null, errors: {} };
 
   const updateQuestionWithId = updateQuestion.bind(null, initialData.id);
 

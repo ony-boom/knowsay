@@ -6,8 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { QuestionState } from "@/lib/actions/types";
-import { StoreQuestion, StoreQuestionSchema } from "@/schemas/questionSchema";
+import { QcmState } from "@/lib/actions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -21,53 +20,35 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { createQuestion } from "@/lib/actions/create-question";
+import { createQcm } from "@/lib/actions/create-qcm";
+import { StoreQCM } from "@/schemas/qcmSchema";
+import { storeQcmSchema } from "@/schemas/qcmSchema";
 
 type CreateQuestionFormProps = {
   quizId: string;
 };
 
-export const CreateQuestionForm = ({ quizId }: CreateQuestionFormProps) => {
+export const CreateQCMForm = ({ quizId }: CreateQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: QuestionState = { message: null, errors: {} };
+  const initialState: QcmState = { message: null, errors: {} };
 
-  const createQuestionWithId = createQuestion.bind(null, quizId);
+  const createQcmWithId = createQcm.bind(null, quizId);
 
-  const [state, formAction] = useActionState(
-    createQuestionWithId,
-    initialState,
-  );
+  const [state, formAction] = useActionState(createQcmWithId, initialState);
 
-  const form = useForm<StoreQuestion>({
-    resolver: zodResolver(StoreQuestionSchema),
+  const form = useForm<StoreQCM>({
+    resolver: zodResolver(storeQcmSchema),
     defaultValues: {
-      content: "",
-      type: "QCM",
-      timer: 20,
-      quiz_id: quizId,
+      question: "",
     },
     mode: "onBlur",
   });
 
-  const onSubmit = (data: StoreQuestion) => {
+  const onSubmit = (data: StoreQCM) => {
     startTransition(() => {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
-          if (key === "content") {
-            const filteredValue = JSON.parse(value as never).filter(
-              (block: { content?: unknown[] }) => block.content?.length,
-            );
-            formData.append(key, JSON.stringify(filteredValue));
-            return;
-          }
           formData.append(key, String(value));
         }
       });
@@ -81,38 +62,10 @@ export const CreateQuestionForm = ({ quizId }: CreateQuestionFormProps) => {
         <form id="question-form" onSubmit={form.handleSubmit(onSubmit)}>
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="space-y-2">
-              <CardTitle>Create New Question</CardTitle>
+              <CardTitle>Create New QCM Question</CardTitle>
               <CardDescription>
-                Add a question to your quiz. Make sure to provide multiple
-                options and select the correct answer.
+                Add a multiple-choice question to your quiz.
               </CardDescription>
-            </div>
-            <div className="mr-4 flex flex-1 flex-row items-center justify-end gap-6">
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a question type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="QCM">Multiple Choice</SelectItem>
-                        <SelectItem value="OPEN">Open Answer</SelectItem>
-                        <SelectItem value="ORDER">Ordering</SelectItem>
-                        <SelectItem value="MATCHING">Matching</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
             <Button
               type="submit"
@@ -136,7 +89,7 @@ export const CreateQuestionForm = ({ quizId }: CreateQuestionFormProps) => {
             <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="content"
+                name="question"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Question Content</FormLabel>

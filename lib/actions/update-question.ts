@@ -1,6 +1,6 @@
 "use server";
 
-import { QuestionState, State } from "./types";
+import { QcmState, State } from "./types";
 import { StoreQuestionSchema } from "@/schemas/questionSchema";
 import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
@@ -10,7 +10,7 @@ export async function updateQuestion(
   id: string,
   prevState: State,
   formData: FormData,
-): Promise<QuestionState> {
+): Promise<QcmState> {
   // Extract form data
   const data = {
     quiz_id: formData.get("quiz_id") as string,

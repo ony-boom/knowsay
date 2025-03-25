@@ -14,6 +14,13 @@ export const quizQuestionWithQcmSchema = quizQuestionSchema.extend({
   qcm: qcmSchema,
 });
 
+export const storeQuizQuestionSchema = quizQuestionSchema.omit({
+  id: true,
+  position: true,
+});
+
 export type QuizQuestionWithQcm = z.infer<typeof quizQuestionWithQcmSchema>;
 
 export type QuizQuestion = z.infer<typeof quizQuestionSchema>;
+
+export type StoreQuizQuestion = z.infer<typeof storeQuizQuestionSchema>;

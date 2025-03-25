@@ -1,12 +1,10 @@
-export type QuestionState = {
+export type QcmState = {
   errors?: {
-    content?: string[];
-    type?: string[];
-    quiz_id?: string[];
+    question?: string[];
     _form?: string[];
   };
   message?: string | null;
-  questionId?: string;
+  qcmId?: string;
   success?: boolean;
 };
 
