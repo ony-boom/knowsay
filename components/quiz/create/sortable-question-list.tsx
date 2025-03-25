@@ -10,19 +10,22 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableItem } from "./sortable-item";
-import { QuestionSchema, Question } from "@/schemas/questionSchema";
 import { updateQuestionOrder } from "@/lib/actions/update-question-order";
+import {
+  QuizQuestionWithQcm,
+  quizQuestionWithQcmSchema,
+} from "@/schemas/quizQuestionSchema";
 
 // Schema for the form
 const sortableQuestionsSchema = z.object({
-  questions: z.array(QuestionSchema),
+  questions: z.array(quizQuestionWithQcmSchema),
 });
 
 export type SortableQuestionsSchema = z.infer<typeof sortableQuestionsSchema>;
 
 interface SortableQuestionListProps {
-  initialQuestions: Question[];
-  onReorder: (questions: Question[]) => void;
+  initialQuestions: QuizQuestionWithQcm[];
+  onReorder: (questions: QuizQuestionWithQcm[]) => void;
   sensors: ReturnType<typeof useSensors>;
 }
 

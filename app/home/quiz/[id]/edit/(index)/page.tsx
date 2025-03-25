@@ -9,8 +9,8 @@ import {
 import { ChevronsUpDown } from "lucide-react";
 import { getQuizById } from "@/lib/actions/fetch-quiz";
 import { getCategories } from "@/lib/actions/get-categories";
-import { getQuestionsByQuiz } from "@/lib/actions/get-questions";
 import { getTranslations } from "next-intl/server";
+import { getAllQuizQuestionsWithQcm } from "@/lib/actions/get-quiz-question";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -20,7 +20,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const [quiz, categories, questions] = await Promise.all([
     getQuizById(id),
     getCategories(),
-    getQuestionsByQuiz(id),
+    getAllQuizQuestionsWithQcm(id),
   ]);
 
   if (!quiz || !questions) {

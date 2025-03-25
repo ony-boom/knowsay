@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { qcmSchema } from "./qcmSchema";
 
 export const quizQuestionSchema = z.object({
   id: z.string().uuid(),
@@ -8,5 +9,11 @@ export const quizQuestionSchema = z.object({
   time_limit: z.number().int().positive(),
   points: z.number().int().nonnegative(),
 });
+
+export const quizQuestionWithQcmSchema = quizQuestionSchema.extend({
+  qcm: qcmSchema,
+});
+
+export type QuizQuestionWithQcm = z.infer<typeof quizQuestionWithQcmSchema>;
 
 export type QuizQuestion = z.infer<typeof quizQuestionSchema>;

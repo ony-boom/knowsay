@@ -11,10 +11,10 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { Question } from "@/schemas/questionSchema";
+import { QuizQuestionWithQcm } from "@/schemas/quizQuestionSchema";
 
 type QuestionManagerProps = {
-  initialQuestions: Question[];
+  initialQuestions: QuizQuestionWithQcm[];
 };
 
 export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
@@ -27,7 +27,8 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
     }),
   );
 
-  const [questions, setQuestions] = useState<Question[]>(initialQuestions);
+  const [questions, setQuestions] =
+    useState<QuizQuestionWithQcm[]>(initialQuestions);
 
   return (
     <div className="space-y-6">

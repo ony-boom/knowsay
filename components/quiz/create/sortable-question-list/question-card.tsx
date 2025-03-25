@@ -15,7 +15,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   <Card className="border-l-primary overflow-hidden border-l-2 transition-all hover:shadow-sm">
     <CardContent className="p-2">
       <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-        <QuestionInfo question={question} index={index} />
+        <QuestionInfo qcm={question["qcm"]} index={index} />
         <QuestionActions question={question} />
       </div>
     </CardContent>

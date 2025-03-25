@@ -1,7 +1,7 @@
 import { SortableQuestionsSchema } from "../sortable-question-list";
 
 interface QuestionInfoProps {
-  question: SortableQuestionsSchema["questions"][0];
+  qcm: SortableQuestionsSchema["questions"][0]["qcm"];
   index: number;
 }
 interface FirstContent {
@@ -9,11 +9,8 @@ interface FirstContent {
   text: string;
 }
 
-export const QuestionInfo: React.FC<QuestionInfoProps> = ({
-  question,
-  index,
-}) => {
-  const questionContent = JSON.parse(question.content);
+export const QuestionInfo: React.FC<QuestionInfoProps> = ({ qcm, index }) => {
+  const questionContent = JSON.parse(qcm.question);
   const firstContent = questionContent.at(0)?.content[0] as FirstContent;
 
   return (
@@ -24,9 +21,6 @@ export const QuestionInfo: React.FC<QuestionInfoProps> = ({
       <h4 className="line-clamp-1 max-w-[300px] overflow-hidden text-sm font-medium text-ellipsis whitespace-nowrap">
         {firstContent?.text ?? ""}
       </h4>
-      <div className="text-muted-foreground ml-1 shrink-0 text-xs">
-        {question.type}
-      </div>
     </div>
   );
 };
