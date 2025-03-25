@@ -37,7 +37,7 @@ export default function Layout({
             <LanguageSwitch />
             <div className="hidden md:flex">
               <SignOutButton>
-                <Button size="icon"  variant="ghost" className="p-0">
+                <Button size="icon" variant="ghost" className="p-0">
                   <LogOut />
                 </Button>
               </SignOutButton>
@@ -55,7 +55,11 @@ export default function Layout({
         <section className="bg-neutral-50-50 flex items-center justify-between py-4">
           {!isAtHomeRoot && <HomeBreadcrumb />}
 
-          <Button variant="link" className="flex items-center gap-2 px-6" onClick={() => redirect("/home/account")}>
+          <Button
+            variant="link"
+            className="flex items-center gap-2 px-6"
+            onClick={() => redirect("/home/account")}
+          >
             <Avatar>
               <AvatarImage
                 src={
@@ -73,7 +77,7 @@ export default function Layout({
           </Button>
 
           {isAtHomeRoot && (
-            <div className="flex gap-4 px-6">
+            <div className="flex flex-col gap-4 px-6 sm:flex-row">
               <Button
                 asChild
                 variant="outline"
