@@ -13,9 +13,9 @@ export async function createQuizFormAction(
 ): Promise<State> {
   let id;
   // Extract form data
-  const user = await currentUser();
+  const clerkUser = await currentUser();
 
-  if (!user) {
+  if (!clerkUser) {
     redirect("/auth/login");
   }
 
@@ -39,10 +39,16 @@ export async function createQuizFormAction(
   }
 
   try {
+    const { data: user } = await supabase
+      .from("users")
+      .select("id")
+      .eq("clerk_id", clerkUser.id)
+      .single();
+
     const { data, error } = await supabase
       .from("quiz")
       .insert({
-        // creator_id: user.id,
+        creator_id: user?.id,
         title: validatedFields.data.title,
         description: validatedFields.data.description,
         difficulty: validatedFields.data.difficulty,
