@@ -3,8 +3,8 @@ import { z } from "zod";
 export const qcmSchema = z.object({
   qcm_id: z.string().uuid(),
   question: z.string(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  created_at: z.coerce.date(),
+  updated_at: z.coerce.date(),
 });
 
 export const storeQcmSchema = qcmSchema

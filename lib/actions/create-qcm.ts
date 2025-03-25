@@ -22,12 +22,6 @@ export async function createQcm(
     question: (formData.get("question") as string) || "New question",
   };
 
-  // Extract quiz question data
-  const quizQuestionData = {
-    quiz_id: quizId,
-    qcm_id: "", // Will be filled after QCM creation
-  };
-
   // Validate QCM input using Zod schema
   const validatedQcm = storeQcmSchema.safeParse(qcmData);
 
@@ -58,7 +52,7 @@ export async function createQcm(
 
     // Now create the quiz question with the newly created QCM ID
     const quizQuestionWithQcmId: StoreQuizQuestion = {
-      ...quizQuestionData,
+      quiz_id: quizId,
       qcm_id: qcmResult.qcm_id,
       points: 1,
       time_limit: 30,

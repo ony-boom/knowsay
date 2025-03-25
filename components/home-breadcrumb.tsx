@@ -113,7 +113,7 @@ function renderBreadcrumbContent(pathname: string, isId: boolean) {
 function IdContent({ id }: { id: string }) {
   const pathname = usePathname();
   const isQuizPath = pathname.includes("/quiz");
-  const path = isQuizPath ? "quiz" : "challenges";
+  const path = isQuizPath ? "quizzes" : "challenges";
 
   const { data, isLoading } = useSWR<{ title: string }>(
     `/api/${path}/${id}`,

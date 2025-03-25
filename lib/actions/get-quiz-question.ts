@@ -145,3 +145,53 @@ export async function getAllQuizQuestionsWithQcm(quizId: string) {
     return [];
   }
 }
+
+/**
+ * Get a single quiz question with its QCM details by ID
+ */
+export async function getQuizQuestionWithQcm(id: string) {
+  try {
+    if (!id) {
+      throw new Error("Question ID is required");
+    }
+
+    const { data, error } = await supabase
+      .from("quiz_questions")
+      .select(
+        `
+        *,
+        qcm:qcm_id(
+          qcm_id,
+          question,
+          created_at,
+          updated_at,
+          qcm_options:qcm_options(
+            option_id,
+            option_text,
+            option_image_url,
+            is_correct
+          )
+        )
+      `,
+      )
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    // Validate the data against schema
+    const validatedData = quizQuestionWithQcmSchema.safeParse(data);
+
+    if (!validatedData.success) {
+      console.error("Validation error:", validatedData.error);
+      throw new Error("Invalid data returned from database");
+    }
+
+    return validatedData.data;
+  } catch (error) {
+    console.error("Error fetching quiz question with QCM:", error);
+    throw error;
+  }
+}

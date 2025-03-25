@@ -1,16 +1,15 @@
-import { EditQuestionForm } from "@/components/quiz/edit/edit-question-form";
+import { UpdateQcmForm } from "@/components/quiz/edit/update-qcm-form";
 import { Card } from "@/components/ui/card";
-import { getQuestion } from "@/lib/actions/get-questions";
+import { getQuizQuestionWithQcm } from "@/lib/actions/get-quiz-question";
 
 export default async function EditQuestionPage(props: {
   params: Promise<{
-    id: string;
     questionId: string;
   }>;
 }) {
-  const { id, questionId } = await props.params;
+  const { questionId } = await props.params;
 
-  const question = await getQuestion(questionId);
+  const question = await getQuizQuestionWithQcm(questionId);
 
   if (!question) {
     return (
@@ -26,7 +25,7 @@ export default async function EditQuestionPage(props: {
 
   return (
     <Card>
-      <EditQuestionForm quizId={id} initialData={question} />
+      <UpdateQcmForm initialData={question} />
     </Card>
   );
 }

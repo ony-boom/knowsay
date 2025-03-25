@@ -7,11 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { QcmState } from "@/lib/actions/types";
-import {
-  Question,
-  StoreQuestion,
-  StoreQuestionSchema,
-} from "@/schemas/questionSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -25,57 +20,42 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { updateQuestion } from "@/lib/actions/update-question";
+import { updateQcm } from "@/lib/actions/update-qcm";
+import { QuizQuestionWithQcm } from "@/schemas/quizQuestionSchema";
+import { StoreQCM, storeQcmSchema } from "@/schemas/qcmSchema";
 
 type EditQuestionFormProps = {
-  quizId: string;
-  initialData: Question;
+  initialData: QuizQuestionWithQcm;
 };
 
-export const EditQuestionForm = ({
-  quizId,
-  initialData,
-}: EditQuestionFormProps) => {
+export const UpdateQcmForm = ({ initialData }: EditQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: QcmState = { message: null, errors: {} };
 
-  const updateQuestionWithId = updateQuestion.bind(null, initialData.id);
+  const updateQuestionWithId = updateQcm.bind(
+    null,
+    initialData.qcm_id,
+    initialData.id,
+  );
 
   const [state, formAction] = useActionState(
     updateQuestionWithId,
     initialState,
   );
 
-  const form = useForm<StoreQuestion>({
-    resolver: zodResolver(StoreQuestionSchema),
+  const form = useForm<StoreQCM>({
+    resolver: zodResolver(storeQcmSchema),
     defaultValues: {
-      content: initialData.content,
-      type: initialData.type,
-      timer: initialData.timer || 20,
-      quiz_id: quizId,
+      question: initialData.qcm.question,
     },
     mode: "onBlur",
   });
 
-  const onSubmit = (data: StoreQuestion) => {
+  const onSubmit = (data: StoreQCM) => {
     startTransition(() => {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
-          if (key === "content") {
-            const filteredValue = JSON.parse(value as never).filter(
-              (block: { content?: unknown[] }) => block.content?.length,
-            );
-            formData.append(key, JSON.stringify(filteredValue));
-            return;
-          }
           formData.append(key, String(value));
         }
       });
@@ -88,37 +68,10 @@ export const EditQuestionForm = ({
       <form id="question-form" onSubmit={form.handleSubmit(onSubmit)}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="space-y-2">
-            <CardTitle>Edit Question</CardTitle>
+            <CardTitle>Edit QCM Question</CardTitle>
             <CardDescription>
-              Update your question details and save changes when done.
+              Update your multiple-choice question and save changes when done.
             </CardDescription>
-          </div>
-          <div className="mr-4 flex flex-1 flex-row items-center justify-end gap-6">
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a question type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="QCM">Multiple Choice</SelectItem>
-                      <SelectItem value="OPEN">Open Answer</SelectItem>
-                      <SelectItem value="ORDER">Ordering</SelectItem>
-                      <SelectItem value="MATCHING">Matching</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
           <Button
             type="submit"
@@ -127,7 +80,11 @@ export const EditQuestionForm = ({
               !form.formState.isValid || !form.formState.isDirty || isPending
             }
           >
-            {isPending ? "Updating..." : "Update Question"}
+            {isPending
+              ? "Updating..."
+              : state.success === true
+                ? "Saved"
+                : "Update Question"}
           </Button>
         </CardHeader>
 
@@ -135,7 +92,7 @@ export const EditQuestionForm = ({
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="content"
+              name="question"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Question Content</FormLabel>
