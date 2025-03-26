@@ -1,16 +1,28 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createChallengeSchema } from "@/schemas/challengeSchema";
 import { supabase } from "@/lib/supabase";
 import { currentUser } from "@clerk/nextjs/server";
-import { State } from "./types";
+import type { Challenge } from "@/schemas/challengeSchema";
+
+export type ChallengeState = {
+  errors?: {
+    title?: string[];
+    description?: string[];
+    start_time?: string[];
+    end_time?: string[];
+    is_team_based?: string[];
+    _form?: string[];
+  };
+  message?: string | null;
+  challenge?: Challenge;
+};
 
 export async function createChallengeAction(
-  prevState: State,
+  prevState: ChallengeState,
   data: FormData,
-): Promise<State> {
+): Promise<ChallengeState> {
   let challengeId;
   // Extract form data
   const clerkUser = await currentUser();
@@ -81,6 +93,5 @@ export async function createChallengeAction(
     };
   }
 
-  revalidatePath("/home/challenge");
-  redirect(`/home/challenge/${challengeId}`);
+  redirect(`/home/challenge/${challengeId}/edit`);
 }
