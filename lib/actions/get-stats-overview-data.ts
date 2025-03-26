@@ -16,17 +16,21 @@ export async function getStatsOverviewData() {
     .single();
 
   return Promise.all([
-    supabase
-      .from("quiz_attempts")
-      .select("*", { count: "exact" })
-      .eq("user_id", user!.id)
-      .eq("status", "completed"),
+    supabase.rpc(
+      "distinct_quiz_attempts",
+      {
+        user_uuid: user!.id,
+      },
+      { count: "exact" },
+    ),
 
-    supabase
-      .from("test_attempts")
-      .select("*", { count: "exact" })
-      .eq("user_id", user!.id)
-      .eq("status", "completed"),
+    supabase.rpc(
+      "distinct_test_attempts",
+      {
+        user_uuid: user!.id,
+      },
+      { count: "exact" },
+    ),
 
     supabase.rpc(
       "get_completed_attempts",

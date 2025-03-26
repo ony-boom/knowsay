@@ -27,3 +27,22 @@ export async function getAllQuizAttempts(quizId: string) {
 
   return data as QuizAttempt[];
 }
+
+export async function getQuizAttemptById(attemptId: string) {
+  const { data, error } = await supabase
+    .from("quiz_attempts")
+    .select(
+      `
+        *,
+        user:user_id (*)
+      `,
+    )
+    .eq("id", attemptId)
+    .single();
+  if (error) {
+    console.error("Error fetching quiz attempt:", error);
+    return null;
+  }
+
+  return data as QuizAttempt;
+}

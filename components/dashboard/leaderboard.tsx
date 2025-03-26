@@ -22,7 +22,7 @@ export const Leaderboard = async () => {
         <div className="space-y-4">
           {data.map((item, index) => (
             <LeaderboardItem
-              key={item.user_id}
+              key={index}
               user={{
                 ...item,
                 rank: index + 1,

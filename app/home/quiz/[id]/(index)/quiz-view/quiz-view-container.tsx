@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useLayoutEffect,
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import React, { useLayoutEffect, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { DynamicQuestionView } from "./dynamic-question-view";
 import { AnswerView } from "@/components/quiz/take/answer-view";
@@ -16,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { QuizQuestion } from "@/schemas/quizQuestionSchema";
 import { QCM } from "@/schemas/qcmSchema";
 import { QuizAttempt } from "@/schemas/quizAttemptSchema";
-import { ChevronLeft, ChevronRight, Redo } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, Redo } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { updateQuizAttempt } from "@/lib/actions/update-quiz-attempt";
 
@@ -67,7 +61,6 @@ const PreviousAttempts = ({
 );
 
 export function QuizViewContainer(props: QuizViewContainerProps) {
-  const { setState } = useTakeQuizState;
   const {
     currentQuestion,
     score,
@@ -77,7 +70,10 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
     setQuestionAsFinished,
     incrementScore,
     finishedQuestions,
+    selectedAnswers,
   } = useTakeQuizState();
+
+  const { setState } = useTakeQuizState;
 
   const questionsContainerRef = useRef<HTMLDivElement>(null);
   const questionRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -89,11 +85,15 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
   );
 
   const [showPreviousAttempts, setShowPreviousAttempts] =
-    useState(hasPreviousAttempts);
+    React.useState(hasPreviousAttempts);
 
   const isDone =
     currentQuestion === questions.length - 1 &&
     finishedQuestions.size === questions.length;
+
+  const currentQuestionId = questions[currentQuestion]?.qcm_id;
+  const currentQuestionAnswered = finishedQuestions.has(currentQuestionId);
+  const currentQuestionSelected = Boolean(selectedAnswers[currentQuestionId]);
 
   const submitQuizAttempt = useCallback(async () => {
     await updateQuizAttempt({
@@ -123,11 +123,13 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
     }
   }, [currentQuestion]);
 
-  const handleAnswerSubmit = (isCorrect: boolean, id: string) => {
-    if (isCorrect && !finishedQuestions.has(id)) {
+  const handleCheckAnswer = () => {
+    const answer = selectedAnswers[currentQuestionId];
+    if (!answer) return;
+    if (answer.isCorrect) {
       incrementScore();
     }
-    setQuestionAsFinished(id);
+    setQuestionAsFinished(currentQuestionId);
   };
 
   const handleRetakeQuiz = () => {
@@ -173,7 +175,7 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
                     You scored {score} out of {questions.length}
                   </p>
                   <div className="flex justify-center gap-4">
-                    <Button onClick={reset} variant="outline">
+                    <Button onClick={handleRetakeQuiz} variant="outline">
                       Retake Quiz
                     </Button>
                     {hasPreviousAttempts && (
@@ -221,9 +223,6 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
                       <AnswerView
                         questionId={question.qcm_id}
                         readOnly={finishedQuestions.has(question.qcm_id)}
-                        onAnswerSubmit={(isCorrect) =>
-                          handleAnswerSubmit(isCorrect, question.qcm_id)
-                        }
                       />
                     </motion.div>
                   ))}
@@ -242,12 +241,22 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
                   >
                     <ChevronLeft className="mr-1 h-4 w-4" /> Previous
                   </Button>
-                  <Button
-                    onClick={nextQuestion}
-                    disabled={questions.length - 1 === currentQuestion}
-                  >
-                    Next <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
+
+                  {currentQuestionAnswered ? (
+                    <Button
+                      onClick={nextQuestion}
+                      disabled={questions.length - 1 === currentQuestion}
+                    >
+                      Next <ChevronRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleCheckAnswer}
+                      disabled={!currentQuestionSelected}
+                    >
+                      <Check /> Check Answer
+                    </Button>
+                  )}
                 </motion.div>
               </>
             )}

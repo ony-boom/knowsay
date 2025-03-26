@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarIcon, UserCircle, Users } from "lucide-react";
+import { UserCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,16 +14,6 @@ import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { QuizzesTab } from "@/components/dashboard/tab-items/quizzes";
 import { ChallengesTab } from "@/components/dashboard/tab-items/challenges";
-
-// Types
-interface Challenge {
-  id: string;
-  title: string;
-  start_date: string;
-  end_date: string;
-  participants: number;
-  rank: number;
-}
 
 interface Test {
   id: string;

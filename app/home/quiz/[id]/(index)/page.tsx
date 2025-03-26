@@ -14,8 +14,10 @@ export default async function QuizPage(props: {
   const { id } = await props.params;
   const quiz = await getQuizById(id);
 
-  const questions = await getAllQuizQuestions(id);
-  const previousAttempts = await getAllQuizAttempts(id);
+  const [questions, previousAttempts] = await Promise.all([
+    getAllQuizQuestions(id),
+    getAllQuizAttempts(id),
+  ]);
 
   if (questions.length === 0) {
     return (

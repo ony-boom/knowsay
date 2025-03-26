@@ -15,11 +15,9 @@ export async function getQuizzesWithScoresAndStatus() {
     .eq("clerk_id", clerkUser.id)
     .single();
 
-  const { data, error } = await supabase
-    .rpc("get_quizzes_with_user_score", {
-      user_uuid: user.id,
-    })
-    .range(0, 2);
+  const { data, error } = await supabase.rpc("get_quizzes_with_user_score", {
+    user_uuid: user.id,
+  });
 
   if (error) {
     console.error(error);
@@ -35,4 +33,5 @@ export type QuizzesWithScoreAndStatus = {
   status: string;
   score: number;
   difficulty: Quiz["difficulty"];
+  attempt_id: string;
 };
