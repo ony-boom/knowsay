@@ -1,13 +1,14 @@
+"use server";
+
 import { cn } from "@/lib/utils";
 import { Medal, Trophy, UserCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LeaderBoardEntry } from "@/lib/definitions";
-import { clerkClient } from "@clerk/nextjs/server";
+import { clerkClient as clerkClientFn } from "@clerk/nextjs/server";
 
 export const LeaderboardItem = async ({ user }: LeaderboardItemProps) => {
-  const clerkUser = await (
-    await clerkClient()
-  ).users.getUser(user.user_clerk_id);
+  const clerkClient = await clerkClientFn();
+  const clerkUser = await clerkClient.users.getUser(user.user_clerk_id);
 
   // Function to render rank icon or number
   const renderRankIndicator = () => {

@@ -2,16 +2,16 @@
 
 import { supabase } from "@/lib/supabase";
 import { z } from "zod";
-import { AnswerSchema } from "@/schemas/answerSchema";
+import { qcmOptionSchema } from "@/schemas/qcmOptionSchema";
 
 export async function getAnswers(questionId: string) {
   const { data, error } = await supabase
-    .from("answers")
+    .from("qcm_options")
     .select("*")
-    .eq("question_id", questionId);
+    .eq("qcm_id", questionId);
 
   if (error) throw new Error(error.message);
-  const validatedData = z.array(AnswerSchema).safeParse(data);
+  const validatedData = z.array(qcmOptionSchema).safeParse(data);
 
   if (!validatedData.success) {
     console.error(validatedData.error);

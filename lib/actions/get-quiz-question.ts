@@ -53,19 +53,18 @@ export async function getQuizQuestions(
 export async function getQuizQuestion(id: string) {
   const { data, error } = await supabase
     .from("quiz_questions")
-    .select("*")
+    .select(
+      `
+    *,
+    qcm:qcm_id (*)
+  `,
+    )
     .eq("id", id)
     .single();
 
-  if (error) throw new Error(error.message);
+  if (error) throw new Error(error?.message);
 
-  // Validate data against schema
-  const validatedData = quizQuestionSchema.safeParse(data);
-  if (!validatedData.success) {
-    throw new Error("Invalid data returned from database");
-  }
-
-  return validatedData.data;
+  return data;
 }
 
 /**
@@ -79,7 +78,17 @@ export async function getAllQuizQuestions(quizId: string) {
 
     const { data, error } = await supabase
       .from("quiz_questions")
-      .select("*")
+      .select(
+        `
+        *,
+        qcm:qcm_id (
+          qcm_id,
+          question,
+          created_at,
+          updated_at
+        )
+      `,
+      )
       .eq("quiz_id", quizId)
       .order("position", { ascending: true });
 
@@ -87,8 +96,7 @@ export async function getAllQuizQuestions(quizId: string) {
       throw new Error(error.message);
     }
 
-    const validatedData = quizQuestionArraySchema.parse(data);
-    return validatedData;
+    return data;
   } catch (error) {
     console.error("Error fetching quiz questions:", error);
     return [];

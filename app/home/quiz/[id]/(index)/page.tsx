@@ -1,6 +1,7 @@
 import { getQuizById } from "@/lib/actions/get-quiz";
 import { QuizViewContainer } from "./quiz-view/quiz-view-container";
 import { getAllQuizQuestions } from "@/lib/actions/get-quiz-question";
+import { getAllQuizAttempts } from "@/lib/actions/get-all-quiz-attempts";
 
 export default async function QuizPage(props: {
   params: Promise<{
@@ -14,6 +15,7 @@ export default async function QuizPage(props: {
   const quiz = await getQuizById(id);
 
   const questions = await getAllQuizQuestions(id);
+  const previousAttempts = await getAllQuizAttempts(id);
 
   if (questions.length === 0) {
     return (
@@ -37,7 +39,11 @@ export default async function QuizPage(props: {
         )}
       </hgroup>
 
-      <QuizViewContainer questions={questions} />
+      <QuizViewContainer
+        quizId={id}
+        previousAttempts={previousAttempts}
+        questions={questions}
+      />
     </>
   );
 }

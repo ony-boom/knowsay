@@ -8,13 +8,13 @@ import { swrFetcher } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
 import { Button } from "@/components/ui/button";
-import { Answer } from "@/schemas/answerSchema";
+import { QCMOptionArray } from "@/schemas/qcmOptionSchema";
 
 export function QcmAnswer(props: QcmAnswerProps) {
   const [value, setValue] = useState<string>();
 
   const { questionId, onAnswerSubmitted, ...divProps } = props;
-  const { data: answers, isLoading } = useSWR<Answer[]>(
+  const { data: answers, isLoading } = useSWR<QCMOptionArray>(
     `/api/questions/answers/${questionId}`,
     swrFetcher,
   );
@@ -49,7 +49,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
   };
 
   const handleSubmit = () => {
-    const isCorrect = correctAnswer?.content === value;
+    const isCorrect = correctAnswer?.option_text === value;
     onAnswerSubmitted(isCorrect);
   };
 
@@ -62,8 +62,9 @@ export function QcmAnswer(props: QcmAnswerProps) {
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {answers?.map((answer) => {
-            const isSelected = value === answer.content;
-            const isCorrectAnswer = correctAnswer?.content === answer.content;
+            const isSelected = value === answer.option_text;
+            const isCorrectAnswer =
+              correctAnswer?.option_text === answer.option_text;
             const isIncorrectSelection =
               isSelected && !isCorrectAnswer && props.readOnly;
             const isCorrectSelection =
@@ -72,42 +73,49 @@ export function QcmAnswer(props: QcmAnswerProps) {
             return (
               <div
                 className={cn(
-                  "border-border hover:bg-secondary relative flex cursor-pointer items-center rounded-md border p-4 transition-all",
+                  "border-border hover:bg-secondary/40 relative flex cursor-pointer items-center rounded-lg border p-5 shadow-sm transition-all",
                   {
-                    "bg-secondary border-ring": isSelected && !props.readOnly,
-                    "border-green-600 bg-green-50 dark:bg-green-950/20":
+                    "bg-secondary border-primary shadow-md":
+                      isSelected && !props.readOnly,
+                    "border-green-600 bg-green-50 shadow-md dark:bg-green-950/30":
                       isCorrectSelection,
-                    "border-red-600 bg-red-50 dark:bg-red-950/20":
+                    "border-red-600 bg-red-50 shadow-md dark:bg-red-950/30":
                       isIncorrectSelection,
                   },
                 )}
-                key={answer.id}
-                onClick={() => !props.readOnly && handleCheck(answer.content)}
+                key={answer.option_id}
+                onClick={() =>
+                  !props.readOnly && handleCheck(answer.option_text!)
+                }
               >
                 <div
                   className={cn(
-                    "border-muted-foreground relative mr-3.5 h-5 w-5 flex-shrink-0 rounded-full border",
+                    "border-muted-foreground relative mr-4 h-6 w-6 flex-shrink-0 rounded-full border transition-all",
                     {
-                      "border-ring border-4": isSelected && !props.readOnly,
-                      "border-4 border-green-600": isCorrectSelection,
-                      "border-4 border-red-600": isIncorrectSelection,
+                      "border-primary border-[5px]":
+                        isSelected && !props.readOnly,
+                      "border-[5px] border-green-600": isCorrectSelection,
+                      "border-[5px] border-red-600": isIncorrectSelection,
                     },
                   )}
                 >
                   <RadioGroupItem
                     className="sr-only"
                     disabled={props.readOnly}
-                    value={answer.content}
-                    id={answer.id}
+                    value={answer.option_text!}
+                    id={answer.option_id}
                   />
                 </div>
                 <Label
-                  className={cn("w-full cursor-pointer font-normal", {
+                  className={cn("w-full cursor-pointer text-base font-medium", {
                     "pointer-events-none": props.readOnly,
+                    "text-primary": isSelected && !props.readOnly,
+                    "text-green-700 dark:text-green-400": isCorrectSelection,
+                    "text-red-700 dark:text-red-400": isIncorrectSelection,
                   })}
-                  htmlFor={answer.id}
+                  htmlFor={answer.option_id}
                 >
-                  {answer.content}
+                  {answer.option_text}
                 </Label>
               </div>
             );
@@ -117,8 +125,8 @@ export function QcmAnswer(props: QcmAnswerProps) {
 
       <Button
         variant="secondary"
-        className="w-full sm:w-max"
         onClick={handleSubmit}
+        disabled={!value || props.readOnly}
       >
         Check
       </Button>

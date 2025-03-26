@@ -8,41 +8,23 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Quiz } from "@/schemas/quizSchema";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import {
+  getQuizzesWithScoresAndStatus,
+  QuizzesWithScoreAndStatus,
+} from "@/lib/actions/get-quiz-with-scores-and-status";
 
-const QuizItem = ({ quiz }: { quiz: Quiz }) => (
-  <div className="flex items-center justify-between rounded-lg border p-4">
-    <div>
-      <p className="font-medium">{quiz.title}</p>
-      <div className="mt-1 flex items-center gap-2">
-        <Badge
-          variant={
-            quiz.difficulty === "EASY"
-              ? "outline"
-              : quiz.difficulty === "MEDIUM"
-                ? "secondary"
-                : "destructive"
-          }
-        >
-          {quiz.difficulty}
-        </Badge>
-        {/* <span className="text-muted-foreground text-sm">{quiz.status}</span> */}
-      </div>
-    </div>
-    {/* <div className="text-lg font-bold">{quiz.score}%</div> */}
-  </div>
-);
+export const QuizzesTab = async () => {
+  const quizzes = await getQuizzesWithScoresAndStatus();
 
-export const QuizzesTab = () => {
-  // TODO: Fetch quizzes from server action
-  const quizzes: Quiz[] = [];
   return (
     <Card>
       <CardHeader>
         <CardTitle>Recent Quizzes</CardTitle>
-        <CardDescription>Your recently completed quizzes</CardDescription>
+        <CardDescription>
+          Your recently created/completed quizzes
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -61,3 +43,27 @@ export const QuizzesTab = () => {
     </Card>
   );
 };
+const QuizItem = ({ quiz }: { quiz: QuizzesWithScoreAndStatus }) => (
+  <div className="flex items-center justify-between rounded-lg border p-4">
+    <div>
+      <p className="font-medium">{quiz.title}</p>
+      <div className="mt-1 flex items-center gap-2">
+        <Badge
+          variant={
+            quiz.difficulty === "EASY"
+              ? "outline"
+              : quiz.difficulty === "MEDIUM"
+                ? "secondary"
+                : "default"
+          }
+        >
+          {quiz.difficulty ?? "MEDIUM"}
+        </Badge>
+        <span className="text-muted-foreground text-sm">
+          {quiz.status ?? "DRAFT"}
+        </span>
+      </div>
+    </div>
+    <div className="text-lg font-bold">{quiz.score ?? 0}%</div>
+  </div>
+);
