@@ -88,10 +88,13 @@ export default function Layout({
                 </Link>
               </Button>
               <Button
+                asChild
                 variant="outline"
                 className="hover:cursor-pointe border-2 border-dashed border-neutral-300 p-4"
               >
-                {t("home.toolbar.buttons.createChallenge")}
+                <Link href="/home/challenge/create">
+                  {t("home.toolbar.buttons.createChallenge")}
+                </Link>
               </Button>
               <Button
                 variant="outline"
