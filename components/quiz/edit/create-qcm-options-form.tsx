@@ -16,7 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AnswerItem } from "@/components/quiz/create/answer-item";
 import { toast } from "sonner";
-import { QCMOption, storeQcmOptionSchema } from "@/schemas/qcmOptionSchema";
+import {
+  QCMOption,
+  QCMOptionArray,
+  storeQcmOptionSchema,
+} from "@/schemas/qcmOptionSchema";
 import { z } from "zod";
 import {
   createQcmOptions,
@@ -32,11 +36,13 @@ const createOptionsSchema = z.object({
 type CreateQcmOptionsFormProps = {
   qcm_id: string;
   questionId: string;
+  initialData: QCMOptionArray;
 };
 
 export const CreateQcmOptionsForm = ({
   qcm_id,
   questionId,
+  initialData,
 }: CreateQcmOptionsFormProps) => {
   const params = useParams();
   const quizId = typeof params.id === "string" ? params.id : "";
@@ -44,8 +50,15 @@ export const CreateQcmOptionsForm = ({
   const [isPending, startTransition] = useTransition();
   const initialState: QcmOptionState = { message: undefined, errors: {} };
 
-  const [options, setOptions] = useState<QCMOption[]>([]);
+  const [options, setOptions] = useState<QCMOption[]>(initialData || []);
   const [newOption, setNewOption] = useState("");
+  // Track whether options were modified from initial data
+  const [optionsModified, setOptionsModified] = useState(false);
+  // Track option changes by ID to know which ones are new or modified
+  const [modifiedOptionIds, setModifiedOptionIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [newOptionIds, setNewOptionIds] = useState<Set<string>>(new Set());
 
   // Create the server action with proper binding
   const createOptionsAction = createQcmOptions.bind(
@@ -56,14 +69,26 @@ export const CreateQcmOptionsForm = ({
   );
   const [state, formAction] = useActionState(createOptionsAction, initialState);
 
+  // Load initial data when component mounts or when initialData changes
+  useEffect(() => {
+    if (initialData && initialData.length > 0) {
+      setOptions(initialData);
+      setOptionsModified(false);
+      // Reset tracking sets when new initial data is loaded
+      setModifiedOptionIds(new Set());
+      setNewOptionIds(new Set());
+    }
+  }, [initialData]);
+
   const addOption = () => {
     if (!newOption.trim()) {
       toast.error("Option text is required");
       return;
     }
 
+    const newId = uuidv4();
     const newOptionItem: QCMOption = {
-      option_id: uuidv4(),
+      option_id: newId,
       qcm_id,
       option_text: newOption,
       option_image_url: null,
@@ -72,6 +97,14 @@ export const CreateQcmOptionsForm = ({
 
     setOptions([...options, newOptionItem]);
     setNewOption("");
+    setOptionsModified(true);
+
+    // Track this as a new option
+    setNewOptionIds((prev) => {
+      const updated = new Set(prev);
+      updated.add(newId);
+      return updated;
+    });
   };
 
   const updateOption = (updatedOption: QCMOption) => {
@@ -80,6 +113,16 @@ export const CreateQcmOptionsForm = ({
         option.option_id === updatedOption.option_id ? updatedOption : option,
       ),
     );
+    setOptionsModified(true);
+
+    // If this isn't a new option, mark it as modified
+    if (!newOptionIds.has(updatedOption.option_id)) {
+      setModifiedOptionIds((prev) => {
+        const updated = new Set(prev);
+        updated.add(updatedOption.option_id);
+        return updated;
+      });
+    }
   };
 
   const toggleCorrect = (id: string) => {
@@ -90,10 +133,34 @@ export const CreateQcmOptionsForm = ({
           : option,
       ),
     );
+    setOptionsModified(true);
+
+    // If this isn't a new option, mark it as modified
+    if (!newOptionIds.has(id)) {
+      setModifiedOptionIds((prev) => {
+        const updated = new Set(prev);
+        updated.add(id);
+        return updated;
+      });
+    }
   };
 
   const deleteOption = (id: string) => {
     setOptions(options.filter((option) => option.option_id !== id));
+    setOptionsModified(true);
+
+    // Remove from tracking sets if it exists
+    setModifiedOptionIds((prev) => {
+      const updated = new Set(prev);
+      updated.delete(id);
+      return updated;
+    });
+
+    setNewOptionIds((prev) => {
+      const updated = new Set(prev);
+      updated.delete(id);
+      return updated;
+    });
   };
 
   const handleSubmit = () => {
@@ -115,9 +182,22 @@ export const CreateQcmOptionsForm = ({
         // Create a FormData to submit
         const formData = new FormData();
 
+        // Only submit options that are new or modified
+        const optionsToSubmit = options.filter(
+          (option) =>
+            newOptionIds.has(option.option_id) ||
+            modifiedOptionIds.has(option.option_id),
+        );
+
+        if (optionsToSubmit.length === 0) {
+          toast.info("No changes to save");
+          return;
+        }
+
         // Add each option to the FormData with indexed fields
-        options.forEach((option, index) => {
+        optionsToSubmit.forEach((option, index) => {
           formData.append(`option_text_${index}`, option.option_text || "");
+          formData.append(`option_id_${index}`, option.option_id);
           if (option.option_image_url) {
             formData.append(
               `option_image_url_${index}`,
@@ -127,6 +207,11 @@ export const CreateQcmOptionsForm = ({
           formData.append(
             `is_correct_${index}`,
             option.is_correct ? "true" : "false",
+          );
+          // Add a flag to indicate if this is a new option
+          formData.append(
+            `is_new_${index}`,
+            newOptionIds.has(option.option_id) ? "true" : "false",
           );
         });
 
@@ -146,12 +231,22 @@ export const CreateQcmOptionsForm = ({
   useEffect(() => {
     if (state?.success) {
       toast.success(state.message || "Options saved successfully");
-      // Clear options after successful save
-      setOptions([]);
+      // Reset tracking after successful save
+      setModifiedOptionIds(new Set());
+      setNewOptionIds(new Set());
+      setOptionsModified(false);
     } else if (state?.message && !state.success) {
       toast.error(state.message);
     }
   }, [state]);
+
+  // Check if the button should be enabled
+  const isSaveButtonDisabled =
+    isPending ||
+    options.length < 2 ||
+    !options.some((option) => option.is_correct) ||
+    !optionsModified ||
+    (newOptionIds.size === 0 && modifiedOptionIds.size === 0);
 
   return (
     <Card className="w-full">
@@ -215,6 +310,8 @@ export const CreateQcmOptionsForm = ({
                   }
                   onToggleCorrect={toggleCorrect}
                   onDelete={deleteOption}
+                  isNew={newOptionIds.has(option.option_id)}
+                  isModified={modifiedOptionIds.has(option.option_id)}
                 />
               ))}
             </div>
@@ -228,15 +325,14 @@ export const CreateQcmOptionsForm = ({
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button
-          onClick={handleSubmit}
-          disabled={
-            options.length < 2 ||
-            !options.some((option) => option.is_correct) ||
-            isPending
-          }
-        >
+      <CardFooter className="flex justify-between">
+        <div className="text-muted-foreground text-sm">
+          {modifiedOptionIds.size > 0 && (
+            <span>{modifiedOptionIds.size} modified • </span>
+          )}
+          {newOptionIds.size > 0 && <span>{newOptionIds.size} new</span>}
+        </div>
+        <Button onClick={handleSubmit} disabled={isSaveButtonDisabled}>
           <Save className="mr-2 h-4 w-4" />
           {isPending ? "Saving..." : state?.success ? "Saved" : "Save Options"}
         </Button>

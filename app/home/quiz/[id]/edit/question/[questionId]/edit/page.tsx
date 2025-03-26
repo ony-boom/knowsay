@@ -1,6 +1,7 @@
 import { CreateQcmOptionsForm } from "@/components/quiz/edit/create-qcm-options-form";
 import { UpdateQcmForm } from "@/components/quiz/edit/update-qcm-form";
 import { Card } from "@/components/ui/card";
+import { getQcmOptions } from "@/lib/actions/get-qcm-options";
 import { getQuizQuestionWithQcm } from "@/lib/actions/get-quiz-question";
 
 export default async function EditQuestionPage(props: {
@@ -11,6 +12,8 @@ export default async function EditQuestionPage(props: {
   const { questionId } = await props.params;
 
   const question = await getQuizQuestionWithQcm(questionId);
+
+  const qcmOptions = await getQcmOptions(question.qcm_id);
 
   if (!question) {
     return (
@@ -29,7 +32,11 @@ export default async function EditQuestionPage(props: {
       <Card>
         <UpdateQcmForm initialData={question} />
       </Card>
-      <CreateQcmOptionsForm qcm_id={question.qcm_id} questionId={question.id} />
+      <CreateQcmOptionsForm
+        qcm_id={question.qcm_id}
+        questionId={question.id}
+        initialData={qcmOptions}
+      />
     </div>
   );
 }

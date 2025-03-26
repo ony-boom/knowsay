@@ -22,6 +22,11 @@ export const storeQcmOptionSchema = z.object({
   is_correct: z.boolean(),
 });
 
+// Schema for array validation
+export const qcmOptionsArraySchema = z.array(qcmOptionSchema);
+
 export type StoreQCMOption = z.infer<typeof storeQcmOptionSchema>;
 
 export type QCMOption = z.infer<typeof qcmOptionSchema>;
+
+export type QCMOptionArray = z.infer<typeof qcmOptionsArraySchema>;
