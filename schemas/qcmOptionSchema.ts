@@ -15,4 +15,13 @@ export const qcmOptionSchema = z
     },
   );
 
+// store qcm option schema
+export const storeQcmOptionSchema = z.object({
+  option_text: z.string().nullable(),
+  option_image_url: z.string().nullable(),
+  is_correct: z.boolean(),
+});
+
+export type StoreQCMOption = z.infer<typeof storeQcmOptionSchema>;
+
 export type QCMOption = z.infer<typeof qcmOptionSchema>;

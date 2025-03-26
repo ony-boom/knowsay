@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronsUpDown } from "lucide-react";
-import { getQuizById } from "@/lib/actions/fetch-quiz";
+import { getQuizById } from "@/lib/actions/get-quiz";
 import { getCategories } from "@/lib/actions/get-categories";
 import { getTranslations } from "next-intl/server";
 import { getAllQuizQuestionsWithQcm } from "@/lib/actions/get-quiz-question";

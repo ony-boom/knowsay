@@ -1,3 +1,4 @@
+import { CreateQcmOptionsForm } from "@/components/quiz/edit/create-qcm-options-form";
 import { UpdateQcmForm } from "@/components/quiz/edit/update-qcm-form";
 import { Card } from "@/components/ui/card";
 import { getQuizQuestionWithQcm } from "@/lib/actions/get-quiz-question";
@@ -24,8 +25,11 @@ export default async function EditQuestionPage(props: {
   }
 
   return (
-    <Card>
-      <UpdateQcmForm initialData={question} />
-    </Card>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <UpdateQcmForm initialData={question} />
+      </Card>
+      <CreateQcmOptionsForm qcm_id={question.qcm_id} questionId={question.id} />
+    </div>
   );
 }

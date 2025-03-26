@@ -6,7 +6,7 @@ import { QuizList } from "@/components/quiz/quiz-list";
 import { QuizListSkeleton } from "@/components/quiz/quiz-list-skeleton";
 import { CategoryCardList } from "@/components/quiz/category-card";
 import { CategoryCardSkeleton } from "@/components/quiz/category-card-skeleton";
-import { fetchQuizzes } from "@/lib/actions/fetch-quiz";
+import { getQuizzes } from "@/lib/actions/get-quiz";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -21,7 +21,7 @@ export default async function Page(props: {
 
   const currentPage = Number(searchParams?.page) || 1;
 
-  const { totalPages } = await fetchQuizzes(query, currentPage, category);
+  const { totalPages } = await getQuizzes(query, currentPage, category);
 
   return (
     <div className="flex w-full flex-col gap-6 md:flex-row">

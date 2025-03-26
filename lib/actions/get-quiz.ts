@@ -12,7 +12,7 @@ const ITEMS_PER_PAGE = 9;
  * @param categorySlug Optional category filter
  * @returns Filtered quizzes with pagination data
  */
-export async function fetchQuizzes(
+export async function getQuizzes(
   query: string = "",
   page?: number,
   categorySlug?: string,

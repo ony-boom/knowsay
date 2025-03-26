@@ -1,4 +1,4 @@
-import { getQuizById } from "@/lib/actions/fetch-quiz";
+import { getQuizById } from "@/lib/actions/get-quiz";
 import { QuizViewContainer } from "./quiz-view/quiz-view-container";
 import { getAllQuizQuestions } from "@/lib/actions/get-quiz-question";
 

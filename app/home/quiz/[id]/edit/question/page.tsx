@@ -9,8 +9,10 @@ export default async function CreateQuestionPage(props: {
   const { id } = await props.params;
 
   return (
-    <Card>
-      <CreateQCMForm quizId={id} />
-    </Card>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CreateQCMForm quizId={id} />
+      </Card>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import { QuizListItem } from "./quiz-list-item";
 import { Suspense } from "react";
 import { QuizListSkeleton } from "./quiz-list-skeleton";
-import { fetchQuizzes } from "@/lib/actions/fetch-quiz";
+import { getQuizzes } from "@/lib/actions/get-quiz";
 
 interface QuizListProps {
   query: string;
@@ -14,7 +14,7 @@ export async function QuizList({
   currentPage,
   categorySlug,
 }: QuizListProps) {
-  const { quizzes } = await fetchQuizzes(query, currentPage, categorySlug);
+  const { quizzes } = await getQuizzes(query, currentPage, categorySlug);
 
   return (
     <Suspense
