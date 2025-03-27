@@ -9,7 +9,8 @@ import {
 import { getChallengeById } from "@/lib/actions/get-challenge";
 import { getChallengeQuizWithQuiz } from "@/lib/actions/get-challenge-quiz";
 import { ChallengeQuizWithQuizArray } from "@/schemas/challengeQuizSchema";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Users } from "lucide-react";
+import Link from "next/link";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
@@ -45,15 +46,25 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6 pt-0 md:px-6 md:py-8">
-      <hgroup className="space-y-2 md:space-y-4">
-        <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
-          Edit Challenge
-        </h1>
-        <p className="text-foreground/80 text-base md:text-lg">
-          Update your challenge details to refine the experience for
-          participants.
-        </p>
-      </hgroup>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <hgroup className="space-y-2 md:space-y-4">
+          <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
+            Edit Challenge
+          </h1>
+          <p className="text-foreground/80 text-base md:text-lg">
+            Update your challenge details to refine the experience for
+            participants.
+          </p>
+        </hgroup>
+
+        <Link
+          href={`/home/challenge/${id}/participants`}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
+        >
+          <Users className="h-4 w-4" />
+          Manage Participants
+        </Link>
+      </div>
 
       {/* edit quiz form */}
       <Collapsible className="w-full rounded-lg border" defaultOpen>
