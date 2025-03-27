@@ -19,6 +19,15 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { deleteChallengeQuizAction } from "@/lib/actions/delete-challenge-quiz";
+import { toast } from "sonner";
 
 // Schema for a challenge quiz item, including linked quiz details
 const sortableQuizzesSchema = z.object({
@@ -30,13 +39,75 @@ export type SortableQuizzesSchema = z.infer<typeof sortableQuizzesSchema>;
 interface QuizManagerProps {
   initialQuizzes: SortableQuizzesSchema["quizzes"];
 }
+
 interface QuizCardProps {
   quizItem: SortableQuizzesSchema["quizzes"][number];
   index: number;
   onDelete?: (id: string) => void;
 }
 
+const DeleteQuizDialog: React.FC<{
+  quizTitle: string;
+  quizId: string;
+  onDelete: () => void;
+  onClose: () => void;
+}> = ({ quizTitle, quizId, onDelete, onClose }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const result = await deleteChallengeQuizAction(quizId);
+
+      if (result.success) {
+        toast.success("The quiz has been removed from this challenge.", {
+          description: "Quiz removed successfully",
+        });
+        onDelete();
+      } else {
+        toast.error(result.errors?._form?.[0] || "Failed to remove quiz", {
+          description: "Error removing quiz",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An unexpected error occurred", {
+        description: "Error removing quiz",
+      });
+    } finally {
+      setIsDeleting(false);
+      onClose();
+    }
+  };
+
+  return (
+    <DialogContent className="sm:max-w-md">
+      <div className="space-y-4">
+        <DialogTitle className="text-xl font-bold">Remove Quiz</DialogTitle>
+        <p>
+          Are you sure you want to remove &quot;{quizTitle}&quot; from this
+          challenge? This action cannot be undone.
+        </p>
+        <DialogFooter className="flex justify-end space-x-2">
+          <Button variant="outline" onClick={onClose} disabled={isDeleting}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Removing..." : "Remove Quiz"}
+          </Button>
+        </DialogFooter>
+      </div>
+    </DialogContent>
+  );
+};
+
 const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index, onDelete }) => {
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
   return (
     <Card className="group relative border transition-all hover:shadow-md">
       <CardContent className="flex items-center gap-4 p-3">
@@ -51,15 +122,27 @@ const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index, onDelete }) => {
             <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap">
               {quizItem.quiz.difficulty}
             </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-destructive hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full"
-              onClick={() => onDelete?.(quizItem.quiz.quiz_id)}
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="sr-only">Remove quiz from challenge</span>
-            </Button>
+
+            <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-destructive hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  <span className="sr-only">Remove quiz from challenge</span>
+                </Button>
+              </DialogTrigger>
+              <DeleteQuizDialog
+                quizTitle={quizItem.quiz.title}
+                quizId={quizItem.id}
+                onDelete={() => {
+                  if (onDelete) onDelete(quizItem.id);
+                }}
+                onClose={() => setOpenDeleteDialog(false)}
+              />
+            </Dialog>
           </div>
         </div>
       </CardContent>
@@ -127,6 +210,11 @@ export const QuizManager: React.FC<QuizManagerProps> = ({ initialQuizzes }) => {
     move(activeIndex, overIndex);
   };
 
+  const handleDelete = (id: string) => {
+    const updatedQuizzes = quizzes.filter((quiz) => quiz.id !== id);
+    setQuizzes(updatedQuizzes);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -172,7 +260,11 @@ export const QuizManager: React.FC<QuizManagerProps> = ({ initialQuizzes }) => {
             <div className="flex flex-col space-y-3">
               {fields.map((quizItem, index) => (
                 <SortableItem key={quizItem.id} id={quizItem.id}>
-                  <QuizCard quizItem={quizItem} index={index} />
+                  <QuizCard
+                    quizItem={quizItem}
+                    index={index}
+                    onDelete={handleDelete}
+                  />
                 </SortableItem>
               ))}
             </div>
