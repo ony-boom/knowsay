@@ -7,12 +7,19 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { getChallengeById } from "@/lib/actions/get-challenge";
+import { getChallengeQuizWithQuiz } from "@/lib/actions/get-challenge-quiz";
+import { ChallengeQuizWithQuizArray } from "@/schemas/challengeQuizSchema";
 import { ChevronsUpDown } from "lucide-react";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
 
   const challenge = await getChallengeById(id);
+
+  const challengeQuiz: ChallengeQuizWithQuizArray =
+    await getChallengeQuizWithQuiz(id);
+
+  console.log("Challenge quiz", challengeQuiz); // Debugging line
 
   if (!challenge) {
     return (
@@ -79,7 +86,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <p className="text-foreground/80 mt-4 mb-4 text-lg">
             Manage your quizzes and track your progress seamlessly.
           </p>
-          <QuizManager initialQuizzes={[]} />
+          <QuizManager initialQuizzes={challengeQuiz} />
         </CollapsibleContent>
       </Collapsible>
     </div>

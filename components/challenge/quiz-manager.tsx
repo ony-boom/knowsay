@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,7 @@ import { SortableItem } from "@/components/quiz/create/sortable-item";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PlusIcon } from "lucide-react";
+import { challengeQuizWithQuizArraySchema } from "@/schemas/challengeQuizSchema";
 import {
   DndContext,
   KeyboardSensor,
@@ -20,22 +21,7 @@ import {
 
 // Schema for a challenge quiz item, including linked quiz details
 const sortableQuizzesSchema = z.object({
-  quizzes: z.array(
-    z.object({
-      id: z.string().uuid(), // challenge quiz id
-      challenge_id: z.string().uuid(),
-      quiz_id: z.string().uuid(),
-      position: z.number().int().positive(),
-      created_at: z.coerce.date(),
-      quiz: z.object({
-        quiz_id: z.string().uuid(),
-        title: z.string().min(3, "Title is required"),
-        description: z.string().nullable().optional(),
-        difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
-        is_public: z.boolean(),
-      }),
-    }),
-  ),
+  quizzes: challengeQuizWithQuizArraySchema,
 });
 
 export type SortableQuizzesSchema = z.infer<typeof sortableQuizzesSchema>;
@@ -49,25 +35,38 @@ interface QuizCardProps {
   index: number;
 }
 
-const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index }) => (
-  <Card className="border transition-all hover:shadow">
-    <CardContent className="p-4">
-      <div className="flex flex-col gap-2">
-        <h4 className="text-lg font-bold">
-          {index + 1}. {quizItem.quiz.title}
-        </h4>
-        {quizItem.quiz.description && (
-          <p className="text-muted-foreground text-sm">
-            {quizItem.quiz.description}
-          </p>
-        )}
-        <p className="text-muted-foreground text-xs">
-          Difficulty: {quizItem.quiz.difficulty}
-        </p>
-      </div>
-    </CardContent>
-  </Card>
-);
+const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index }) => {
+  const difficultyColors = {
+    easy: "bg-green-100 text-green-800",
+    medium: "bg-amber-100 text-amber-800",
+    hard: "bg-red-100 text-red-800",
+  };
+
+  const difficultyColor =
+    difficultyColors[
+      quizItem.quiz.difficulty.toLowerCase() as keyof typeof difficultyColors
+    ] || "bg-slate-100 text-slate-800";
+
+  return (
+    <Card className="group relative border transition-all hover:shadow-md">
+      <CardContent className="flex items-center gap-4 p-3">
+        <div className="bg-primary/10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
+          <span className="text-primary text-xs font-medium">{index + 1}</span>
+        </div>
+        <div className="flex flex-1 items-center justify-between gap-2 overflow-hidden">
+          <h4 className="text-foreground group-hover:text-primary truncate text-sm font-medium">
+            {quizItem.quiz.title}
+          </h4>
+          <span
+            className={`rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ${difficultyColor}`}
+          >
+            {quizItem.quiz.difficulty}
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 const AddQuizButton: React.FC = () => {
   const pathname = usePathname();
@@ -88,9 +87,11 @@ export const QuizManager: React.FC<QuizManagerProps> = ({ initialQuizzes }) => {
     useSensor(KeyboardSensor),
   );
 
+  const [quizzes, setQuizzes] = useState(initialQuizzes);
+
   const form = useForm<SortableQuizzesSchema>({
     resolver: zodResolver(sortableQuizzesSchema),
-    defaultValues: { quizzes: initialQuizzes },
+    defaultValues: { quizzes },
   });
 
   const { fields, move } = useFieldArray({
@@ -99,7 +100,10 @@ export const QuizManager: React.FC<QuizManagerProps> = ({ initialQuizzes }) => {
     keyName: "_id",
   });
 
-  const [, setQuizzes] = useState(initialQuizzes);
+  // Update form values when quizzes state changes
+  useEffect(() => {
+    form.reset({ quizzes });
+  }, [quizzes, form]);
 
   const handleMove = async ({
     activeIndex,
@@ -111,10 +115,17 @@ export const QuizManager: React.FC<QuizManagerProps> = ({ initialQuizzes }) => {
     quizId: string;
   }) => {
     console.log("Moving quiz:", { activeIndex, overIndex, quizId });
+
+    // Create a new array with the moved item
+    const updatedQuizzes = [...quizzes];
+    const [movedItem] = updatedQuizzes.splice(activeIndex, 1);
+    updatedQuizzes.splice(overIndex, 0, movedItem);
+
     // Update local state
-    move(activeIndex, overIndex);
-    const updatedQuizzes = form.getValues().quizzes;
     setQuizzes(updatedQuizzes);
+
+    // Update form state
+    move(activeIndex, overIndex);
   };
 
   return (
@@ -159,7 +170,7 @@ export const QuizManager: React.FC<QuizManagerProps> = ({ initialQuizzes }) => {
             items={fields.map((q) => q.id)}
             strategy={rectSortingStrategy}
           >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="flex flex-col space-y-3">
               {fields.map((quizItem, index) => (
                 <SortableItem key={quizItem.id} id={quizItem.id}>
                   <QuizCard quizItem={quizItem} index={index} />
