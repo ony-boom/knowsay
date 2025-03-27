@@ -10,7 +10,7 @@ import { QCMOptionArray } from "@/schemas/qcmOptionSchema";
 import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
 
 export function QcmAnswer(props: QcmAnswerProps) {
-  const { questionId, ...divProps } = props;
+  const { questionId, onAnswerChange, ...divProps } = props;
   const { selectedAnswers, setSelectedAnswer } = useTakeQuizState();
 
   const selectedValue = selectedAnswers[questionId]?.value;
@@ -25,6 +25,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
   const correctAnswer = answers?.find((answer) => answer.is_correct);
 
   const handleCheck = (value: string) => {
+    onAnswerChange?.(questionId);
     if (!readOnly) {
       setSelectedAnswer(
         questionId,
@@ -131,4 +132,5 @@ export function QcmAnswer(props: QcmAnswerProps) {
 export type QcmAnswerProps = React.ComponentProps<typeof RadioGroup> & {
   questionId: string;
   readOnly?: boolean;
+  onAnswerChange?: (answer: string) => void;
 };

@@ -5,6 +5,7 @@ interface UseTakeQuizState {
   currentQuestion: number;
   score: number;
   finishedQuestions: Set<string>;
+  currentQuestionTimeout: number;
 
   // Add selected answers tracking to the store
   selectedAnswers: Record<string, { value: string; isCorrect: boolean }>;
@@ -29,6 +30,7 @@ export const useTakeQuizState = create<UseTakeQuizState>((set) => {
     totalQuestions: 0,
     currentQuestion: 0,
     score: 0,
+    currentQuestionTimeout: 0,
     finishedQuestions: new Set<string>(),
     selectedAnswers: {},
 
