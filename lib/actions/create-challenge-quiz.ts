@@ -7,6 +7,7 @@ import {
 } from "@/schemas/challengeQuizSchema";
 import { supabase } from "@/lib/supabase";
 import { currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export type ChallengeQuizState = {
   errors?: {
@@ -95,6 +96,8 @@ export async function createChallengeQuizzesAction(
         success: false,
       };
     }
+
+    revalidatePath(`/home/challenge/${challengeId}/edit`);
 
     return {
       message: "Quizzes successfully added to challenge",
