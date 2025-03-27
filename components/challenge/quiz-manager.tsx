@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SortableItem } from "@/components/quiz/create/sortable-item";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Trash2 } from "lucide-react";
 import { challengeQuizWithQuizArraySchema } from "@/schemas/challengeQuizSchema";
 import {
   DndContext,
@@ -18,6 +18,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { Button } from "../ui/button";
 
 // Schema for a challenge quiz item, including linked quiz details
 const sortableQuizzesSchema = z.object({
@@ -29,24 +30,13 @@ export type SortableQuizzesSchema = z.infer<typeof sortableQuizzesSchema>;
 interface QuizManagerProps {
   initialQuizzes: SortableQuizzesSchema["quizzes"];
 }
-
 interface QuizCardProps {
   quizItem: SortableQuizzesSchema["quizzes"][number];
   index: number;
+  onDelete?: (id: string) => void;
 }
 
-const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index }) => {
-  const difficultyColors = {
-    easy: "bg-green-100 text-green-800",
-    medium: "bg-amber-100 text-amber-800",
-    hard: "bg-red-100 text-red-800",
-  };
-
-  const difficultyColor =
-    difficultyColors[
-      quizItem.quiz.difficulty.toLowerCase() as keyof typeof difficultyColors
-    ] || "bg-slate-100 text-slate-800";
-
+const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index, onDelete }) => {
   return (
     <Card className="group relative border transition-all hover:shadow-md">
       <CardContent className="flex items-center gap-4 p-3">
@@ -57,11 +47,20 @@ const QuizCard: React.FC<QuizCardProps> = ({ quizItem, index }) => {
           <h4 className="text-foreground group-hover:text-primary truncate text-sm font-medium">
             {quizItem.quiz.title}
           </h4>
-          <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ${difficultyColor}`}
-          >
-            {quizItem.quiz.difficulty}
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap">
+              {quizItem.quiz.difficulty}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive h-7 w-7 rounded-full"
+              onClick={() => onDelete?.(quizItem.quiz.quiz_id)}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              <span className="sr-only">Remove quiz from challenge</span>
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
