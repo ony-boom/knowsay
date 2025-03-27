@@ -2,12 +2,13 @@ import { getQuizzes } from "@/lib/actions/get-quiz";
 import { Suspense } from "react";
 import { QuizListSkeleton } from "../quiz/quiz-list-skeleton";
 import { QuizListForChallengeItem } from "./quiz-list-for-challenge-item";
+import { getChallengeQuizWithQuiz } from "@/lib/actions/get-challenge-quiz";
 
 interface QuizListForChallengeProps {
   query: string;
   currentPage: number;
   categorySlug?: string;
-  challengeId?: string;
+  challengeId: string;
 }
 
 export async function QuizListForChallenge({
@@ -16,7 +17,10 @@ export async function QuizListForChallenge({
   categorySlug,
   challengeId,
 }: QuizListForChallengeProps) {
-  const { quizzes } = await getQuizzes(query, currentPage, categorySlug);
+  const [{ quizzes }, challengeQuiz] = await Promise.all([
+    getQuizzes(query, currentPage, categorySlug),
+    getChallengeQuizWithQuiz(challengeId),
+  ]);
 
   return (
     <Suspense
@@ -33,8 +37,8 @@ export async function QuizListForChallenge({
               description={quiz.description || "No description available"}
               category={quiz.categories.name}
               difficulty={quiz.difficulty}
-              createdAt={new Date(quiz.created_at).toLocaleDateString()}
               challengeId={challengeId}
+              challengeQuiz={challengeQuiz}
             />
           ))}
         </div>
