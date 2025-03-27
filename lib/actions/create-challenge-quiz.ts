@@ -26,8 +26,6 @@ export async function createChallengeQuizzesAction(
   // Verify user authentication
   const clerkUser = await currentUser();
 
-  console.log("Clerk user", clerkUser); // Debugging line
-
   if (!clerkUser) {
     redirect("/auth/login");
   }
@@ -98,6 +96,7 @@ export async function createChallengeQuizzesAction(
     }
 
     revalidatePath(`/home/challenge/${challengeId}/edit`);
+    revalidatePath("/home/challenge/${challengeId}/edit/add-quiz");
 
     return {
       message: "Quizzes successfully added to challenge",
