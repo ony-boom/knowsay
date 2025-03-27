@@ -1,3 +1,4 @@
+import { QuizManager } from "@/components/challenge/quiz-manager";
 import { UpdateChallengeForm } from "@/components/quiz/edit/update-challenge-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,6 +61,25 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         </CollapsibleTrigger>
         <CollapsibleContent className="border-t p-4 pt-0">
           <UpdateChallengeForm initialData={challenge} />
+        </CollapsibleContent>
+      </Collapsible>
+
+      {/* quiz manager */}
+      <Collapsible className="w-full rounded-lg border">
+        <CollapsibleTrigger asChild>
+          <div className="flex w-full items-center justify-between p-4 font-medium">
+            <span>Quiz Manager</span>
+            <Button variant="ghost" size="sm">
+              <ChevronsUpDown className="h-4 w-4" />
+              <span className="sr-only">Toggle</span>
+            </Button>
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="border-t p-4 pt-0">
+          <p className="text-foreground/80 mt-4 mb-4 text-lg">
+            Manage your quizzes and track your progress seamlessly.
+          </p>
+          <QuizManager initialQuizzes={[]} />
         </CollapsibleContent>
       </Collapsible>
     </div>
