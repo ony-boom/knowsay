@@ -17,7 +17,6 @@ export const createChallengeQuizSchema = z.object({
 export const createChallengeQuizzesSchema = z.array(
   z.object({
     quiz_id: z.string().uuid("Please select a valid quiz"),
-    position: z.number().int().positive("Position must be a positive integer"),
   }),
 );
 

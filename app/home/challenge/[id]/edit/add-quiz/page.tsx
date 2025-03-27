@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function Page(props: {
+  params: Promise<{ id: string }>;
   searchParams?: Promise<{
     query?: string;
     page?: string;
@@ -24,6 +25,8 @@ export default async function Page(props: {
   const currentPage = Number(searchParams?.page) || 1;
 
   const { totalPages } = await getQuizzes(query, currentPage, category);
+
+  const { id } = await props.params;
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6 pt-0 md:px-6 md:py-8">
@@ -71,6 +74,7 @@ export default async function Page(props: {
               query={query}
               currentPage={currentPage}
               categorySlug={category}
+              challengeId={id}
             />
           </Suspense>
           <div className="mt-8">

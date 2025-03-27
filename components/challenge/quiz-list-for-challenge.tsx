@@ -7,12 +7,14 @@ interface QuizListForChallengeProps {
   query: string;
   currentPage: number;
   categorySlug?: string;
+  challengeId?: string;
 }
 
 export async function QuizListForChallenge({
   query,
   currentPage,
   categorySlug,
+  challengeId,
 }: QuizListForChallengeProps) {
   const { quizzes } = await getQuizzes(query, currentPage, categorySlug);
 
@@ -32,6 +34,7 @@ export async function QuizListForChallenge({
               category={quiz.categories.name}
               difficulty={quiz.difficulty}
               createdAt={new Date(quiz.created_at).toLocaleDateString()}
+              challengeId={challengeId}
             />
           ))}
         </div>
