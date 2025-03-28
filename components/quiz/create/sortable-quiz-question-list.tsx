@@ -1,9 +1,8 @@
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
 import { EmptyQuestionState } from "./sortable-question-list/empty-question-state";
-import { QuestionCard } from "./sortable-question-list/question-card";
+import { QuizQuestionCard } from "./sortable-question-list/quiz-question-card";
 import { closestCenter, DndContext, useSensors } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -17,27 +16,29 @@ import {
 } from "@/schemas/quizQuestionSchema";
 
 // Schema for the form
-const sortableQuestionsSchema = z.object({
+const sortableQuizQuestionsSchema = z.object({
   questions: z.array(quizQuestionWithQcmSchema),
 });
 
-export type SortableQuestionsSchema = z.infer<typeof sortableQuestionsSchema>;
+export type SortableQuizQuestionsSchema = z.infer<
+  typeof sortableQuizQuestionsSchema
+>;
 
 interface SortableQuestionListProps {
-  initialQuestions: QuizQuestionWithQcm[];
+  initialQuizQuestions: QuizQuestionWithQcm[];
   onReorder: (questions: QuizQuestionWithQcm[]) => void;
   sensors: ReturnType<typeof useSensors>;
 }
 
-export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
-  initialQuestions,
+export const SortableQuizQuestionList: React.FC<SortableQuestionListProps> = ({
+  initialQuizQuestions,
   onReorder,
   sensors,
 }: SortableQuestionListProps) => {
-  const form = useForm<SortableQuestionsSchema>({
-    resolver: zodResolver(sortableQuestionsSchema),
+  const form = useForm<SortableQuizQuestionsSchema>({
+    resolver: zodResolver(sortableQuizQuestionsSchema),
     defaultValues: {
-      questions: initialQuestions,
+      questions: initialQuizQuestions,
     },
   });
 
@@ -98,7 +99,7 @@ export const SortableQuestionList: React.FC<SortableQuestionListProps> = ({
         <div className="space-y-2">
           {fields.map((question, index) => (
             <SortableItem key={question.id} id={question.id}>
-              <QuestionCard question={question} index={index} />
+              <QuizQuestionCard question={question} index={index} />
             </SortableItem>
           ))}
         </div>
