@@ -8,11 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getUserCompletedChallenges } from "@/lib/actions/get-user-completed-challenges";
 import { formatDate } from "@/lib/utils";
 import { Challenge } from "@/schemas/challengeSchema";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Users } from "lucide-react";
+import Link from "next/link";
 
-const ChallengeItem = ({ challenge }: { challenge: Challenge }) => (
+const ChallengeItem = ({
+  challenge,
+}: {
+  challenge: ChallengeWithParticipants;
+}) => (
   <div className="rounded-lg border p-4">
     <div className="flex items-center justify-between">
       <h3 className="font-medium">{challenge.title}</h3>
@@ -24,18 +30,21 @@ const ChallengeItem = ({ challenge }: { challenge: Challenge }) => (
       <div className="flex items-center gap-1"></div>
       <CalendarIcon className="h-4 w-4" />
       <span>
-        {formatDate(challenge.start_time)} - {formatDate(challenge.end_time)}
+        {formatDate(challenge.start_time.toString())} -{" "}
+        {formatDate(challenge.end_time.toString())}
       </span>
     </div>
     <div className="flex items-center gap-1">
-      {/* <Users className="h-4 w-4" />
-      <span>{challenge.participants} participants</span> */}
+      <Users className="h-4 w-4" />
+      <span>{challenge.participant_count} participants</span>
     </div>
   </div>
 );
 
-export const ChallengesTab = () => {
-  const challenges: Challenge[] = [];
+export const ChallengesTab = async () => {
+  const completedChallenges: ChallengeWithParticipants[] =
+    await getUserCompletedChallenges();
+
   return (
     <Card>
       <CardHeader>
@@ -46,16 +55,29 @@ export const ChallengesTab = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {challenges.map((challenge) => (
-            <ChallengeItem key={challenge.challenge_id} challenge={challenge} />
-          ))}
+          {completedChallenges?.length === 0 ? (
+            <p className="text-muted-foreground text-center text-sm">
+              No completed challenges yet
+            </p>
+          ) : (
+            completedChallenges?.map((challenge) => (
+              <ChallengeItem
+                key={challenge.challenge_id}
+                challenge={challenge}
+              />
+            ))
+          )}
         </div>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full">
-          View All Challenges
+        <Button variant="outline" asChild className="w-full">
+          <Link href="/home/challenges">View All Challenges</Link>
         </Button>
       </CardFooter>
     </Card>
   );
+};
+
+type ChallengeWithParticipants = Challenge & {
+  participant_count: number;
 };

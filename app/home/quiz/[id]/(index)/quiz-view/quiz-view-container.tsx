@@ -351,6 +351,7 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
     isRunning,
     reset: resetTimer,
     isDone: isTimerDone,
+    pause: pauseTimer,
   } = useTimer(questions[currentQuestion]?.time_limit || 0);
 
   const submitQuizAttempt = useCallback(async () => {
@@ -389,10 +390,12 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
     if (answer.isCorrect) {
       incrementScore();
     }
+    pauseTimer();
     setQuestionAsFinished(currentQuestionId);
   }, [
     currentQuestionId,
     incrementScore,
+    pauseTimer,
     selectedAnswers,
     setQuestionAsFinished,
   ]);
@@ -479,7 +482,12 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
                       ref={(el) => {
                         questionRefs.current[index] = el;
                       }}
-                      className="w-full min-w-full flex-shrink-0 snap-center"
+                      className={cn(
+                        "w-full min-w-full flex-shrink-0 snap-center",
+                        {
+                          hidden: index !== currentQuestion,
+                        },
+                      )}
                       initial={{
                         opacity: 0,
                         x: currentQuestion > index ? -20 : 20,
@@ -546,7 +554,6 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
                     <Button
                       onClick={nextQuestion}
                       size="lg"
-                      className="px-6"
                       disabled={questions.length - 1 === currentQuestion}
                     >
                       Next <ChevronRight />
@@ -555,10 +562,6 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
                     <Button
                       onClick={handleCheckAnswer}
                       size="lg"
-                      className={cn(
-                        "px-6",
-                        currentQuestionSelected ? "animate-pulse" : "",
-                      )}
                       disabled={!currentQuestionSelected}
                     >
                       <Check /> Submit Answer
