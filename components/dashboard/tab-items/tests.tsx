@@ -51,7 +51,7 @@ export const TestsTab = async () => {
       </CardContent>
       <CardFooter>
         <Button variant="outline" asChild className="w-full">
-          <Link href="/home/tests">View All Test</Link>
+          <Link href="/home/test">View All Test</Link>
         </Button>
       </CardFooter>
     </Card>
