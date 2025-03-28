@@ -79,9 +79,7 @@ export default function Layout({
                       {user?.firstName?.charAt(0) ?? "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium">
-                    {user?.firstName || "User"}
-                  </span>
+                  <span className="text-sm font-medium">Learner</span>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="min-w-[320px] rounded-xl border shadow-lg backdrop-blur-sm">
                   <div className="border-b p-4">
