@@ -1,7 +1,6 @@
 import { UpdateTestForm } from "@/components/update-test-form";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Users } from "lucide-react";
-import Link from "next/link";
+import { ChevronsUpDown } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -47,14 +46,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             Update your test details to refine the assessment experience.
           </p>
         </hgroup>
-
-        <Link
-          href={`/home/test/${id}/participants`}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
-        >
-          <Users className="h-4 w-4" />
-          Manage Participants
-        </Link>
       </div>
 
       {/* edit test form */}
