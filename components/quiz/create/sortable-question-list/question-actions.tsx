@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
-import { SortableQuestionsSchema } from "../sortable-question-list";
+import { SortableQuizQuestionsSchema } from "../sortable-quiz-question-list";
 import { QuestionAnswersSheet } from "./question-answers-sheet";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
@@ -10,11 +10,11 @@ import { useParams, usePathname } from "next/navigation";
 import { DeleteQuestionDialog } from "./delete-question-dialog";
 import { useState } from "react";
 
-interface QuestionActionsProps {
-  question: SortableQuestionsSchema["questions"][0];
+interface QuizQuestionActionsProps {
+  question: SortableQuizQuestionsSchema["questions"][0];
 }
 
-export const QuestionActions: React.FC<QuestionActionsProps> = ({
+export const QuizQuestionActions: React.FC<QuizQuestionActionsProps> = ({
   question,
 }) => {
   const { id: quizId } = useParams();

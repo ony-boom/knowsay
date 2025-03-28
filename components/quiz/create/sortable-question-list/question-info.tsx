@@ -1,7 +1,7 @@
-import { SortableQuestionsSchema } from "../sortable-question-list";
+import { SortableQuizQuestionsSchema } from "../sortable-quiz-question-list";
 
-interface QuestionInfoProps {
-  qcm: SortableQuestionsSchema["questions"][0]["qcm"];
+interface QuizQuestionInfoProps {
+  qcm: SortableQuizQuestionsSchema["questions"][0]["qcm"];
   index: number;
 }
 interface FirstContent {
@@ -9,7 +9,10 @@ interface FirstContent {
   text: string;
 }
 
-export const QuestionInfo: React.FC<QuestionInfoProps> = ({ qcm, index }) => {
+export const QuizQuestionInfo: React.FC<QuizQuestionInfoProps> = ({
+  qcm,
+  index,
+}) => {
   const questionContent = JSON.parse(qcm.question);
   const firstContent = questionContent.at(0)?.content[0] as FirstContent;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SortableQuestionList } from "./sortable-question-list";
+import { SortableQuizQuestionList } from "./sortable-quiz-question-list";
 import { AddQuestionButton } from "./add-question-button";
 import { usePathname } from "next/navigation";
 import {
@@ -13,11 +13,13 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { QuizQuestionWithQcm } from "@/schemas/quizQuestionSchema";
 
-type QuestionManagerProps = {
-  initialQuestions: QuizQuestionWithQcm[];
+type QuizQuestionManagerProps = {
+  initialQuizQuestions: QuizQuestionWithQcm[];
 };
 
-export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
+export function QuizQuestionsManager({
+  initialQuizQuestions,
+}: QuizQuestionManagerProps) {
   const pathname = usePathname();
 
   const sensors = useSensors(
@@ -27,8 +29,8 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
     }),
   );
 
-  const [questions, setQuestions] =
-    useState<QuizQuestionWithQcm[]>(initialQuestions);
+  const [quizQuestions, setQuizQuestions] =
+    useState<QuizQuestionWithQcm[]>(initialQuizQuestions);
 
   return (
     <div className="space-y-6">
@@ -39,11 +41,11 @@ export function QuestionsManager({ initialQuestions }: QuestionManagerProps) {
       </div>
 
       <div className="mt-8">
-        <SortableQuestionList
+        <SortableQuizQuestionList
           sensors={sensors}
-          initialQuestions={questions}
-          onReorder={(reorderedQuestions) => {
-            setQuestions(reorderedQuestions);
+          initialQuizQuestions={quizQuestions}
+          onReorder={(reorderedQuizQuestions) => {
+            setQuizQuestions(reorderedQuizQuestions);
           }}
         />
       </div>
