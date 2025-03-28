@@ -112,15 +112,31 @@ function renderBreadcrumbContent(pathname: string, isId: boolean) {
 
 function IdContent({ id }: { id: string }) {
   const pathname = usePathname();
-  const isQuizPath = pathname.includes("/quiz");
-  const path = isQuizPath ? "quizzes" : "challenges";
+
+  // Map pathname segments to their corresponding API endpoints
+  const pathMapping: Record<string, string> = {
+    quiz: "quizzes",
+    challenge: "challenges",
+    test: "tests",
+    // Add more mappings as needed
+  };
+
+  // Find which path type we're currently on
+  const pathType = Object.keys(pathMapping).find((key) =>
+    pathname.includes(`/${key}`),
+  );
+  const apiPath = pathType ? pathMapping[pathType] : "items";
 
   const { data, isLoading } = useSWR<{ title: string }>(
-    `/api/${path}/${id}`,
+    `/api/${apiPath}/${id}`,
     swrFetcher,
   );
 
-  if (isLoading) return <Skeleton className="h-4 w-32" />;
+  if (isLoading) return <Skeleton className="h-4 w-32 animate-pulse" />;
 
-  return data ? <>{data.title}</> : null;
+  return data ? (
+    <>{data.title}</>
+  ) : (
+    <span className="text-muted-foreground italic">Untitled</span>
+  );
 }

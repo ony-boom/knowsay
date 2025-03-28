@@ -1,5 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import { ChallengeSchema } from "@/schemas/challengeSchema";
+import {
+  challengeSchema,
+  createChallengeSchema,
+} from "@/schemas/challengeSchema";
 import { z } from "zod";
 
 export async function GET() {
@@ -7,12 +10,12 @@ export async function GET() {
     const { data, error } = await supabase
       .from("challenges")
       .select("*")
-      .gt("end_date", new Date().toISOString());
+      .gt("end_time", new Date().toISOString());
 
     if (error) return Response.json({ error: error.message }, { status: 400 });
 
     // Validate the data against the schema
-    const validatedChallenges = z.array(ChallengeSchema).safeParse(data);
+    const validatedChallenges = z.array(challengeSchema).safeParse(data);
     if (!validatedChallenges.success) {
       return Response.json({ error: "Invalid data format" }, { status: 500 });
     }
@@ -28,22 +31,25 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Create a submission schema without required fields that DB generates
-    const ChallengeSubmissionSchema = ChallengeSchema.omit({
-      id: true,
-    });
-
-    // Validate the input
-    const result = ChallengeSubmissionSchema.safeParse(body);
+    // Use the createChallengeSchema for validation
+    const result = createChallengeSchema.safeParse(body);
     if (!result.success) {
       return Response.json({ error: result.error.format() }, { status: 400 });
     }
 
-    const { title, start_date, end_date, created_by } = result.data;
+    const { title, description, start_time, end_time, is_team_based } =
+      result.data;
 
-    const { data, error } = await supabase
-      .from("challenges")
-      .insert([{ title, start_date, end_date, created_by }]);
+    const { data, error } = await supabase.from("challenges").insert([
+      {
+        title,
+        description,
+        start_time,
+        end_time,
+        is_team_based,
+        creator_id: body.creator_id || null,
+      },
+    ]);
 
     if (error) return Response.json({ error: error.message }, { status: 400 });
 
