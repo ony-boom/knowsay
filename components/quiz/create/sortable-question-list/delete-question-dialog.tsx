@@ -9,11 +9,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import React from "react";
-import { deleteQuestion } from "@/lib/actions/delete-question";
 
 export const DeleteQuestionDialog = ({
-  id,
-  quizId,
+  // id,
+  // quizId,
   onClose,
 }: {
   id: string;
@@ -26,8 +25,8 @@ export const DeleteQuestionDialog = ({
     startTransition(async () => {
       try {
         // Use the server action to delete the question
-        const deleteAction = deleteQuestion.bind(null, id, quizId);
-        await deleteAction();
+        // const deleteAction = deleteQuestion.bind(null, id, quizId);
+        // await deleteAction();
         onClose(); // Close the dialog after successful deletion
       } catch (error) {
         console.error("Error deleting question:", error);
