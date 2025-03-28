@@ -19,7 +19,7 @@ const TestItem = ({ userTest }: { userTest: UserTestWithScore }) => (
     <div>
       <p className="font-medium">{userTest.tests.title}</p>
       <p className="text-muted-foreground text-sm">
-        Taken on {formatDate(userTest.tests.created_at)}
+        Taken on {formatDate(userTest.tests.created_at.toString())}
       </p>
     </div>
     <div className="text-lg font-bold">{userTest.score}%</div>
@@ -51,7 +51,7 @@ export const TestsTab = async () => {
       </CardContent>
       <CardFooter>
         <Button variant="outline" asChild className="w-full">
-          <Link href="/home/tests">View All Challenges</Link>
+          <Link href="/home/test">View All Test</Link>
         </Button>
       </CardFooter>
     </Card>

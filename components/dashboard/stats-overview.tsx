@@ -3,8 +3,8 @@ import { getStatsOverviewData } from "@/lib/actions/get-stats-overview-data";
 
 export const StatsOverview = async () => {
   const data = await getStatsOverviewData();
-  const quizCount = data[0].count ?? 0;
-  const challengeCount = data[2].count ?? 0;
+  const quizCount = data?.[0].count ?? 0;
+  const challengeCount = data?.[2].count ?? 0;
 
   return (
     <div className="grid gap-6 md:grid-cols-3">

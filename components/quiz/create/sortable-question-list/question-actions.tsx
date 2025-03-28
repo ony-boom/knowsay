@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
 import { SortableQuizQuestionsSchema } from "../sortable-quiz-question-list";
-import { QuestionAnswersSheet } from "./question-answers-sheet";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { DeleteQuestionDialog } from "./delete-question-dialog";
@@ -24,17 +23,6 @@ export const QuizQuestionActions: React.FC<QuizQuestionActionsProps> = ({
 
   return (
     <div className="mt-2 flex shrink-0 space-x-2 self-end sm:mt-0 sm:space-x-3 sm:self-auto">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="h-7 text-xs">
-            View Answers
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <QuestionAnswersSheet question={question} />
-        </DialogContent>
-      </Dialog>
-
       <Link
         href={`${pathname}/question/${question.id}/edit`}
         className="ring-offset-background hover:bg-muted focus-visible:ring-ring inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
