@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import { LanguageSwitch } from "@/components/language-switch";
 import { useTranslations } from "next-intl";
@@ -20,6 +20,57 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const LogoutButton = () => {
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
+  return (
+    <>
+      <Button
+        size="icon"
+        variant="ghost"
+        className="p-0"
+        aria-label="logout"
+        onClick={() => setIsLogoutDialogOpen(true)}
+      >
+        <LogOut />
+      </Button>
+
+      <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">
+              Confirm Logout
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to log out of your account? You will need to
+              sign in again to access your content.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end space-x-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsLogoutDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <SignOutButton>
+              <Button variant="destructive">Log Out</Button>
+            </SignOutButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
 
 export default function Layout({
   children,
@@ -44,11 +95,7 @@ export default function Layout({
           <nav className="flex items-center gap-2 md:gap-4">
             <LanguageSwitch />
             <div className="hidden md:flex">
-              <SignOutButton>
-                <Button size="icon" variant="ghost" className="p-0">
-                  <LogOut />
-                </Button>
-              </SignOutButton>
+              <LogoutButton />
             </div>
             <Button
               variant="ghost"
