@@ -234,10 +234,13 @@ export default function Layout({
                 </Link>
               </Button>
               <Button
+                asChild
                 variant="outline"
-                className="border-neutral-50-300 border-2 border-dashed p-4 hover:cursor-pointer"
+                className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
               >
-                {t("home.toolbar.buttons.createTest")}
+                <Link href="/home/test/create">
+                  {t("home.toolbar.buttons.createTest")}
+                </Link>
               </Button>
             </div>
           )}
