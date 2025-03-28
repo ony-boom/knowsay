@@ -29,7 +29,7 @@ export default async function MyQuizPage(props: {
           </p>
         </hgroup>
         <Link
-          href="/quiz/create"
+          href="/home/quiz/create"
           className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <Plus className="mr-2 h-4 w-4" />
