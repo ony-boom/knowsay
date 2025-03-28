@@ -1,7 +1,9 @@
 import React, { Suspense } from "react";
 import { getUserQuizzes } from "@/lib/actions/get-user-quiz";
-import { QuizListItem } from "@/components/quiz/quiz-list-item";
 import { QuizListSkeleton } from "@/components/quiz/quiz-list-skeleton";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { UserQuizListItem } from "@/components/user-quiz-list-item";
 
 export default async function MyQuizPage(props: {
   searchParams?: Promise<{
@@ -26,13 +28,20 @@ export default async function MyQuizPage(props: {
             Review and manage the quizzes you&apos;ve created.
           </p>
         </hgroup>
+        <Link
+          href="/quiz/create"
+          className="bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Create your own quiz
+        </Link>
       </div>
 
       <Suspense fallback={<QuizListSkeleton />}>
         {quizzes.length > 0 ? (
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {quizzes.map((quiz) => (
-              <QuizListItem
+              <UserQuizListItem
                 key={quiz.quiz_id}
                 quizId={quiz.quiz_id}
                 title={quiz.title}
