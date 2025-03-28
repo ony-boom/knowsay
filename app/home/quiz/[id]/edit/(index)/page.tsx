@@ -17,13 +17,13 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const id = params.id;
   const t = await getTranslations("quiz.edit");
 
-  const [quiz, categories, questions] = await Promise.all([
+  const [quiz, categories, quizQuestions] = await Promise.all([
     getQuizById(id),
     getCategories(),
     getAllQuizQuestionsWithQcm(id),
   ]);
 
-  if (!quiz || !questions) {
+  if (!quiz || !quizQuestions) {
     return (
       <div className="flex flex-col gap-6 px-6 py-8 pt-0">
         <h1 className="text-3xl font-black lg:text-5xl">
@@ -74,7 +74,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <p className="text-foreground/80 mt-4 text-lg">
             {t("sections.questionsDescription")}
           </p>
-          <QuizQuestionsManager initialQuizQuestions={questions} />
+          <QuizQuestionsManager initialQuizQuestions={quizQuestions} />
         </CollapsibleContent>
       </Collapsible>
     </div>

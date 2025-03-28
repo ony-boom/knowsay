@@ -7,13 +7,18 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { getTestById } from "@/lib/actions/get-test";
+import { TestQuestionsManager } from "@/components/test-question-manager";
+import { getAllTestQuestionsWithQcm } from "@/lib/actions/get-test-question";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
 
-  const test = await getTestById(id);
+  const [test, testQuestions] = await Promise.all([
+    getTestById(id),
+    getAllTestQuestionsWithQcm(id),
+  ]);
 
-  if (!test) {
+  if (!test || !testQuestions) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center p-6">
         <div className="bg-muted rounded-lg p-8 text-center shadow-sm">
@@ -65,6 +70,24 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       </Collapsible>
 
       {/* edit test questions */}
+      <Collapsible className="w-full rounded-lg border">
+        <CollapsibleTrigger asChild>
+          <div className="flex w-full items-center justify-between p-4 font-medium">
+            <span>Test Questions</span>
+            <Button variant="ghost" size="sm">
+              <ChevronsUpDown className="h-4 w-4" />
+              <span className="sr-only">Toggle</span>
+            </Button>
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="border-t p-4 pt-0">
+          <p className="text-foreground/80 mt-4 mb-6 text-base md:text-lg">
+            Manage your test questions below. You can add, edit, or remove
+            questions to customize your assessment.
+          </p>
+          <TestQuestionsManager initialTestQuestions={testQuestions} />
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
