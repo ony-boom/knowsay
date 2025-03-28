@@ -1,7 +1,7 @@
-import { CreateQuizQCMForm } from "@/components/quiz/edit/create-quiz-qcm-form";
+import { CreateTestQCMForm } from "@/components/create-test-qcm-form";
 import { Card } from "@/components/ui/card";
 
-export default async function CreateQuizQuestionPage(props: {
+export default async function CreateTestQuestionPage(props: {
   params: Promise<{
     id: string;
   }>;
@@ -11,7 +11,7 @@ export default async function CreateQuizQuestionPage(props: {
   return (
     <div className="flex flex-col gap-6">
       <Card>
-        <CreateQuizQCMForm quizId={id} />
+        <CreateTestQCMForm testId={id} />
       </Card>
     </div>
   );

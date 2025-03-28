@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { QcmState } from "@/lib/actions/types";
+import { QuizQcmState } from "@/lib/actions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -20,19 +20,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { createQcm } from "@/lib/actions/create-qcm";
+import { createQuizQcm } from "@/lib/actions/create-quiz-qcm";
 import { StoreQCM } from "@/schemas/qcmSchema";
 import { storeQcmSchema } from "@/schemas/qcmSchema";
 
-type CreateQuestionFormProps = {
+type CreateQuizQcmFormProps = {
   quizId: string;
 };
 
-export const CreateQCMForm = ({ quizId }: CreateQuestionFormProps) => {
+export const CreateQuizQCMForm = ({ quizId }: CreateQuizQcmFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: QcmState = { message: null, errors: {} };
+  const initialState: QuizQcmState = { message: null, errors: {} };
 
-  const createQcmWithId = createQcm.bind(null, quizId);
+  const createQcmWithId = createQuizQcm.bind(null, quizId);
 
   const [state, formAction] = useActionState(createQcmWithId, initialState);
 

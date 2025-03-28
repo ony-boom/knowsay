@@ -1,4 +1,4 @@
-export type QcmState = {
+export type QuizQcmState = {
   errors?: {
     question?: string[];
     _form?: string[];

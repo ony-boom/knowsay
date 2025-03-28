@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { QcmState } from "@/lib/actions/types";
+import { QuizQcmState } from "@/lib/actions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +30,7 @@ type EditQuestionFormProps = {
 
 export const UpdateQcmForm = ({ initialData }: EditQuestionFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: QcmState = { message: null, errors: {} };
+  const initialState: QuizQcmState = { message: null, errors: {} };
 
   const updateQuestionWithId = updateQcm.bind(
     null,
