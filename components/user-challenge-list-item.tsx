@@ -113,7 +113,7 @@ export const UserChallengeListItem = ({
             </Button>
           </div>
         </div>
-        <CardDescription className="line-clamp-2">
+        <CardDescription className="line-clamp-1 overflow-hidden text-ellipsis whitespace-nowrap">
           {challenge.description || "No description provided"}
         </CardDescription>
 
