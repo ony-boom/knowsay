@@ -14,11 +14,11 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { QuizQuestionWithQcm } from "@/schemas/quizQuestionSchema";
 
 type QuizQuestionManagerProps = {
-  initialQuestions: QuizQuestionWithQcm[];
+  initialQuizQuestions: QuizQuestionWithQcm[];
 };
 
 export function QuizQuestionsManager({
-  initialQuestions,
+  initialQuizQuestions,
 }: QuizQuestionManagerProps) {
   const pathname = usePathname();
 
@@ -29,8 +29,8 @@ export function QuizQuestionsManager({
     }),
   );
 
-  const [questions, setQuestions] =
-    useState<QuizQuestionWithQcm[]>(initialQuestions);
+  const [quizQuestions, setQuizQuestions] =
+    useState<QuizQuestionWithQcm[]>(initialQuizQuestions);
 
   return (
     <div className="space-y-6">
@@ -43,9 +43,9 @@ export function QuizQuestionsManager({
       <div className="mt-8">
         <SortableQuizQuestionList
           sensors={sensors}
-          initialQuizQuestions={questions}
-          onReorder={(reorderedQuestions) => {
-            setQuestions(reorderedQuestions);
+          initialQuizQuestions={quizQuestions}
+          onReorder={(reorderedQuizQuestions) => {
+            setQuizQuestions(reorderedQuizQuestions);
           }}
         />
       </div>

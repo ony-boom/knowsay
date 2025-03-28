@@ -59,7 +59,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         </CollapsibleContent>
       </Collapsible>
 
-      {/* edit questions */}
+      {/* edit quiz questions */}
       <Collapsible className="w-full rounded-lg border">
         <CollapsibleTrigger asChild>
           <div className="flex w-full items-center justify-between p-4 font-medium">
@@ -74,7 +74,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           <p className="text-foreground/80 mt-4 text-lg">
             {t("sections.questionsDescription")}
           </p>
-          <QuizQuestionsManager initialQuestions={questions} />
+          <QuizQuestionsManager initialQuizQuestions={questions} />
         </CollapsibleContent>
       </Collapsible>
     </div>
