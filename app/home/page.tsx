@@ -3,6 +3,7 @@ import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { QuizzesTab } from "@/components/dashboard/tab-items/quizzes";
 import { ChallengesTab } from "@/components/dashboard/tab-items/challenges";
+import { TestsTab } from "@/components/dashboard/tab-items/tests";
 
 export default function Home() {
   return (
@@ -16,7 +17,6 @@ export default function Home() {
           <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
           <TabsTrigger value="challenges">Challenges</TabsTrigger>
           <TabsTrigger value="tests">Tests</TabsTrigger>
-          <TabsTrigger value="assigned">Assigned Tests</TabsTrigger>
         </TabsList>
 
         <TabsContent value="quizzes" className="mt-0">
@@ -28,14 +28,7 @@ export default function Home() {
         </TabsContent>
 
         <TabsContent value="tests" className="mt-0">
-          {/* <TestsTab tests={mockTests} formatDate={formatDate} /> */}
-        </TabsContent>
-
-        <TabsContent value="assigned" className="mt-0">
-          {/* <AssignedTestsTab
-            assignments={mockAssignedTests}
-            formatDate={formatDate}
-          /> */}
+          <TestsTab />
         </TabsContent>
       </Tabs>
     </div>
