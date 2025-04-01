@@ -20,19 +20,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { updateQcm } from "@/lib/actions/update-qcm";
+import { updateQuizQcm } from "@/lib/actions/update-quiz-qcm";
 import { QuizQuestionWithQcm } from "@/schemas/quizQuestionSchema";
 import { StoreQCM, storeQcmSchema } from "@/schemas/qcmSchema";
 
-type EditQuestionFormProps = {
+type UpdateQuizQcmFormProps = {
   initialData: QuizQuestionWithQcm;
 };
 
-export const UpdateQcmForm = ({ initialData }: EditQuestionFormProps) => {
+export const UpdateQuizQcmForm = ({ initialData }: UpdateQuizQcmFormProps) => {
   const [isPending, startTransition] = useTransition();
   const initialState: QuizQcmState = { message: null, errors: {} };
 
-  const updateQuestionWithId = updateQcm.bind(
+  const updateQuestionWithId = updateQuizQcm.bind(
     null,
     initialData.qcm_id,
     initialData.id,

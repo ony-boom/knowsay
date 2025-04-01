@@ -6,7 +6,7 @@ import { storeQcmSchema } from "@/schemas/qcmSchema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function updateQcm(
+export async function updateQuizQcm(
   qcmId: string,
   quizQuestionId: string,
   prevState: QuizQcmState,

@@ -1,0 +1,35 @@
+import { Card } from "@/components/ui/card";
+import { UpdateTestQcmForm } from "@/components/update-test-qcm-form";
+import { getTestQuestionWithQcm } from "@/lib/actions/get-test-question";
+
+export default async function EditTestQuestionPage(props: {
+  params: Promise<{
+    questionId: string;
+  }>;
+}) {
+  const { questionId } = await props.params;
+
+  const question = await getTestQuestionWithQcm(questionId);
+
+  if (!question) {
+    return (
+      <div className="flex flex-col gap-6 px-6 py-8 pt-0">
+        <h1 className="text-3xl font-black lg:text-5xl">
+          Test Question Not Found
+        </h1>
+        <p className="text-foreground/80 text-lg">
+          The question you&apos;re trying to edit doesn&apos;t exist or was
+          deleted.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Card>
+        <UpdateTestQcmForm initialData={question} />
+      </Card>
+    </div>
+  );
+}
