@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { qcmSchema } from "./qcmSchema";
+import { qcmSchema, storeQcmSchema } from "./qcmSchema";
 
 export const testQuestionSchema = z.object({
   id: z.string().uuid(),
@@ -17,8 +17,17 @@ export const testQuestionWithQcmSchema = testQuestionSchema.extend({
 
 export const storeTestQuestionSchema = testQuestionSchema.omit({
   id: true,
+  qcm_id: true,
   position: true,
 });
+
+export const storeTestQuestionWithQcmSchema = storeTestQuestionSchema.extend({
+  ...storeQcmSchema.shape,
+});
+
+export type StoreTestQuestionWithQcm = z.infer<
+  typeof storeTestQuestionWithQcmSchema
+>;
 
 export type TestQuestionWithQcm = z.infer<typeof testQuestionWithQcmSchema>;
 

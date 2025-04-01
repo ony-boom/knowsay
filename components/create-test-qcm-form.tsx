@@ -7,8 +7,10 @@ import { DynamicQuestionEditor } from "@/components/quiz/create/bloc-note/dynami
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { StoreTestQuestion } from "@/schemas/testQuestionSchema";
-import { storeTestQuestionSchema } from "@/schemas/testQuestionSchema";
+import {
+  StoreTestQuestionWithQcm,
+  storeTestQuestionWithQcmSchema,
+} from "@/schemas/testQuestionSchema";
 import {
   CardContent,
   CardDescription,
@@ -42,20 +44,19 @@ export const CreateTestQCMForm = ({ testId }: CreateTestQcmFormProps) => {
 
   const [state, formAction] = useActionState(createTestQcmWithId, initialState);
 
-  // TODO: Fix the type of formAction to accept FormData
-  const form = useForm<StoreTestQuestion & { question: string }>({
-    resolver: zodResolver(storeTestQuestionSchema),
+  const form = useForm<StoreTestQuestionWithQcm>({
+    resolver: zodResolver(storeTestQuestionWithQcmSchema),
     defaultValues: {
       test_id: testId,
       is_free_text: false,
-      time_limit: 60,
+      time_limit: 30,
       points: 1,
       question: "",
     },
     mode: "onBlur",
   });
 
-  const onSubmit = (data: StoreTestQuestion & { question: string }) => {
+  const onSubmit = (data: StoreTestQuestionWithQcm) => {
     startTransition(() => {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
@@ -85,10 +86,17 @@ export const CreateTestQCMForm = ({ testId }: CreateTestQcmFormProps) => {
               type="submit"
               form="test-question-form"
               disabled={
-                !form.formState.isValid || !form.formState.isDirty || isPending
+                !form.formState.isValid ||
+                !form.formState.isDirty ||
+                isPending ||
+                state.success
               }
             >
-              {isPending ? "Saving..." : "Save Question"}
+              {isPending
+                ? "Saving..."
+                : state.success === true
+                  ? "Saved"
+                  : "Save Question"}
             </Button>
           </CardHeader>
 
@@ -118,6 +126,30 @@ export const CreateTestQCMForm = ({ testId }: CreateTestQcmFormProps) => {
                 )}
               />
 
+              {/* Display appropriate fields based on question type */}
+              {isFreeText ? (
+                <div className="bg-muted/50 rounded-lg border p-4">
+                  <h3 className="mb-2 text-sm font-medium">
+                    Free Text Question
+                  </h3>
+                  <p className="text-muted-foreground mb-4 text-xs">
+                    Students will be able to type in their answers freely. These
+                    answers will need manual grading.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-muted/50 rounded-lg border p-4">
+                  <h3 className="mb-2 text-sm font-medium">
+                    Multiple Choice Question
+                  </h3>
+                  <p className="text-muted-foreground mb-4 text-xs">
+                    Students will select from provided options. Answers will be
+                    automatically graded.
+                  </p>
+                  {/* QCM specific options would go here */}
+                </div>
+              )}
+
               <FormField
                 control={form.control}
                 name="points"
@@ -137,29 +169,25 @@ export const CreateTestQCMForm = ({ testId }: CreateTestQcmFormProps) => {
                 )}
               />
 
-              {!isFreeText && (
-                <FormField
-                  control={form.control}
-                  name="time_limit"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Time Limit (seconds)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min={5}
-                          {...field}
-                          value={field.value ?? ""}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={form.control}
+                name="time_limit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Time Limit (seconds)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={5}
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

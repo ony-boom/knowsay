@@ -1,13 +1,9 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
+import { storeTestQuestionWithQcmSchema } from "@/schemas/testQuestionSchema";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { storeQcmSchema } from "@/schemas/qcmSchema";
-import {
-  StoreTestQuestion,
-  storeTestQuestionSchema,
-} from "@/schemas/testQuestionSchema";
 
 export interface TestQcmState {
   errors?: {
@@ -16,6 +12,7 @@ export interface TestQcmState {
     [key: string]: string[] | undefined;
   };
   message?: string;
+  success?: boolean;
 }
 
 export async function createTestQcm(
@@ -25,29 +22,33 @@ export async function createTestQcm(
 ): Promise<TestQcmState> {
   let testQuestionResult;
 
-  // Extract form data for QCM
-  const qcmData = {
-    question: (formData.get("question") as string) || "New question",
-  };
-
-  // Get is_free_text from form data (defaulting to false if not provided)
-  const isFreeText = formData.get("is_free_text") === "true";
-
-  // Validate QCM input using Zod schema
-  const validatedQcm = storeQcmSchema.safeParse(qcmData);
-
-  if (!validatedQcm.success) {
-    return {
-      errors: validatedQcm.error.flatten().fieldErrors,
-      message: "Invalid QCM data. Please check the form for errors.",
-    };
-  }
-
   try {
+    // Extract all form data for combined test question with QCM
+    const testQuestionWithQcm = {
+      test_id: testId,
+      question: formData.get("question") as string,
+      is_free_text: formData.get("is_free_text") === "true",
+      points: parseInt(formData.get("points") as string) || 1,
+      time_limit: parseInt(formData.get("time_limit") as string) || 30,
+    };
+
+    // Validate combined data using the schema that includes both test question and QCM fields
+    const validatedData =
+      storeTestQuestionWithQcmSchema.safeParse(testQuestionWithQcm);
+
+    if (!validatedData.success) {
+      return {
+        errors: validatedData.error.flatten().fieldErrors,
+        message: "Invalid data. Please check the form for errors.",
+      };
+    }
+
     // First insert the QCM
     const { data: qcmResult, error: qcmError } = await supabase
       .from("qcm")
-      .insert(validatedQcm.data)
+      .insert({
+        question: validatedData.data.question,
+      })
       .select()
       .single();
 
@@ -61,54 +62,17 @@ export async function createTestQcm(
       };
     }
 
-    // Now create the test question with the newly created QCM ID
-    const testQuestionWithQcmId: StoreTestQuestion = {
-      test_id: testId,
-      qcm_id: qcmResult.qcm_id,
-      points: 1,
-      time_limit: 30,
-      is_free_text: isFreeText, // Use the value from form data
-    };
-
-    // Validate test question data
-    const validatedTestQuestion = storeTestQuestionSchema.parse(
-      testQuestionWithQcmId,
-    );
-
-    if (!validatedTestQuestion) {
-      throw new Error(
-        "Invalid test question data. Please check the form for errors.",
-      );
-    }
-
-    // Get current max position for ordering
-    const { data: positionData, error: positionError } = await supabase
-      .from("test_questions")
-      .select("position")
-      .eq("test_id", testId)
-      .order("position", { ascending: false })
-      .limit(1);
-
-    if (positionError) {
-      console.error("Failed to get position data:", positionError);
-      return {
-        message: positionError.message,
-        errors: {
-          _form: ["Database error: Failed to determine question position"],
-        },
-      };
-    }
-
-    // Calculate new position (1 if no questions exist yet)
-    const newPosition =
-      positionData && positionData.length > 0
-        ? positionData[0].position + 1
-        : 1;
-
-    // Insert the test question with position
+    // Insert the test question with the new QCM ID
+    // Position is now handled by a database trigger
     const { data, error: testQuestionError } = await supabase
       .from("test_questions")
-      .insert({ ...validatedTestQuestion, position: newPosition })
+      .insert({
+        test_id: validatedData.data.test_id,
+        qcm_id: qcmResult.qcm_id,
+        is_free_text: validatedData.data.is_free_text,
+        time_limit: validatedData.data.time_limit,
+        points: validatedData.data.points,
+      })
       .select()
       .single();
 
