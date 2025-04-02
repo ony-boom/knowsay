@@ -20,8 +20,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const challengeQuiz: ChallengeQuizWithQuizArray =
     await getChallengeQuizWithQuiz(id);
 
-  console.log("Challenge quiz", challengeQuiz); // Debugging line
-
   if (!challenge) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center p-6">

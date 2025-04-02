@@ -58,10 +58,6 @@ export async function createChallengeQuizzesAction(
       .eq("clerk_id", clerkUser.id)
       .single();
 
-    console.log("User", user); // Debugging line
-
-    console.log("User ID:", user?.id); // Debugging line
-
     const { data: challenge } = await supabase
       .from("challenges")
       .select("*")
