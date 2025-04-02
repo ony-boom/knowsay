@@ -1,3 +1,4 @@
+import { Block } from "@blocknote/core";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -46,5 +47,31 @@ export const formatDate = (dateString: string) => {
     month: "short",
     day: "numeric",
     year: "numeric",
+  });
+};
+
+/**
+ * Removes items from the content list that have no text content
+ * @param contentList - The list of content items to filter
+ * @returns A new array with empty content items removed
+ */
+export const removeEmptyContentItems = (contentList: Block[]): Block[] => {
+  return contentList.filter((item) => {
+    // Check if content array exists and has items
+    if (
+      !item.content ||
+      !Array.isArray(item.content) ||
+      item.content.length === 0
+    ) {
+      return false;
+    }
+
+    // Check if any content item has non-empty text
+    return item.content.some(
+      (contentItem) =>
+        contentItem.type === "text" &&
+        contentItem.text &&
+        contentItem.text.trim() !== "",
+    );
   });
 };
