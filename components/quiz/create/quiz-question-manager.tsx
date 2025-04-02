@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { SortableQuizQuestionList } from "./sortable-quiz-question-list";
-import { AddQuestionButton } from "./add-question-button";
+import { AddQuizQuestionButton } from "./add-quiz-question-button";
 import { usePathname } from "next/navigation";
 import {
   KeyboardSensor,
@@ -37,7 +37,7 @@ export function QuizQuestionsManager({
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold">Quiz Questions</h3>
 
-        <AddQuestionButton pathname={pathname} />
+        <AddQuizQuestionButton pathname={pathname} />
       </div>
 
       <div className="mt-8">

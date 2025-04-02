@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { QcmState } from "@/lib/actions/types";
+import { QuizQcmState } from "@/lib/actions/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -20,19 +20,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { updateQcm } from "@/lib/actions/update-qcm";
+import { updateQuizQcm } from "@/lib/actions/update-quiz-qcm";
 import { QuizQuestionWithQcm } from "@/schemas/quizQuestionSchema";
 import { StoreQCM, storeQcmSchema } from "@/schemas/qcmSchema";
 
-type EditQuestionFormProps = {
+type UpdateQuizQcmFormProps = {
   initialData: QuizQuestionWithQcm;
 };
 
-export const UpdateQcmForm = ({ initialData }: EditQuestionFormProps) => {
+export const UpdateQuizQcmForm = ({ initialData }: UpdateQuizQcmFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: QcmState = { message: null, errors: {} };
+  const initialState: QuizQcmState = { message: null, errors: {} };
 
-  const updateQuestionWithId = updateQcm.bind(
+  const updateQuestionWithId = updateQuizQcm.bind(
     null,
     initialData.qcm_id,
     initialData.id,

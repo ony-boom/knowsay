@@ -1,7 +1,7 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { QcmState } from "./types";
+import { QuizQcmState } from "./types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { storeQcmSchema } from "@/schemas/qcmSchema";
@@ -10,11 +10,11 @@ import {
   storeQuizQuestionSchema,
 } from "@/schemas/quizQuestionSchema";
 
-export async function createQcm(
+export async function createQuizQcm(
   quizId: string,
-  prevState: QcmState,
+  prevState: QuizQcmState,
   formData: FormData,
-): Promise<QcmState> {
+): Promise<QuizQcmState> {
   let quizQuestionResult;
 
   // Extract form data for QCM

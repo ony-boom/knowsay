@@ -1,7 +1,7 @@
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-export const AddQuestionButton = ({ pathname }: { pathname: string }) => {
+export const AddTestQuestionButton = ({ pathname }: { pathname: string }) => {
   return (
     <Link
       href={`${pathname}/question`}

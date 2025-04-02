@@ -4,8 +4,6 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { TestQuestionWithQcm } from "@/schemas/testQuestionSchema";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import {
   KeyboardSensor,
   PointerSensor,
@@ -13,6 +11,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableTestQuestionList } from "./sortable-test-question-list";
+import { AddTestQuestionButton } from "./add-test-question-button";
 
 type TestQuestionsManagerProps = {
   initialTestQuestions: TestQuestionWithQcm[];
@@ -38,12 +37,7 @@ export function TestQuestionsManager({
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold">Test Questions</h3>
 
-        <Button variant="outline" size="sm" className="gap-1" asChild>
-          <a href={`${pathname}/questions/new`}>
-            <Plus className="h-4 w-4" />
-            <span>Add Question</span>
-          </a>
-        </Button>
+        <AddTestQuestionButton pathname={pathname} />
       </div>
 
       <div className="mt-8">
