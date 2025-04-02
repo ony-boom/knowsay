@@ -27,8 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { TestQcmState } from "@/lib/actions/create-test-qcm";
-import { updateTestQcm } from "@/lib/actions/update-test-qcm";
+import { TestQcmState, updateTestQcm } from "@/lib/actions/update-test-qcm";
 
 type UpdateTestQcmFormProps = {
   initialData: TestQuestionWithQcm;
@@ -36,7 +35,7 @@ type UpdateTestQcmFormProps = {
 
 export const UpdateTestQcmForm = ({ initialData }: UpdateTestQcmFormProps) => {
   const [isPending, startTransition] = useTransition();
-  const initialState: TestQcmState = { message: undefined, errors: {} };
+  const initialState: TestQcmState = { message: null, errors: {} };
 
   const updateQuestionWithId = updateTestQcm.bind(
     null,
@@ -53,9 +52,10 @@ export const UpdateTestQcmForm = ({ initialData }: UpdateTestQcmFormProps) => {
     resolver: zodResolver(storeTestQuestionWithQcmSchema),
     defaultValues: {
       question: initialData.qcm.question,
-      time_limit: initialData.time_limit || undefined,
+      time_limit: initialData.time_limit || null,
       points: initialData.points,
       is_free_text: initialData.is_free_text,
+      test_id: initialData.test_id,
     },
     mode: "onBlur",
   });
@@ -134,11 +134,11 @@ export const UpdateTestQcmForm = ({ initialData }: UpdateTestQcmFormProps) => {
                         type="number"
                         placeholder="Time limit in seconds"
                         {...field}
-                        value={field.value || ""}
+                        value={field.value === null ? "" : field.value}
                         onChange={(e) => {
                           const value = e.target.value
                             ? parseInt(e.target.value)
-                            : undefined;
+                            : null;
                           field.onChange(value);
                         }}
                       />
@@ -159,9 +159,13 @@ export const UpdateTestQcmForm = ({ initialData }: UpdateTestQcmFormProps) => {
                         type="number"
                         placeholder="Points for this question"
                         {...field}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value))
-                        }
+                        value={field.value}
+                        onChange={(e) => {
+                          const value = e.target.value
+                            ? parseInt(e.target.value)
+                            : 1;
+                          field.onChange(value);
+                        }}
                       />
                     </FormControl>
                     <FormMessage />

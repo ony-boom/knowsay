@@ -10,7 +10,7 @@ export interface TestQcmState {
     _form?: string[];
     [key: string]: string[] | undefined;
   };
-  message?: string;
+  message?: string | null;
   success?: boolean;
 }
 
@@ -27,8 +27,9 @@ export async function updateTestQcm(
     const testQuestionWithQcm = {
       question: formData.get("question") as string,
       is_free_text: formData.get("is_free_text") === "true",
-      points: parseInt(formData.get("points") as string) || 1,
-      time_limit: parseInt(formData.get("time_limit") as string) || 30,
+      points: parseInt(formData.get("points") as string),
+      time_limit: parseInt(formData.get("time_limit") as string),
+      test_id: formData.get("test_id") as string,
     };
 
     // Validate data using the schema

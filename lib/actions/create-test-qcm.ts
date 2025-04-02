@@ -11,7 +11,7 @@ export interface TestQcmState {
     _form?: string[];
     [key: string]: string[] | undefined;
   };
-  message?: string;
+  message?: string | null;
   success?: boolean;
 }
 
