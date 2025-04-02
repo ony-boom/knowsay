@@ -113,15 +113,12 @@ function renderBreadcrumbContent(pathname: string, isId: boolean) {
 function IdContent({ id }: { id: string }) {
   const pathname = usePathname();
 
-  // Map pathname segments to their corresponding API endpoints
   const pathMapping: Record<string, string> = {
     quiz: "quizzes",
     challenge: "challenges",
     test: "tests",
-    // Add more mappings as needed
   };
 
-  // Find which path type we're currently on
   const pathType = Object.keys(pathMapping).find((key) =>
     pathname.includes(`/${key}`),
   );
@@ -135,7 +132,7 @@ function IdContent({ id }: { id: string }) {
   if (isLoading) return <Skeleton className="h-4 w-32 animate-pulse" />;
 
   return data ? (
-    <>{data.title}</>
+    <>{data.title ?? "Untitled"}</>
   ) : (
     <span className="text-muted-foreground italic">Untitled</span>
   );
