@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
 import { QCMOptionArray } from "@/schemas/qcmOptionSchema";
 import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
+import Image from "next/image";
 
 export function QcmAnswer(props: QcmAnswerProps) {
   const { questionId, onAnswerChange, ...divProps } = props;
@@ -67,7 +68,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
         className={cn("w-full", props.className)}
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {answers?.map((answer) => {
+          {answers?.map((answer, index) => {
             const isSelected = selectedValue === answer.option_text;
             const isCorrectAnswer =
               correctAnswer?.option_text === answer.option_text;
@@ -118,7 +119,17 @@ export function QcmAnswer(props: QcmAnswerProps) {
                   })}
                   htmlFor={answer.option_id}
                 >
-                  {answer.option_text}
+                  {answer.option_image_url ? (
+                    <Image
+                      height={60}
+                      width={60}
+                      className="object-cover"
+                      src={answer.option_image_url}
+                      alt={`Option ${index + 1}`}
+                    />
+                  ) : (
+                    answer.option_text
+                  )}
                 </Label>
               </div>
             );
