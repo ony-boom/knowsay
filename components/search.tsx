@@ -5,8 +5,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "./ui/input";
 import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 
-export const SearchInput = () => {
+export const SearchInput = ({
+  className: containerClassName,
+  inputProps,
+  ...rest
+}: SearchInputProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -29,12 +34,13 @@ export const SearchInput = () => {
   }, 250);
 
   return (
-    <div className="relative">
+    <div className={cn(containerClassName, "relative")} {...rest}>
       <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
       <Input
+        {...inputProps}
         type="search"
-        placeholder="Search quiz..."
-        className="pl-8"
+        placeholder="Search..."
+        className={cn("pl-8", inputProps?.className)}
         defaultValue={searchParams.get("query")?.toString()}
         onChange={(e) => {
           handleSearch(e.target.value);
@@ -42,4 +48,8 @@ export const SearchInput = () => {
       />
     </div>
   );
+};
+
+export type SearchInputProps = React.ComponentProps<"div"> & {
+  inputProps?: React.ComponentProps<typeof Input>;
 };

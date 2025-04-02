@@ -249,7 +249,7 @@ export default function Layout({
         <Separator />
       </div>
 
-      <div className="w-full py-6">{children}</div>
+      <div className="h-full w-full py-6">{children}</div>
     </div>
   );
 }

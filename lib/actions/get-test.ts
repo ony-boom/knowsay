@@ -20,6 +20,7 @@ export async function getTests(
   query: string = "",
   page?: number,
   includeCompleted: boolean = true,
+  onlyCreatedBy?: string | undefined,
 ) {
   try {
     // Start building the query
@@ -28,6 +29,10 @@ export async function getTests(
     // Apply title filter if query exists
     if (query) {
       queryBuilder = queryBuilder.ilike("title", `%${query}%`);
+    }
+
+    if (onlyCreatedBy) {
+      queryBuilder = queryBuilder.eq("creator_id", onlyCreatedBy);
     }
 
     // Filter out completed tests if not including them
