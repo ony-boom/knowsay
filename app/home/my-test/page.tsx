@@ -32,14 +32,14 @@ const TestListSkeleton = () => (
 );
 
 // Main page component
-export default async function MyTestPage({
-  searchParams,
-}: {
-  searchParams?: {
+export default async function MyTestPage(props: {
+  searchParams?: Promise<{
     query?: string;
     page?: string;
-  };
+    category?: string;
+  }>;
 }) {
+  const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const page = searchParams?.page ? parseInt(searchParams.page) : 1;
 
