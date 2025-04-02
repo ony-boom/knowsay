@@ -197,7 +197,7 @@ export default function Layout({
                     <li>
                       <NavigationMenuLink asChild>
                         <Link
-                          href="/home/test?onlyByUser=true"
+                          href="/home/my-test"
                           className="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex flex-col items-start rounded-md p-3 text-sm transition-colors outline-none"
                         >
                           <div className="font-medium">My Tests</div>
