@@ -64,7 +64,8 @@ export const Pagination = ({ totalPages }: PaginationProps) => {
         {/* Next button */}
         <PaginationNext
           className={cn({
-            "pointer-events-none opacity-50": currentPage === totalPages,
+            "pointer-events-none opacity-50":
+              currentPage === totalPages || !totalPages,
           })}
           href={createPageURL(currentPage + 1)}
         />
