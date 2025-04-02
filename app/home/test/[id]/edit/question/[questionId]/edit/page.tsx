@@ -1,6 +1,9 @@
+import { CreateQcmOptionsForm } from "@/components/quiz/edit/create-qcm-options-form";
 import { Card } from "@/components/ui/card";
 import { UpdateTestQcmForm } from "@/components/update-test-qcm-form";
+import { getQcmOptions } from "@/lib/actions/get-qcm-options";
 import { getTestQuestionWithQcm } from "@/lib/actions/get-test-question";
+import { TestQuestionWithQcm } from "@/schemas/testQuestionSchema";
 
 export default async function EditTestQuestionPage(props: {
   params: Promise<{
@@ -9,7 +12,10 @@ export default async function EditTestQuestionPage(props: {
 }) {
   const { questionId } = await props.params;
 
-  const question = await getTestQuestionWithQcm(questionId);
+  const question: TestQuestionWithQcm =
+    await getTestQuestionWithQcm(questionId);
+
+  const qcmOptions = await getQcmOptions(question.qcm_id);
 
   if (!question) {
     return (
@@ -30,6 +36,13 @@ export default async function EditTestQuestionPage(props: {
       <Card>
         <UpdateTestQcmForm initialData={question} />
       </Card>
+      {!question.is_free_text ? (
+        <CreateQcmOptionsForm
+          qcm_id={question.qcm_id}
+          questionId={question.id}
+          initialData={qcmOptions}
+        />
+      ) : null}
     </div>
   );
 }
