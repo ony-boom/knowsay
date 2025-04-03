@@ -14,6 +14,7 @@ const testArraySchema = z.array(testSchema);
  * @param query Search query for test titles
  * @param page Current page number (defaults to fetching all tests if undefined)
  * @param includeCompleted Whether to include completed tests (based on end_time)
+ * @param onlyCreatedBy
  * @returns Filtered tests with pagination data
  */
 export async function getTests(
@@ -90,9 +91,7 @@ export async function getTestById(id: string): Promise<Test | null> {
     }
 
     // Validate the data against the schema
-    const validatedData = testSchema.parse(data);
-
-    return validatedData;
+    return testSchema.parse(data);
   } catch (error) {
     console.error("Failed to get test details:", error);
     throw error;

@@ -3,9 +3,11 @@
 import { supabase } from "@/lib/supabase";
 import { z } from "zod";
 import {
+  TestQuestion,
   testQuestionSchema,
   testQuestionWithQcmSchema,
 } from "@/schemas/testQuestionSchema";
+import {QCM} from "@/schemas/qcmSchema";
 
 // Schema for array validation
 const testQuestionArraySchema = z.array(testQuestionSchema);
@@ -65,7 +67,9 @@ export async function getTestQuestion(id: string) {
 
   if (error) throw new Error(error?.message);
 
-  return data;
+  return data as TestQuestion & {
+    qcm: QCM;
+  };
 }
 
 /**

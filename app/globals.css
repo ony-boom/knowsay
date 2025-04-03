@@ -132,6 +132,12 @@
     padding: 0 !important;
     padding-right: 8px !important;
 
+    &[contenteditable="false"] {
+      .bn-block-outer:last-child {
+        display: none !important;
+      }
+    }
+
     .bn-block-group {
       @apply space-y-3;
     }
