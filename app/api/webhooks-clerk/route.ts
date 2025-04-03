@@ -69,14 +69,11 @@ const manageUserEventData = async (
    */
 
   if (type === "user.created" || type === "user.updated") {
-    const user: User & {
-      clerk_id: string;
-    } = {
-      clerk_id: data.id as string,
+    const user: User  = {
+      clerk_id: data.id,
       email: data?.email_addresses[0]?.email_address || "",
       name: `${data.first_name ?? ""} ${data.last_name ?? ""}`,
-      role: "USER",
-      // password_hash:
+      role: "user",
     };
 
     // Vérifier si l'utilisateur existe déjà dans Supabase
@@ -91,7 +88,6 @@ const manageUserEventData = async (
     }
 
     if (!existingUser) {
-      // User creation on database
       try {
         await supabase.from("users").insert([user]);
       } catch (error) {

@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { useAuth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 import { AuthButtons } from "@/components/auth";
+import { useAuth } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function Home() {
   const { isSignedIn } = useAuth();
