@@ -74,6 +74,7 @@ const manageUserEventData = async (
       email: data?.email_addresses[0]?.email_address || "",
       name: `${data.first_name ?? ""} ${data.last_name ?? ""}`,
       role: "user",
+      imageUrl: data.image_url,
     };
 
     // Vérifier si l'utilisateur existe déjà dans Supabase

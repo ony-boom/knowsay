@@ -5,6 +5,7 @@ export type User = {
   role: "super_admin"| "user"| "corrector";
   email: string;
   clerk_id: string;
+  imageUrl?: string;
 };
 
 export type LeaderBoardEntry = {
