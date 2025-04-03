@@ -2,6 +2,11 @@
 import Lottie from "lottie-react";
 import loaderData from "./loader.json";
 
-export default function Loader() {
-  return <Lottie animationData={loaderData} loop />;
+export default function Loader(props: LoaderProps) {
+  return <Lottie {...props} animationData={loaderData} loop />;
 }
+
+export type LoaderProps = Omit<
+  React.ComponentProps<typeof Lottie>,
+  "animationData" | "loop"
+>;
