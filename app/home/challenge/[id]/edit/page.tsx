@@ -56,7 +56,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         </hgroup>
 
         <Link
-          href={`/home/challenge/${id}/participants`}
+          href={`/home/challenge/${id}/edit/manage-participants`}
           className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
         >
           <Users className="h-4 w-4" />
