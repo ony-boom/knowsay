@@ -33,18 +33,47 @@
         "questions": "Edit Questions",
         "questionsDescription": "Update your quiz questions or add new ones. Changes are saved automatically."
       }
-    }
-  },
-  "usersMangement": {
-    "title": "Users management",
-    "description": "Change users permissions to manage access",
-    "roleDescription": "Change user role",
-    "role": {
-      "super_admin": "Admin",
-      "corrector": "Corrector",
-      "user": "User"
     },
-    "success": "Role updated succesfully!",
-    "error": "Error on updating role"
+    "create": {
+      "title": "Create a New Quiz",
+      "description": "Design your interactive quiz with custom questions and share it with others to test their knowledge.",
+      "form": "Describe Your Amazing Quiz Here",
+      "formFields": {
+        "quizTitle": "Quiz Title",
+        "quizTitlePlaceholder": "Enter your quiz title",
+        "quizTitleDescription": "Choose a catchy title for your quiz that describes its content.",
+        "category": "Category",
+        "categoryPlaceholder": "Select a category",
+        "categoryDescription": "Select a category that best fits your quiz content.",
+        "difficulty": "Difficulty Level",
+        "difficultyPlaceholder": "Select difficulty",
+        "difficultyDescription": "Choose how challenging your quiz will be for participants.",
+        "description": "Description",
+        "descriptionPlaceholder": "Provide details about what your quiz covers...",
+        "descriptionDescription": "Give potential quiz takers an idea of what to expect.",
+        "publicQuiz": "Public Quiz",
+        "publicQuizDescription": "Make your quiz available for everyone to discover and play.",
+        "errorTitle": "Error",
+        "submitCreating": "Creating...",
+        "submitCreateQuiz": "Create Quiz"
+      },
+      "questionsSection": {
+        "title": "Create your quiz first",
+        "description": "Please fill out the quiz details in the section above. Once the quiz is created, you'll be able to add and customize questions on the next page.",
+        "button": "Add questions after creating the quiz"
+      }
+    },
+    "usersMangement": {
+      "title": "Users management",
+      "description": "Change users permissions to manage access",
+      "roleDescription": "Change user role",
+      "role": {
+        "super_admin": "Admin",
+        "corrector": "Corrector",
+        "user": "User"
+      },
+      "success": "Role updated succesfully!",
+      "error": "Error on updating role"
+    }
   }
 }
