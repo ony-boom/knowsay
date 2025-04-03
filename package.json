@@ -89,6 +89,7 @@
     "onlyBuiltDependencies": [
       "@clerk/shared",
       "bcrypt",
+      "esbuild",
       "sharp"
     ],
     "overrides": {
