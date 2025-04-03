@@ -74,6 +74,32 @@
       },
       "success": "Role updated succesfully!",
       "error": "Error on updating role"
+    },
+    "listItem": {
+      "edit": "Edit quiz",
+      "delete": "Delete quiz",
+      "created": "Created"
+    },
+    "deleteQuiz": {
+      "dialogTitle": "Delete Quiz",
+      "dialogDescription": "Are you sure you want to delete \"{quizTitle}\"? This action cannot be undone and all associated questions and data will be permanently removed.",
+      "cancel": "Cancel",
+      "delete": "Delete Quiz",
+      "deleting": "Deleting...",
+      "toastSuccess": {
+        "title": "Quiz deleted successfully",
+        "description": "Your quiz has been permanently removed"
+      },
+      "toastFailed": "Failed to delete quiz",
+      "toastFailureDescription": "Please try again later",
+      "toastUnexpected": "An unexpected error occurred",
+      "toastUnexpectedDescription": "Please try again later"
     }
+  },
+  "myQuiz": {
+    "title": "My Quizzes",
+    "description": "Review and manage the quizzes you've created.",
+    "empty": "You haven't created any quizzes yet. Start building your quiz collection now!",
+    "createButton": "Create your own quiz"
   }
 }

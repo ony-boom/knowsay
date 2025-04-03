@@ -21,6 +21,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { deleteQuizAction } from "@/lib/actions/delete-quiz";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 type QuizListItemProps = {
   quizId: string;
@@ -43,6 +44,7 @@ export const UserQuizListItem = ({
 }: QuizListItemProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const t = useTranslations("quiz");
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -50,21 +52,21 @@ export const UserQuizListItem = ({
       const result = await deleteQuizAction(quizId);
 
       if (result.success) {
-        toast.success("Quiz deleted successfully", {
-          description: "Your quiz has been permanently removed",
+        toast.success(t("deleteQuiz.toastSuccess.title"), {
+          description: t("deleteQuiz.toastSuccess.description"),
         });
         if (onDelete) {
           onDelete(quizId);
         }
       } else {
-        toast.error(result.errors?._form?.[0] || "Failed to delete quiz", {
-          description: "Please try again later",
+        toast.error(result.errors?._form?.[0] || t("deleteQuiz.toastFailed"), {
+          description: t("deleteQuiz.toastFailureDescription"),
         });
       }
     } catch (error) {
       console.error(error);
-      toast.error("An unexpected error occurred", {
-        description: "Please try again later",
+      toast.error(t("deleteQuiz.toastUnexpected"), {
+        description: t("deleteQuiz.toastUnexpectedDescription"),
       });
     } finally {
       setIsDeleting(false);
@@ -85,7 +87,10 @@ export const UserQuizListItem = ({
               asChild
               onClick={(e) => e.stopPropagation()}
             >
-              <Link href={`/home/quiz/${quizId}/edit`} aria-label="Edit quiz">
+              <Link
+                href={`/home/quiz/${quizId}/edit`}
+                aria-label={t("listItem.edit")}
+              >
                 <Pencil className="h-4 w-4" />
               </Link>
             </Button>
@@ -97,7 +102,7 @@ export const UserQuizListItem = ({
                 e.stopPropagation();
                 setIsDeleteDialogOpen(true);
               }}
-              aria-label="Delete quiz"
+              aria-label={t("listItem.delete")}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -106,7 +111,6 @@ export const UserQuizListItem = ({
         <CardDescription className="line-clamp-2">
           {description}
         </CardDescription>
-        {/* Quiz metadata tags */}
         <div className="mt-2 flex gap-2">
           <span className="bg-secondary inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium">
             {difficulty}
@@ -117,21 +121,21 @@ export const UserQuizListItem = ({
         </div>
       </CardHeader>
       <CardContent>
-        {/* Creation date information */}
         <div className="text-muted-foreground flex items-center justify-between text-xs">
-          <span>Created: {createdAt}</span>
+          <span>
+            {t("listItem.created")}: {createdAt}
+          </span>
         </div>
       </CardContent>
 
-      {/* Delete confirmation dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Delete Quiz</DialogTitle>
+            <DialogTitle className="text-xl font-bold">
+              {t("deleteQuiz.dialogTitle")}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{title}&quot;? This action
-              cannot be undone and all associated questions and data will be
-              permanently removed.
+              {t("deleteQuiz.dialogDescription", { quizTitle: title })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex justify-end space-x-2 pt-4">
@@ -140,14 +144,14 @@ export const UserQuizListItem = ({
               onClick={() => setIsDeleteDialogOpen(false)}
               disabled={isDeleting}
             >
-              Cancel
+              {t("deleteQuiz.cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={isDeleting}
             >
-              {isDeleting ? "Deleting..." : "Delete Quiz"}
+              {isDeleting ? t("deleteQuiz.deleting") : t("deleteQuiz.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
