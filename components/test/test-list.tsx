@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { getUser } from "@/lib/actions/get-user";
+import Link from "next/link";
 
 export function TestList({ tests }: { tests: Test[] }) {
   if (tests.length === 0) {
@@ -36,7 +37,9 @@ const TestListItem = async ({ test }: { test: Test }) => {
   return (
     <Card key={test.test_id}>
       <CardHeader>
-        <CardTitle className="text-lg font-medium">{test.title}</CardTitle>
+        <CardTitle className="text-lg font-medium">
+          <Link href={`/home/test/${test.test_id}`}>{test.title}</Link>
+        </CardTitle>
         <CardDescription className="line-clamp-2">
           {test.description}
         </CardDescription>
