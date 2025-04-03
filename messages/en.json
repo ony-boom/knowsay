@@ -101,5 +101,17 @@
     "description": "Review and manage the quizzes you've created.",
     "empty": "You haven't created any quizzes yet. Start building your quiz collection now!",
     "createButton": "Create your own quiz"
+  },
+  "usersMangement": {
+    "title": "Users management",
+    "description": "Change users permissions to manage access",
+    "roleDescription": "Change user role",
+    "role": {
+      "super_admin": "Admin",
+      "corrector": "Corrector",
+      "user": "User"
+    },
+    "success": "Role updated succesfully!",
+    "error": "Error on updating role"
   }
 }

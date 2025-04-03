@@ -1,7 +1,7 @@
 import { User } from "../definitions";
 import { supabase } from "../supabase"
 
-export const getAllUsers = async () => {
+export const getAllParticipants = async () => {
     try {
         const { data, error } = await supabase
             .from("users")

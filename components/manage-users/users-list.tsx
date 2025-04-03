@@ -1,9 +1,9 @@
-import { getAllUsers } from "@/lib/actions/get-users";
+import { getAllParticipants } from "@/lib/actions/get-users";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 export default async function UsersList() {
-    const allUsers = await getAllUsers();
+    const allUsers = await getAllParticipants();
     return (
         <Card>
             <CardHeader className="pb-3">
