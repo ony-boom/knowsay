@@ -2,8 +2,9 @@ export type User = {
   id?: string;
   name: string;
   password_hash?: string;
-  role: "USER" | "CORRECTOR" | "ADMIN";
+  role: "super_admin"| "user"| "corrector";
   email: string;
+  clerk_id: string;
 };
 
 export type LeaderBoardEntry = {

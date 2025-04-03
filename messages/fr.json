@@ -14,7 +14,9 @@
       "buttons": {
         "createQuiz": "Créer un quiz",
         "createChallenge": "Créer un défi",
-        "createTest": "Créer un test"
+        "createTest": "Créer un test",
+        "manageUsers": "Gérer les utilisateurs",
+        "manageAssignement": "Gerer les correcteurs"
       }
     }
   },
@@ -32,5 +34,17 @@
         "questionsDescription": "Mettez à jour vos questions ou ajoutez-en de nouvelles. Les modifications sont enregistrées automatiquement."
       }
     }
+  },
+  "usersMangement": {
+    "title": "Gestionnaire d'utilisateurs",
+    "description": "Changez le role de chaque utilisateur pour mieux gérer l'accès à l'application",
+    "roleDescription": "Changer le role de l'utilisateur",
+    "role": {
+      "super_admin": "Administrateur",
+      "corrector": "Correcteur",
+      "user": "Utilisateur"
+    },
+    "success": "Role mis à jour avec succès!",
+    "error": "Impossible de mettre à jour le rôle."
   }
 }

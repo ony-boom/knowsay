@@ -14,7 +14,9 @@
       "buttons": {
         "createQuiz": "Create quiz",
         "createChallenge": "Create challenge",
-        "createTest": "Create test"
+        "createTest": "Create test",
+        "manageUsers": "Manage users",
+        "manageAssignement": "Manage corrector"
       }
     }
   },
@@ -32,5 +34,17 @@
         "questionsDescription": "Update your quiz questions or add new ones. Changes are saved automatically."
       }
     }
+  },
+  "usersMangement": {
+    "title": "Users management",
+    "description": "Change users permissions to manage access",
+    "roleDescription": "Change user role",
+    "role": {
+      "super_admin": "Admin",
+      "corrector": "Corrector",
+      "user": "User"
+    },
+    "success": "Role updated succesfully!",
+    "error": "Error on updating role"
   }
 }
