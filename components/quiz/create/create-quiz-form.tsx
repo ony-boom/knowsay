@@ -27,15 +27,20 @@ import { useActionState, useTransition } from "react";
 import { Category } from "@/schemas/categorySchema";
 import { StoreQuiz, storeQuizSchema } from "@/schemas/quizSchema";
 import { createQuizFormAction } from "@/lib/actions/create-quiz";
+import { useTranslations } from "next-intl";
 
 type CreateQuizFormProps = {
   categories: Category[];
 };
 
 export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
+  const t = useTranslations("quiz.create.formFields");
   const [isPending, startTransition] = useTransition();
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createQuizFormAction, initialState);
+  const [state, formAction] = useActionState(
+    createQuizFormAction,
+    initialState,
+  );
 
   const form = useForm<StoreQuiz>({
     resolver: zodResolver(storeQuizSchema),
@@ -71,18 +76,15 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Quiz Title</FormLabel>
+                  <FormLabel>{t("quizTitle")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your quiz title"
+                      placeholder={t("quizTitlePlaceholder")}
                       {...field}
                       aria-invalid={!!form.formState.errors.title}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Choose a catchy title for your quiz that describes its
-                    content.
-                  </FormDescription>
+                  <FormDescription>{t("quizTitleDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -95,7 +97,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
               name="category_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>{t("category")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -108,7 +110,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                             : ""
                         }
                       >
-                        <SelectValue placeholder="Select a category" />
+                        <SelectValue placeholder={t("categoryPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -119,9 +121,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    Select a category that best fits your quiz content.
-                  </FormDescription>
+                  <FormDescription>{t("categoryDescription")}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -132,7 +132,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
               name="difficulty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Difficulty Level</FormLabel>
+                  <FormLabel>{t("difficulty")}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -145,7 +145,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                             : ""
                         }
                       >
-                        <SelectValue placeholder="Select difficulty" />
+                        <SelectValue placeholder={t("difficultyPlaceholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -155,7 +155,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Choose how challenging your quiz will be for participants.
+                    {t("difficultyDescription")}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -168,18 +168,16 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>{t("description")}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Provide details about what your quiz covers..."
+                    placeholder={t("descriptionPlaceholder")}
                     className="min-h-[120px]"
                     {...field}
                     value={field.value || ""}
                   />
                 </FormControl>
-                <FormDescription>
-                  Give potential quiz takers an idea of what to expect.
-                </FormDescription>
+                <FormDescription>{t("descriptionDescription")}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -197,9 +195,9 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>Public Quiz</FormLabel>
+                  <FormLabel>{t("publicQuiz")}</FormLabel>
                   <FormDescription>
-                    Make your quiz available for everyone to discover and play.
+                    {t("publicQuizDescription")}
                   </FormDescription>
                 </div>
               </FormItem>
@@ -208,7 +206,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
 
           {state.errors?._form && (
             <div className="bg-destructive/15 text-destructive rounded-md p-3 text-sm">
-              <p className="font-medium">Error</p>
+              <p className="font-medium">{t("errorTitle")}</p>
               <p>{state.errors._form.join(", ")}</p>
             </div>
           )}
@@ -221,7 +219,7 @@ export const CreateQuizForm = ({ categories }: CreateQuizFormProps) => {
                 !form.formState.isValid || !form.formState.isDirty || isPending
               }
             >
-              {isPending ? "Creating..." : "Create Quiz"}
+              {isPending ? t("submitCreating") : t("submitCreateQuiz")}
             </Button>
           </div>
         </div>

@@ -33,7 +33,62 @@
         "questions": "Modifier les Questions",
         "questionsDescription": "Mettez à jour vos questions ou ajoutez-en de nouvelles. Les modifications sont enregistrées automatiquement."
       }
+    },
+    "create": {
+      "title": "Créer un nouveau quiz",
+      "description": "Concevez votre quiz interactif avec des questions personnalisées et partagez-le avec d'autres pour tester leurs connaissances.",
+      "form": "Décrivez votre quiz extraordinaire ici",
+      "formFields": {
+        "quizTitle": "Titre du Quiz",
+        "quizTitlePlaceholder": "Entrez le titre de votre quiz",
+        "quizTitleDescription": "Choisissez un titre accrocheur pour votre quiz qui décrit son contenu.",
+        "category": "Catégorie",
+        "categoryPlaceholder": "Sélectionnez une catégorie",
+        "categoryDescription": "Sélectionnez une catégorie qui correspond le mieux au contenu de votre quiz.",
+        "difficulty": "Niveau de difficulté",
+        "difficultyPlaceholder": "Sélectionnez la difficulté",
+        "difficultyDescription": "Choisissez le niveau de défi que représentera votre quiz pour les participants.",
+        "description": "Description",
+        "descriptionPlaceholder": "Fournissez des détails sur le contenu de votre quiz...",
+        "descriptionDescription": "Donnez aux futurs participants une idée de ce à quoi s'attendre.",
+        "publicQuiz": "Quiz Public",
+        "publicQuizDescription": "Rendez votre quiz accessible à tous pour découvrir et jouer.",
+        "errorTitle": "Erreur",
+        "submitCreating": "Création...",
+        "submitCreateQuiz": "Créer le Quiz"
+      },
+      "questionsSection": {
+        "title": "Créez d'abord votre quiz",
+        "description": "Veuillez remplir les détails du quiz dans la section ci-dessus. Une fois le quiz créé, vous pourrez ajouter et personnaliser des questions sur la page suivante.",
+        "button": "Ajouter des questions après avoir créé le quiz"
+      }
+    },
+    "listItem": {
+      "edit": "Modifier le quiz",
+      "delete": "Supprimer le quiz",
+      "created": "Créé le"
+    },
+    "deleteQuiz": {
+      "dialogTitle": "Supprimer le Quiz",
+      "dialogDescription": "Êtes-vous sûr de vouloir supprimer \"{quizTitle}\" ? Cette action est irréversible et toutes les questions et données associées seront définitivement supprimées.",
+      "cancel": "Annuler",
+      "delete": "Supprimer le Quiz",
+      "deleting": "Suppression...",
+      "toastSuccess": {
+        "title": "Quiz supprimé avec succès",
+        "description": "Votre quiz a été supprimé définitivement"
+      },
+      "toastFailed": "Échec de la suppression du quiz",
+      "toastFailureDescription": "Veuillez réessayer plus tard",
+      "toastUnexpected": "Une erreur inattendue est survenue",
+      "toastUnexpectedDescription": "Veuillez réessayer plus tard"
     }
+  },
+  "myQuiz": {
+    "title": "Mes Quiz",
+    "description": "Révisez et gérez les quiz que vous avez créés.",
+    "empty": "Vous n'avez pas encore créé de quiz. Commencez à construire votre collection de quiz dès maintenant!",
+    "createButton": "Créez votre propre quiz"
   },
   "usersMangement": {
     "title": "Gestionnaire d'utilisateurs",
