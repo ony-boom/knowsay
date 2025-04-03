@@ -22,8 +22,6 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-
-// filepath: /C:/Users/titos/dev/knowsay/app/home/challenge/[id]/edit/manage-particiants/page.tsx
 import {
   Table,
   TableBody,
@@ -91,7 +89,9 @@ type HeaderProps = {
   isTeamBased: boolean;
 };
 
-const PageHeader: React.FC<HeaderProps> = ({ isTeamBased }) => (
+const ManageParticipantsPageHeader: React.FC<HeaderProps> = ({
+  isTeamBased,
+}) => (
   <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <hgroup className="space-y-2 md:space-y-4">
       <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
@@ -425,7 +425,7 @@ export default async function ManageParticipantsPage(props: {
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6 pt-0 md:px-6 md:py-8">
-      <PageHeader isTeamBased={challenge.is_team_based} />
+      <ManageParticipantsPageHeader isTeamBased={challenge.is_team_based} />
       <SearchBar />
 
       {challenge.is_team_based ? (
