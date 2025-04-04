@@ -9,6 +9,7 @@ import useSWR from "swr";
 import { QCMOptionArray } from "@/schemas/qcmOptionSchema";
 import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
 import Image from "next/image";
+import React from "react";
 
 export function QcmAnswer(props: QcmAnswerProps) {
   const { questionId, onAnswerChange, ...divProps } = props;
