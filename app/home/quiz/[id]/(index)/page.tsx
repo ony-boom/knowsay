@@ -43,8 +43,8 @@ export default async function QuizPage(props: {
 
       <QuizViewContainer
         quizId={id}
-        previousAttempts={previousAttempts}
         questions={questions}
+        previousAttempts={previousAttempts}
       />
     </>
   );

@@ -1,43 +1,85 @@
 import { getAllUsers } from "@/lib/actions/get-users";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import ActionColumn from "./users-action-column";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 export default async function UsersList() {
-    const allUsers = await getAllUsers();
-    return (
-        <Card>
-            <CardHeader className="pb-3">
-                <CardTitle>All Users</CardTitle>
-                <CardDescription>
-                    Manage all users from here.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ul className="w-full  divide-y divide-gray-200 dark:divide-gray-700">
-                    {allUsers?.map((user) => (
-                        <li key={user.clerk_id} className="pb-3 sm:pb-4 flex items-center justify-between">
-                            <div className="w-3/4 flex gap-4">
-                                <Avatar>
-                                    <AvatarImage src={user.imageUrl}></AvatarImage>
-                                    <AvatarFallback className="w-8 h-8 rounded-full border-2">{user?.name?.[0]}</AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1 min-w-0 items-center">
-                                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                        {user.name}
-                                    </p>
-                                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        {user.email}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex-1 w-1/4 justify-end">
-                                <ActionColumn user={user}/>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </CardContent>
-        </Card>
-    );
+  const allUsers = await getAllUsers();
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle>All Users</CardTitle>
+        <CardDescription>
+          Manage all users in the system from here.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-[100px]">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {allUsers?.map((user) => {
+              // Get initials from full name
+              const initials = user.name
+                ? user.name
+                    .split(" ")
+                    .map((name) => name[0])
+                    .join("")
+                    .toUpperCase()
+                    .substring(0, 2)
+                : "??";
+
+              return (
+                <TableRow key={user.clerk_id}>
+                  <TableCell className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.imageUrl} alt={user.name} />
+                      <AvatarFallback>{initials}</AvatarFallback>
+                    </Avatar>
+                    <span className="font-medium">
+                      {user.name || "Unnamed"}
+                    </span>
+                  </TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="outline"
+                      className="bg-green-100 text-green-800"
+                    >
+                      Active
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <ActionColumn user={user} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
 }

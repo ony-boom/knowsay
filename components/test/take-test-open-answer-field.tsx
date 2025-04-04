@@ -8,6 +8,7 @@ import { Block } from "@blocknote/core";
 export function TakeTestOpenAnswerField({
   onChange,
   value,
+  readOnly,
 }: TakeTestOpenAnswerFieldProps) {
   const [blocks, setBlocks] = useState<Block[]>(value || []);
   const editor = useCreateBlockNote({
@@ -17,6 +18,7 @@ export function TakeTestOpenAnswerField({
   return (
     <Editor
       editor={editor}
+      editable={!readOnly}
       onChange={() => {
         // Saves the document JSON to state.
         const blocks = editor.document;
@@ -32,4 +34,5 @@ export function TakeTestOpenAnswerField({
 export type TakeTestOpenAnswerFieldProps = {
   onChange?: (block: Block[]) => void;
   value?: Block[];
+  readOnly?: boolean;
 };
