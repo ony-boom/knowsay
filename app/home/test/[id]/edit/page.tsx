@@ -9,8 +9,9 @@ import {
 import { getTestById } from "@/lib/actions/get-test";
 import { TestQuestionsManager } from "@/components/test-question-manager";
 import { getAllTestQuestionsWithQcm } from "@/lib/actions/get-test-question";
+import Link from "next/link";
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
+export default async function Page(props: Readonly<{ params: Promise<{ id: string }> }>) {
   const { id } = await props.params;
 
   const [test, testQuestions] = await Promise.all([
@@ -29,12 +30,12 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             The test you&apos;re looking for doesn&apos;t exist or has been
             removed.
           </p>
-          <a
+          <Link
             href="/home/test"
             className="bg-primary text-primary-foreground hover:bg-primary/90 mt-4 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
           >
             Back to Tests
-          </a>
+          </Link>
         </div>
       </div>
     );

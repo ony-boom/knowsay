@@ -18,6 +18,6 @@ export const updateUserRole = async (userId: string, newRole: User["role"]) => {
           });
         revalidatePath("/");
     } catch(e) {
-        console.error('error on update role')
+        console.error(`error on update role: ${e}`)
     }
 }
