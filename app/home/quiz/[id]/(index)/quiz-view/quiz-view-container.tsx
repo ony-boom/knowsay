@@ -14,56 +14,14 @@ import {
   ChevronRight,
   Check,
   Redo,
-  Clock,
   Trophy,
+  Divide,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { updateQuizAttempt } from "@/lib/actions/update-quiz-attempt";
 import { useTimer } from "@/hooks/use-timer";
 import { QcmAnswer } from "@/components/qcm-answer";
-
-const TimeProgress = ({
-  timeLeft,
-  totalTime,
-}: {
-  timeLeft: number;
-  totalTime: number;
-}) => {
-  const percentageLeft = (timeLeft / totalTime) * 100;
-  const isWarning = percentageLeft <= 50 && percentageLeft > 20;
-  const isDanger = percentageLeft <= 20;
-
-  return (
-    <div className="bg-card absolute right-0 w-max rounded-lg border">
-      <div className="flex items-center gap-2 p-1">
-        <div className="flex items-center space-x-2">
-          <Clock
-            className={cn(
-              "h-4 w-4",
-              isDanger
-                ? "text-destructive animate-pulse"
-                : isWarning
-                  ? "text-amber-500"
-                  : "text-primary",
-            )}
-          />
-        </div>
-        <span
-          className={cn(
-            "text-sm font-semibold",
-            isDanger
-              ? "text-destructive"
-              : isWarning
-                ? "text-amber-500"
-                : "text-foreground",
-          )}
-        >
-          {Math.ceil(timeLeft)}s
-        </span>
-      </div>
-    </div>
-  );
-};
+import { TimeProgress } from "@/components/time-progress";
 
 const QuestionPagination = ({
   currentQuestion,
@@ -449,10 +407,12 @@ export function QuizViewContainer(props: QuizViewContainerProps) {
             />
 
             {!isDone && (
-              <TimeProgress
-                timeLeft={timeLeft}
-                totalTime={questions[currentQuestion]?.time_limit || 0}
-              />
+              <div className="absolute right-0">
+                <TimeProgress
+                  timeLeft={timeLeft}
+                  totalTime={questions[currentQuestion]?.time_limit || 0}
+                />
+              </div>
             )}
 
             {isDone ? (
