@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 export default function ManageUsers() {
     const t = useTranslations("usersMangement")
     return (
-        <>
+        <div className="flex flex-col gap-4 px-4 py-6 md:px-8 lg:px-12">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <hgroup className="space-y-2 md:space-y-4">
                     <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
@@ -22,12 +22,12 @@ export default function ManageUsers() {
                     <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
                     <Input
                         type="search"
-                        placeholder="Search participants or teams..."
+                        placeholder="Search users..."
                         className="pl-8"
                     />
                 </div>
             </div>
             <UsersList />
-        </>
+        </div>
     )
 }
