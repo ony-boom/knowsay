@@ -40,6 +40,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  getChallengeParticipants,
+  type ChallengeParticipant,
+} from "@/lib/actions/get-challenge-participants";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -52,16 +56,6 @@ type Team = {
   members: Array<{
     initials: string;
   }>;
-};
-
-type Participant = {
-  name: string;
-  email: string;
-  team?: string;
-  role?: string;
-  status?: string;
-  joined?: string;
-  initials: string;
 };
 
 // Atomic Components
@@ -266,7 +260,7 @@ const TeamActions = () => (
 );
 
 type ParticipantListProps = {
-  participants: Participant[];
+  participants: ChallengeParticipant[];
   isTeamBased: boolean;
 };
 
@@ -304,52 +298,71 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {participants.map((participant, index) => (
-            <TableRow key={index}>
-              <TableCell className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>{participant.initials}</AvatarFallback>
-                </Avatar>
-                <span>{participant.name}</span>
-              </TableCell>
-              <TableCell>{participant.email}</TableCell>
-              {isTeamBased ? (
-                <>
-                  <TableCell>{participant.team}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{participant.role}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <ParticipantTeamActions />
-                  </TableCell>
-                </>
-              ) : (
-                <>
-                  <TableCell>
-                    <Badge
-                      className={
-                        participant.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-amber-100 text-amber-800"
-                      }
-                    >
-                      {participant.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{participant.joined || "-"}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </>
-              )}
-            </TableRow>
-          ))}
+          {participants.map((participant) => {
+            // Get initials from full name
+            const initials = participant.name
+              .split(" ")
+              .map((name) => name[0])
+              .join("")
+              .toUpperCase()
+              .substring(0, 2);
+
+            // Format date for display
+            const joinedDate = participant.joined_at
+              ? new Date(participant.joined_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : "-";
+
+            return (
+              <TableRow key={participant.invitation_id}>
+                <TableCell className="flex items-center gap-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>{initials}</AvatarFallback>
+                  </Avatar>
+                  <span>{participant.name || "Unnamed"}</span>
+                </TableCell>
+                <TableCell>{participant.email}</TableCell>
+                {isTeamBased ? (
+                  <>
+                    <TableCell>-</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{participant.role}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <ParticipantTeamActions />
+                    </TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell>
+                      <Badge
+                        className={
+                          participant.status === "active"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-amber-100 text-amber-800"
+                        }
+                      >
+                        {participant.status === "active" ? "Active" : "Pending"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{joinedDate}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </>
+                )}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </CardContent>
@@ -382,7 +395,10 @@ export default async function ManageParticipantsPage(props: {
     return <ChallengeNotFound />;
   }
 
-  // Mock data - in a real app, this would come from your database
+  // Fetch real participant data using the server action
+  const { participants, isTeamBased } = await getChallengeParticipants(id);
+
+  // Mock teams data for now (would need a separate server action for teams)
   const mockTeams: Team[] = [
     {
       name: "Team Alpha",
@@ -396,39 +412,12 @@ export default async function ManageParticipantsPage(props: {
     },
   ];
 
-  const mockParticipants: Participant[] = [
-    {
-      name: "John Doe",
-      email: "john@example.com",
-      team: "Team Alpha",
-      role: "Captain",
-      status: "Active",
-      joined: "Feb 20, 2023",
-      initials: "JD",
-    },
-    {
-      name: "Taylor Smith",
-      email: "taylor@example.com",
-      team: "Team Alpha",
-      role: "Member",
-      status: "Active",
-      joined: "Feb 20, 2023",
-      initials: "TS",
-    },
-    {
-      name: "Alice Smith",
-      email: "alice@example.com",
-      status: "Pending",
-      initials: "AS",
-    },
-  ];
-
   return (
     <div className="flex flex-col gap-6 px-4 py-6 pt-0 md:px-6 md:py-8">
-      <ManageParticipantsPageHeader isTeamBased={challenge.is_team_based} />
+      <ManageParticipantsPageHeader isTeamBased={isTeamBased} />
       <SearchBar />
 
-      {challenge.is_team_based ? (
+      {isTeamBased ? (
         <Tabs defaultValue="teams" className="w-full">
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="teams">Teams</TabsTrigger>
@@ -440,17 +429,11 @@ export default async function ManageParticipantsPage(props: {
           </TabsContent>
 
           <TabsContent value="participants" className="mt-4">
-            <ParticipantList
-              participants={mockParticipants}
-              isTeamBased={true}
-            />
+            <ParticipantList participants={participants} isTeamBased={true} />
           </TabsContent>
         </Tabs>
       ) : (
-        <ParticipantList
-          participants={mockParticipants.filter((p) => p.status)}
-          isTeamBased={false}
-        />
+        <ParticipantList participants={participants} isTeamBased={false} />
       )}
     </div>
   );
