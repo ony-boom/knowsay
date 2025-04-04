@@ -19,8 +19,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { updateQuizAttempt } from "@/lib/actions/update-quiz-attempt";
-import { QcmAnswer } from "@/components/quiz/take/qcm-answer";
 import { useTimer } from "@/hooks/use-timer";
+import { QcmAnswer } from "@/components/qcm-answer";
 
 const TimeProgress = ({
   timeLeft,
