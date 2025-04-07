@@ -9,14 +9,7 @@ import { Button } from "@/components/ui/button";
 import { QuizQuestion } from "@/schemas/quizQuestionSchema";
 import { QCM } from "@/schemas/qcmSchema";
 import { QuizAttempt } from "@/schemas/quizAttemptSchema";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  Redo,
-  Trophy,
-  Divide,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, Redo, Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { updateQuizAttempt } from "@/lib/actions/update-quiz-attempt";
 import { useTimer } from "@/hooks/use-timer";
