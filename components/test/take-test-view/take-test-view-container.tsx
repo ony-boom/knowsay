@@ -1,23 +1,65 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { TestQuestion } from "@/schemas/testQuestionSchema";
 import { TakeTestListItem } from "./take-test-list-item";
 import { useTimer } from "@/hooks/use-timer";
 import { TimeProgress } from "@/components/time-progress";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "motion/react";
+import { Separator } from "@/components/ui/separator";
+import { useTakeTestStore } from "@/hooks/use-take-test-store";
+import { Fragment } from "react";
+import { saveTestAttempts } from "@/lib/actions/save-test-attempts";
+import { toast } from "sonner";
 
 export function TakeTestViewContainer({
   questions,
   totalTime,
+  testId,
 }: TakeTestViewContainerProps) {
-  const [started, setStarted] = useState(false);
-  const { timeLeft, start, isDone: timeout } = useTimer(totalTime);
+  const { setState } = useTakeTestStore;
+  const { started, submited, setTestAnswers, testAnswers } = useTakeTestStore();
+  const { timeLeft, start, isDone: timeout, pause } = useTimer(totalTime);
 
   const handleStart = () => {
-    setStarted(true);
+    setState({ started: true });
     start();
+  };
+
+  const handleSubmit = async () => {
+    setState({ submited: true });
+
+    if (!timeout) pause();
+
+    const answers = Object.keys(testAnswers).map((questionId) => {
+      const answer = testAnswers[questionId];
+      const isFreeText = Boolean(answer.freeAnswer);
+      return {
+        questionId,
+        isFreeText,
+        answer: isFreeText ? answer.freeAnswer : answer.selected,
+      };
+    });
+
+    const saved = await saveTestAttempts({
+      testId,
+      answers,
+    });
+
+    if (saved) {
+      toast.success("Test attempt saved");
+    } else {
+      toast.error("Failed to save test attempt");
+    }
+  };
+
+  const handleTestChange = (value: {
+    answer: string;
+    questionId: string;
+    isFreeText: boolean;
+  }) => {
+    setTestAnswers(value);
   };
 
   return (
@@ -37,23 +79,53 @@ export function TakeTestViewContainer({
       </div>
       <div className="space-y-12">
         {questions?.map((question, index) => (
-          <TakeTestListItem
-            index={index + 1}
-            key={question.id}
-            readOnly={timeout}
-            question={question}
-          />
+          <Fragment key={question.id}>
+            {index + 1 > 1 && <Separator className="mb-8" />}
+            <TakeTestListItem
+              title={!started ? "Please start the quiz" : ""}
+              onChange={handleTestChange}
+              index={index + 1}
+              key={question.id}
+              readOnly={timeout || !started || submited}
+              question={question}
+            />
+          </Fragment>
         ))}
       </div>
 
-      <Button size="lg" className="mt-12 w-full">
-        Submit
-      </Button>
+      <AnimatePresence mode="wait">
+        {started && (
+          <>
+            <Separator className="mt-24 mb-8" />
+            <motion.div
+              className="space-y-4"
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <p className="text-muted-foreground">
+                Please make sure to review your answers before submitting. Once
+                you submit, you will not be able to change your answers. Unless
+                you retake the test.
+              </p>
+              <Button
+                disabled={submited}
+                onClick={handleSubmit}
+                size="lg"
+                className="w-full"
+              >
+                Submit
+              </Button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 export type TakeTestViewContainerProps = {
   totalTime: number;
+  testId: string;
   questions: TestQuestion[];
 };

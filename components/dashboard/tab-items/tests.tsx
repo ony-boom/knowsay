@@ -17,12 +17,18 @@ import Link from "next/link";
 const TestItem = ({ userTest }: { userTest: UserTestWithScore }) => (
   <div className="flex items-center justify-between rounded-lg border p-4">
     <div>
-      <p className="font-medium">{userTest.tests.title}</p>
+      <p className="font-medium">
+        <Link href={`/home/test/${userTest.test_id}`}>
+          {userTest.tests.title}
+        </Link>
+      </p>
       <p className="text-muted-foreground text-sm">
         Taken on {formatDate(userTest.tests.created_at.toString())}
       </p>
     </div>
-    <div className="text-lg font-bold">{userTest.score}%</div>
+    <div className="font-bold">
+      {userTest.status === "corrected" ? `${userTest.score}%` : "Not corrected"}
+    </div>
   </div>
 );
 

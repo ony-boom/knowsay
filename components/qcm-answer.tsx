@@ -7,23 +7,27 @@ import { swrFetcher } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
 import { QCMOptionArray } from "@/schemas/qcmOptionSchema";
-import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
 import Image from "next/image";
 import React from "react";
+import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
 
 export function QcmAnswer(props: QcmAnswerProps) {
-  const { questionId, onAnswerChange, ...divProps } = props;
+  const { questionId, onAnswerChange, passIdOnAnswerChange, ...divProps } =
+    props;
   const { selectedAnswers, setSelectedAnswer } = useTakeQuizState();
 
   const selectedValue = selectedAnswers[questionId]?.value;
   const readOnly = props.readOnly;
 
-  const { data: answers, isLoading } = useSWR<QCMOptionArray>(
+  const {
+    data: answers,
+    isLoading,
+    error,
+  } = useSWR<QCMOptionArray>(
     `/api/questions/answers/${questionId}`,
     swrFetcher,
   );
 
-  // Find the correct answer
   const correctAnswer = answers?.find((answer) => answer.is_correct);
 
   const handleCheck = (value: string) => {
@@ -37,13 +41,10 @@ export function QcmAnswer(props: QcmAnswerProps) {
     }
   };
 
-  if (answers?.length === 0 && !isLoading) {
+  if (error) {
     return (
-      <div className="flex justify-center">
-        <p>
-          Looks like the creator of this quiz hasn&#39;t added any answers yet.
-          That&#39;s a bummer. 😔
-        </p>
+      <div className="flex justify-center p-4 text-red-500">
+        Failed to load answers. Please try again.
       </div>
     );
   }
@@ -52,10 +53,18 @@ export function QcmAnswer(props: QcmAnswerProps) {
     return (
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
         {Array(4)
-          .fill(1)
+          .fill(0)
           .map((_, index) => (
-            <Skeleton className="w-full p-6" key={index} />
+            <Skeleton className="h-16 w-full p-6" key={index} />
           ))}
+      </div>
+    );
+  }
+
+  if (!answers?.length) {
+    return (
+      <div className="text-muted-foreground flex justify-center p-4">
+        No answers available for this question.
       </div>
     );
   }
@@ -69,20 +78,24 @@ export function QcmAnswer(props: QcmAnswerProps) {
         className={cn("w-full", props.className)}
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {answers?.map((answer, index) => {
-            const isSelected = selectedValue === answer.option_text;
+          {answers.map((answer, index) => {
+            const answerValue = passIdOnAnswerChange
+              ? answer.option_id
+              : answer.option_text!;
+            const isSelected = selectedValue === answerValue;
             const isCorrectAnswer =
               correctAnswer?.option_text === answer.option_text;
-            const isIncorrectSelection =
-              isSelected && !isCorrectAnswer && readOnly;
             const isCorrectSelection =
               isSelected && isCorrectAnswer && readOnly;
+            const isIncorrectSelection =
+              isSelected && !isCorrectAnswer && readOnly;
 
             return (
               <div
                 className={cn(
-                  "border-border hover:bg-secondary/40 relative flex cursor-pointer items-center rounded-lg border p-5 shadow-sm transition-all",
+                  "border-border relative flex cursor-pointer items-center rounded-lg border p-5 shadow-sm transition-all",
                   {
+                    "hover:bg-secondary/40": !readOnly,
                     "bg-secondary border-primary shadow-md":
                       isSelected && !readOnly,
                     "border-green-600 bg-green-50 shadow-md dark:bg-green-950/30":
@@ -92,7 +105,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
                   },
                 )}
                 key={answer.option_id}
-                onClick={() => !readOnly && handleCheck(answer.option_text!)}
+                onClick={() => !readOnly && handleCheck(answerValue)}
               >
                 <div
                   className={cn(
@@ -144,5 +157,6 @@ export function QcmAnswer(props: QcmAnswerProps) {
 export type QcmAnswerProps = React.ComponentProps<typeof RadioGroup> & {
   questionId: string;
   readOnly?: boolean;
+  passIdOnAnswerChange?: boolean;
   onAnswerChange?: (answer: string) => void;
 };
