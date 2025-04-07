@@ -28,7 +28,11 @@ export default async function TestPage({
         <p className="text-gray-600">{test.description}</p>
       </hgroup>
 
-      <TakeTestViewContainer questions={questions} totalTime={totalTime} />
+      <TakeTestViewContainer
+        testId={testId}
+        questions={questions}
+        totalTime={totalTime}
+      />
     </div>
   );
 }
