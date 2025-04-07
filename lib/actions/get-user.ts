@@ -43,3 +43,26 @@ export const getCurrentUserId = async () => {
 
   return supabaseUser.id;
 };
+
+export const getUserInfo = async (id: string | string[]) => {
+  if (typeof id === "string") {
+    const {data: user, error} = await supabase.from("users").select("name, email, id, imageUrl").eq("id", id);
+    if (error) {
+      console.error("Error fetching user:", error);
+      return [];
+    }
+    return user;
+  } else {
+    try {
+      const { data, error } = await supabase.from("users").select("name, email, id, imageUrl").in("id", id);
+      if (error) {
+        console.error("Error fetching users:", error);
+        return [];
+      }
+      return data;
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return [];
+    }
+  }
+}

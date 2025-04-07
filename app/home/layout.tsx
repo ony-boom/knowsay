@@ -28,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import FloatingBubble from "@/components/messages/floating-bubble";
 
 const LogoutButton = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -80,6 +81,7 @@ export default function Layout({
   const t = useTranslations();
 
   const isAtHomeRoot = pathname === "/home";
+  const isInsideMessages = pathname.includes("/home/messages");
 
   return (
     <div className="container mx-auto flex h-screen flex-col px-4">
@@ -242,6 +244,16 @@ export default function Layout({
                   {t("home.toolbar.buttons.createTest")}
                 </Link>
               </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
+              >
+                <Link href="/home/messages">
+                  {t("home.toolbar.buttons.messages")}
+                </Link>
+              </Button>
             </div>
           )}
         </section>
@@ -250,6 +262,13 @@ export default function Layout({
       </div>
 
       <div className="h-full w-full py-6">{children}</div>
+      {
+        !isInsideMessages && (
+          <div className="absolute">
+            <FloatingBubble />
+          </div>
+        )
+      }
     </div>
   );
 }

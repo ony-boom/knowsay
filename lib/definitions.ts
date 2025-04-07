@@ -2,7 +2,7 @@ export type User = {
   id?: string;
   name: string;
   password_hash?: string;
-  role: "super_admin"| "user"| "corrector";
+  role: "super_admin" | "user" | "corrector";
   email: string;
   clerk_id: string;
   imageUrl?: string;
@@ -17,3 +17,19 @@ export type LeaderBoardEntry = {
   total_challenges_completed: number;
   total_score: number;
 };
+
+export type MessageContent = {
+  message_id: string,
+  content: string,
+  is_read: true,
+  created_at: string,
+  sender_id: string,
+  sender_name: string,
+  sender_email: string,
+  sender_imageurl: string,
+  receiver_id: string,
+  receiver_name: string,
+  receiver_email: string,
+  receiver_imageurl: string;
+  message_type: 'sent' | 'received';
+}
