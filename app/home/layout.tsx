@@ -1,5 +1,6 @@
 "use client";
 
+import { CookieConsentModal } from "@/components/cookie-consent-modal";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
 import { LanguageSwitch } from "@/components/language-switch";
 import { Logo } from "@/components/logo";
@@ -22,6 +23,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
+import { Toaster } from "@/components/ui/sonner";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import { LogOut, Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -83,7 +85,7 @@ export default function Layout({
   const isInsideMessages = pathname.includes("/home/messages");
 
   return (
-    <div className="container mx-auto flex h-screen flex-col px-4">
+    <div className="relative container mx-auto flex h-screen flex-col px-4">
       <div className="bg-background sticky top-0 z-50">
         <header className="flex items-center justify-between border-b py-4 sm:p-6">
           <div aria-labelledby="logo" className="flex items-center gap-1">
@@ -259,8 +261,9 @@ export default function Layout({
 
         <Separator />
       </div>
-
       <div className="h-full w-full py-6">{children}</div>
+      <Toaster />
+      <CookieConsentModal />;
     </div>
   );
 }
