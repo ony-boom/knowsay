@@ -131,6 +131,7 @@
   .bn-editor {
     padding: 0 !important;
     padding-right: 8px !important;
+    background-color: var(--color-background) !important;
 
     &[contenteditable="false"] {
       .bn-block-outer:last-child {
