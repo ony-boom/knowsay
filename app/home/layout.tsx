@@ -29,6 +29,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import FloatingBubble from "@/components/messages/floating-bubble";
+import { Toaster } from "@/components/ui/sonner";
+import { CookieConsentModal } from "@/components/cookie-consent-modal";
 
 const LogoutButton = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -84,7 +86,7 @@ export default function Layout({
   const isInsideMessages = pathname.includes("/home/messages");
 
   return (
-    <div className="container mx-auto flex h-screen flex-col px-4">
+    <div className="relative container mx-auto flex h-screen flex-col px-4">
       <div className="bg-background sticky top-0 z-50">
         <header className="flex items-center justify-between border-b py-4 sm:p-6">
           <div aria-labelledby="logo" className="flex items-center gap-1">
@@ -260,15 +262,14 @@ export default function Layout({
 
         <Separator />
       </div>
-
       <div className="h-full w-full py-6">{children}</div>
-      {
-        !isInsideMessages && (
-          <div className="absolute">
-            <FloatingBubble />
-          </div>
-        )
-      }
+      {!isInsideMessages && (
+        <div className="absolute">
+          <FloatingBubble />
+        </div>
+      )}
+      <Toaster />
+      <CookieConsentModal />;
     </div>
   );
 }
