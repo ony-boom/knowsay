@@ -1,9 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
 import { supabase } from "../supabase";
 import { getCurrentUserId, getUserInfo } from "../actions/get-user";
-import { cp } from "fs";
 import { MessageContent } from "../definitions";
-import { get } from "http";
 
 export async function getMessagesFromUser(userId: string) {
     try {
@@ -101,7 +98,6 @@ export async function getAllMessages() {
             console.error('Erreur récupération messages :', error);
             return [];
         }
-        console.log('data', data);
         return groupMessages(data);
     } catch (e) {
         console.error(e);
