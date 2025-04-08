@@ -16,7 +16,8 @@
         "createChallenge": "Créer un défi",
         "createTest": "Créer un test",
         "manageUsers": "Gérer les utilisateurs",
-        "manageAssignement": "Gerer les correcteurs"
+        "manageAssignement": "Gerer les correcteurs",
+        "messages": "Messages"
       }
     }
   },

@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const swrFetcher = (...args: Parameters<typeof fetch>) =>
-  fetch(...args).then((res) => res.json());
+  fetch(...args).then((res) => res.json()).catch(e => console.error(e));
 
 export const generatePagination = (currentPage: number, totalPages: number) => {
   // If the total number of pages is 7 or less,
