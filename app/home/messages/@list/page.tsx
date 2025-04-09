@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { getAllMessages } from "@/lib/messages/get-messages"
 import { Search } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export default async function SenderList() {
@@ -29,7 +30,7 @@ export default async function SenderList() {
                             <li className="flex flex-col items-center justify-between py-5" key={content.id}>
                                 <Link href={`/home/messages/${content.id}/conversation`} className="w-full flex justify-between">
                                     <div className="flex min-w-0 gap-x-4">
-                                        <img className="size-12 flex-none rounded-full bg-gray-50" src={content.user.imageUrl} alt="" />
+                                        <Image className="size-12 flex-none rounded-full bg-gray-50" src={content.user.imageUrl} alt="" />
                                         <div className="min-w-0 flex-auto">
                                             <p className="text-sm/6 font-semibold text-gray-900">{content.user?.name}</p>
                                             <p className="mt-1 truncate text-xs/5 text-gray-500">{content.user?.email}</p>

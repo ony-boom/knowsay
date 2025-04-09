@@ -82,7 +82,6 @@ export default function Layout({
   const t = useTranslations();
 
   const isAtHomeRoot = pathname === "/home";
-  const isInsideMessages = pathname.includes("/home/messages");
 
   return (
     <div className="relative container mx-auto flex h-screen flex-col px-4">

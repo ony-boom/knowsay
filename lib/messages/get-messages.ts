@@ -8,23 +8,23 @@ export async function getMessagesFromUser(userId: string) {
             const { data, error } = await supabase
                 .from('messages')
                 .select(`
-          message_id,
-          content,
-          is_read,
-          created_at,
-          sender_id,
-          receiver_id,
-          sender:sender_id (
-            id,
-            name,
-            email
-          ),
-          receiver:receiver_id (
-            id,
-            name,
-            email
-          )
-        `)
+                    message_id,
+                    content,
+                    is_read,
+                    created_at,
+                    sender_id,
+                    receiver_id,
+                    sender:sender_id (
+                        id,
+                        name,
+                        email
+                    ),
+                    receiver:receiver_id (
+                        id,
+                        name,
+                        email
+                    )
+                `)
                 .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
                 .order('created_at', { ascending: true });
 
@@ -67,7 +67,6 @@ export async function getMessagesBetweenUsers(conversationUserId: string) {
     };
 }
 
-
 export async function getAllMessages() {
     try {
         const userId = await getCurrentUserId();
@@ -75,23 +74,23 @@ export async function getAllMessages() {
         const { data, error } = await supabase
             .from('messages')
             .select(`
-        message_id,
-        content,
-        is_read,
-        created_at,
-        sender_id,
-        receiver_id,
-        sender:sender_id (
-          id,
-          name,
-          email
-        ),
-        receiver:receiver_id (
-          id,
-          name,
-          email
-        )
-      `).or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+                message_id,
+                content,
+                is_read,
+                created_at,
+                sender_id,
+                receiver_id,
+                sender:sender_id (
+                id,
+                name,
+                email
+                ),
+                receiver:receiver_id (
+                id,
+                name,
+                email
+                )
+            `).or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
             .order('created_at', { ascending: true });
 
         if (error) {
@@ -111,7 +110,7 @@ export type MessageGroup = Record<string, {
     messages: Array<{ direction: 'sent' | 'received' }>;
 }>
 
-const groupMessages = async (data: any[]) => {
+const groupMessages = async (data: MessageResult[]) => {
     const currentUserId = await getCurrentUserId();
 
     const groupedMessages = {} as MessageGroup;
@@ -145,4 +144,23 @@ const groupMessages = async (data: any[]) => {
         }
     ));
 
+}
+
+type MessageResult = {
+    message_id: string;
+    content: string;
+    is_read: string;
+    created_at: string;
+    sender_id: string;
+    receiver_id: string;
+    sender: {
+        id: string;
+        name: string;
+        email: string;
+    }[];
+    receiver: {
+        id: string;
+        name: string;
+        email: string;
+    }[];
 }

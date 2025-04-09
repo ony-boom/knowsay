@@ -68,7 +68,7 @@ export const useLatestChatStore = create<LatestChatState>((set, get) => {
         const allMessages = await getAllMessages()
     
         const lastMessage = allMessages[0];
-    
+        console.log("lastMessages", lastMessage)
         if (lastMessage) {
           const fallbackId = lastMessage.user.id;
           set(() => ({
