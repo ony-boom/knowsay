@@ -29,8 +29,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import FloatingBubble from "@/components/messages/floating-bubble";
-import { Toaster } from "@/components/ui/sonner";
-import { CookieConsentModal } from "@/components/cookie-consent-modal";
 
 const LogoutButton = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -268,8 +266,6 @@ export default function Layout({
           <FloatingBubble />
         </div>
       )}
-      <Toaster />
-      <CookieConsentModal />;
     </div>
   );
 }

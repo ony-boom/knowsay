@@ -3,6 +3,8 @@ import { Logo } from "@/components/logo";
 import { Container } from "@/components/container";
 import { HomeNavMenu } from "@/components/home-nav-menu";
 import { ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { CookieConsentModal } from "@/components/cookie-consent-modal";
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
@@ -18,8 +20,9 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
 
         <HomeNavMenu />
       </nav>
-
       <div className="grow py-2">{children}</div>
+      <Toaster />
+      <CookieConsentModal />
     </Container>
   );
 }
