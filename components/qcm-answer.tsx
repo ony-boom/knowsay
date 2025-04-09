@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useSWR from "swr";
 import { QCMOptionArray } from "@/schemas/qcmOptionSchema";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTakeQuizState } from "@/hooks/use-take-quiz-state";
 
 export function QcmAnswer(props: QcmAnswerProps) {
@@ -30,13 +30,33 @@ export function QcmAnswer(props: QcmAnswerProps) {
 
   const correctAnswer = answers?.find((answer) => answer.is_correct);
 
+  useEffect(() => {
+    if (!props.defaultValue) return;
+    setSelectedAnswer(
+      questionId,
+      props.defaultValue,
+      passIdOnAnswerChange
+        ? correctAnswer?.option_id === props.defaultValue
+        : correctAnswer?.option_text === props.defaultValue,
+    );
+  }, [
+    correctAnswer?.option_id,
+    correctAnswer?.option_text,
+    passIdOnAnswerChange,
+    props.defaultValue,
+    questionId,
+    setSelectedAnswer,
+  ]);
+
   const handleCheck = (value: string) => {
-    onAnswerChange?.(questionId);
+    onAnswerChange?.(value);
     if (!readOnly) {
       setSelectedAnswer(
         questionId,
         value,
-        correctAnswer?.option_text === value,
+        passIdOnAnswerChange
+          ? correctAnswer?.option_id === value
+          : correctAnswer?.option_text === value,
       );
     }
   };
@@ -82,6 +102,7 @@ export function QcmAnswer(props: QcmAnswerProps) {
             const answerValue = passIdOnAnswerChange
               ? answer.option_id
               : answer.option_text!;
+
             const isSelected = selectedValue === answerValue;
             const isCorrectAnswer =
               correctAnswer?.option_text === answer.option_text;
@@ -158,5 +179,6 @@ export type QcmAnswerProps = React.ComponentProps<typeof RadioGroup> & {
   questionId: string;
   readOnly?: boolean;
   passIdOnAnswerChange?: boolean;
+  defaultValue?: string;
   onAnswerChange?: (answer: string) => void;
 };

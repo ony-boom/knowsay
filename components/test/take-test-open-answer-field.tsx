@@ -10,9 +10,9 @@ export function TakeTestOpenAnswerField({
   value,
   readOnly,
 }: TakeTestOpenAnswerFieldProps) {
-  const [blocks, setBlocks] = useState<Block[]>(value || []);
+  const [, setBlocks] = useState<Block[]>([]);
   const editor = useCreateBlockNote({
-    initialContent: blocks.length > 0 ? blocks : undefined,
+    initialContent: value?.length ? value : undefined,
   });
 
   return (
