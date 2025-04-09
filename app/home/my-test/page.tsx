@@ -8,6 +8,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { UserTestList } from "@/components/user-test-list";
+import { getTranslations } from "next-intl/server";
 
 // Loading skeleton component
 const TestListSkeleton = () => (
@@ -43,15 +44,17 @@ export default async function MyTestPage(props: {
   const query = searchParams?.query || "";
   const page = searchParams?.page ? parseInt(searchParams.page) : 1;
 
+  const t = await getTranslations("home.myTest");
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <hgroup className="space-y-2">
           <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
-            My Tests
+            {t("title")}
           </h1>
           <p className="text-foreground/80 text-base md:text-lg">
-            Review and manage the assessments you&apos;ve created.
+            {t("description")}
           </p>
         </hgroup>
         <Link
@@ -59,7 +62,7 @@ export default async function MyTestPage(props: {
           className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Create new test
+          {t("createButton")}
         </Link>
       </div>
 

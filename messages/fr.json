@@ -19,6 +19,11 @@
         "manageAssignement": "Gerer les correcteurs",
         "messages": "Messages"
       }
+    },
+    "myTest": {
+      "title": "Mes Tests",
+      "description": "Révisez et gérez les évaluations que vous avez créées.",
+      "createButton": "Créer un nouveau test"
     }
   },
   "quiz": {

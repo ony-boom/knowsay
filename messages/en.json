@@ -19,6 +19,11 @@
         "manageAssignement": "Manage corrector",
         "messages": "Messages"
       }
+    },
+    "myTest": {
+      "title": "My Tests",
+      "description": "Review and manage the tests you've created.",
+      "createButton": "Create a new test"
     }
   },
   "quiz": {
