@@ -4,10 +4,12 @@ import { Leaderboard } from "@/components/dashboard/leaderboard";
 import { QuizzesTab } from "@/components/dashboard/tab-items/quizzes";
 import { ChallengesTab } from "@/components/dashboard/tab-items/challenges";
 import { TestsTab } from "@/components/dashboard/tab-items/tests";
+import ChatComponent from "@/components/messages/chat-component";
 
 export default function Home() {
   return (
     <div className="container space-y-8">
+      <ChatComponent />
       <StatsOverview />
 
       <Leaderboard />

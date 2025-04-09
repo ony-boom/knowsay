@@ -1,25 +1,11 @@
 "use client";
 
-import { Logo } from "@/components/logo";
-import Link from "next/link";
-import { Menu, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { usePathname } from "next/navigation";
+import { CookieConsentModal } from "@/components/cookie-consent-modal";
 import { HomeBreadcrumb } from "@/components/home-breadcrumb";
-import { ReactNode, useState } from "react";
-import { SignOutButton, useUser } from "@clerk/nextjs";
 import { LanguageSwitch } from "@/components/language-switch";
-import { useTranslations } from "next-intl";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+import { Logo } from "@/components/logo";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +14,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import FloatingBubble from "@/components/messages/floating-bubble";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { Separator } from "@/components/ui/separator";
+import { Toaster } from "@/components/ui/sonner";
+import { SignOutButton, useUser } from "@clerk/nextjs";
+import { LogOut, Menu } from "lucide-react";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ReactNode, useState } from "react";
 
 const LogoutButton = () => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -81,7 +82,6 @@ export default function Layout({
   const t = useTranslations();
 
   const isAtHomeRoot = pathname === "/home";
-  const isInsideMessages = pathname.includes("/home/messages");
 
   return (
     <div className="relative container mx-auto flex h-screen flex-col px-4">
@@ -261,11 +261,8 @@ export default function Layout({
         <Separator />
       </div>
       <div className="h-full w-full py-6">{children}</div>
-      {!isInsideMessages && (
-        <div className="absolute">
-          <FloatingBubble />
-        </div>
-      )}
+      <Toaster />
+      <CookieConsentModal />;
     </div>
   );
 }
