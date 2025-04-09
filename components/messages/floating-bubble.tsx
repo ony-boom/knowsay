@@ -8,21 +8,23 @@ import { Button } from "../ui/button";
 import { ChatMessageList } from "../ui/chat/chat-message-list";
 import { ExpandableChat, ExpandableChatBody, ExpandableChatFooter, ExpandableChatHeader } from "../ui/chat/expandable-chat";
 import ChatContent from "./chat-content";
-import ChatBox from "./send-message";
+import ChatBox from "./chat-box";
 
 
 export default function FloatingBubble({ currentUserId }: Readonly<{ currentUserId: string }>) {
-  const {latestSenderId, lastSenderBackup, subscribeToLatestMessages, initializeFromHistory } = useLatestChatStore((state) => state)
+  const { latestSenderId, lastSenderBackup, subscribeToLatestMessages, initializeFromHistory } = useLatestChatStore((state) => state)
 
   const [latestSender, setLatestSender] = useState<{ id: string; name: string, imageUrl: string, email: string } | null>(null)
 
   // Unsubscribe from the channel when the component unmounts
   // and subscribe to the latest messages when the component mounts
+  
   useEffect(() => {
     const unsubscribe = subscribeToLatestMessages(currentUserId);
     const init = async () => initializeFromHistory();
     init();
     return () => unsubscribe()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 
@@ -40,7 +42,7 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
   return (
     <ExpandableChat
       size="md"
-      icon={<ImageBubble latestSender={latestSender}/>}
+      icon={<ImageBubble latestSender={latestSender} />}
       position="bottom-right"
     >
       <ExpandableChatHeader className="flex-col text-center justify-center">
@@ -57,20 +59,22 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
         </ChatMessageList>
       </ExpandableChatBody>
       <ExpandableChatFooter>
-          <ChatBox receiverId={latestSender?.id ?? lastSenderBackup!} />
+        <ChatBox receiverId={latestSender?.id ?? lastSenderBackup!} />
       </ExpandableChatFooter>
     </ExpandableChat>
   )
 }
 
-const ImageBubble = ({latestSender}: Readonly<{latestSender: UserLike | null}>) => {
+const ImageBubble = ({ latestSender }: Readonly<{ latestSender: UserLike | null }>) => {
   return (
-    <Avatar>
-        <AvatarImage
+    <Avatar className="size-12">
+      <AvatarImage
           src={latestSender?.imageUrl}
-          alt="Avatar" />
-        <AvatarFallback>{latestSender?.name[0]}</AvatarFallback>
-      </Avatar>
+          alt="Avatar"
+          />
+      <AvatarFallback className="size-12 flex items-center justify-center"><h3 className="text-2xl">
+        {latestSender?.name[0]}</h3></AvatarFallback>
+    </Avatar>
   )
 }
 

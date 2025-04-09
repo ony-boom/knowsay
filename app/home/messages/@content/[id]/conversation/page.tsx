@@ -1,12 +1,10 @@
+import ChatBox from "@/components/messages/chat-box"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from "@/components/ui/chat/chat-bubble"
-import { ChatInput } from "@/components/ui/chat/chat-input"
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list"
+import { Separator } from "@/components/ui/separator"
 import { getMessagesBetweenUsers } from "@/lib/messages/get-messages"
 import { AvatarFallback } from "@radix-ui/react-avatar"
-import { Separator } from "@/components/ui/separator"
-import { SendHorizonal } from "lucide-react"
-import ChatBox from "@/components/messages/send-message"
 
 export default async function Page({
     params,
