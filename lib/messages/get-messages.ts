@@ -97,7 +97,7 @@ export async function getAllMessages() {
             console.error('Erreur récupération messages :', error);
             return [];
         }
-        return groupMessages(data);
+        return groupMessages(data as unknown as MessageResult[]);
     } catch (e) {
         console.error(e);
         return [];
@@ -157,10 +157,10 @@ type MessageResult = {
         id: string;
         name: string;
         email: string;
-    }[];
+    };
     receiver: {
         id: string;
         name: string;
         email: string;
-    }[];
+    };
 }
