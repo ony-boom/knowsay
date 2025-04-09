@@ -26,6 +26,12 @@
       "createButton": "Créer un nouveau test",
       "empty": "Vous n'avez pas encore créé de tests.",
       "createTestButton": "Créer un test"
+    },
+    "myChallenge": {
+      "title": "Mes Défis",
+      "description": "Révisez et gérez les défis que vous avez créés.",
+      "createButton": "Créer votre propre défi",
+      "empty": "Vous n'avez pas encore créé de défis. Commencez à construire votre collection de défis maintenant!"
     }
   },
   "quiz": {
