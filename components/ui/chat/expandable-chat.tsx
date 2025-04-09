@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { X, MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { MessageCircle, X } from "lucide-react";
+import React, { useRef, useState } from "react";
 
 export type ChatPosition = "bottom-right" | "bottom-left";
 export type ChatSize = "sm" | "md" | "lg" | "xl" | "full";
@@ -35,7 +35,7 @@ interface ExpandableChatProps extends React.HTMLAttributes<HTMLDivElement> {
   position?: ChatPosition;
   size?: ChatSize;
   icon?: React.ReactNode;
-}
+};
 
 const ExpandableChat: React.FC<ExpandableChatProps> = ({
   className,
@@ -146,8 +146,7 @@ const ExpandableChatToggle: React.FC<ExpandableChatToggleProps> = ({
 ExpandableChatToggle.displayName = "ExpandableChatToggle";
 
 export {
-  ExpandableChat,
-  ExpandableChatHeader,
-  ExpandableChatBody,
-  ExpandableChatFooter,
+  ExpandableChat, ExpandableChatBody,
+  ExpandableChatFooter, ExpandableChatHeader
 };
+
