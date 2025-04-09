@@ -18,14 +18,14 @@ export function TakeTestViewContainer({
   totalTime,
   testId,
   previousAttemptId,
-  attemptStatus,
+  // attemptStatus,
 }: TakeTestViewContainerProps) {
   const { setState } = useTakeTestStore;
   const { started, submited, setTestAnswers, testAnswers, hasAttempted } =
     useTakeTestStore();
   const { timeLeft, start, isDone: timeout, pause } = useTimer(totalTime);
 
-  const completed = attemptStatus === "completed";
+  // const completed = attemptStatus === "completed";
 
   useLayoutEffect(() => {
     setState({ hasAttempted: Boolean(previousAttemptId) });
