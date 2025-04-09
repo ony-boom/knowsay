@@ -262,7 +262,7 @@ export default function Layout({
       </div>
       <div className="h-full w-full py-6">{children}</div>
       <Toaster />
-      <CookieConsentModal />;
+      <CookieConsentModal />
     </div>
   );
 }
