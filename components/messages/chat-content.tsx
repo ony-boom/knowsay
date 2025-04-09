@@ -1,8 +1,10 @@
 "use client";
 import useSWR from "swr";
 import { getMessagesBetweenUsers } from "@/lib/messages/get-messages";
-import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from "../ui/chat/chat-bubble";
+import { ChatBubble, ChatBubbleActionWrapper, ChatBubbleAvatar, ChatBubbleMessage } from "../ui/chat/chat-bubble";
 import { MessageContent } from "@/lib/definitions";
+import moment from "moment";
+import { Check } from "lucide-react";
 
 const fetcher = (userId: string) => getMessagesBetweenUsers(userId);
 
@@ -27,6 +29,12 @@ export default function ChatContent({ latestSenderId }: Readonly<{ latestSenderI
           <ChatBubbleMessage variant={message.message_type}>
             {message.content}
           </ChatBubbleMessage>
+          <ChatBubbleActionWrapper>
+            <div className=" flex gap-1 justify-center items-center">
+              {message.is_read && (<Check size={8} />)}
+              <p className="text-xs/5">{moment(message.created_at).fromNow()}</p>
+            </div>
+          </ChatBubbleActionWrapper>
         </ChatBubble>
       ))}
     </>

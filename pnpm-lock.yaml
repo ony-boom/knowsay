@@ -122,6 +122,9 @@ importers:
       lucide-react:
         specifier: ^0.479.0
         version: 0.479.0(react@19.0.0)
+      moment:
+        specifier: ^2.30.1
+        version: 2.30.1
       motion:
         specifier: ^12.5.0
         version: 12.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3289,6 +3292,9 @@ packages:
     resolution: {integrity: sha512-w9mCNlj0S8qviuHzpakaLVc+/7q50jl9a/kmJ/n8bmXQZgDPkQHnPBb8MUOYh3WpAYkXuNc2c+khsozhIp/amQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+
+  moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
   motion-dom@12.5.0:
     resolution: {integrity: sha512-uH2PETDh7m+Hjd1UQQ56yHqwn83SAwNjimNPE/kC+Kds0t4Yh7+29rfo5wezVFpPOv57U4IuWved5d1x0kNhbQ==}
@@ -8334,6 +8340,8 @@ snapshots:
       requirejs-config-file: 4.0.0
     transitivePeerDependencies:
       - supports-color
+
+  moment@2.30.1: {}
 
   motion-dom@12.5.0:
     dependencies:

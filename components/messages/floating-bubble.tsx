@@ -9,10 +9,11 @@ import { ChatMessageList } from "../ui/chat/chat-message-list";
 import { ExpandableChat, ExpandableChatBody, ExpandableChatFooter, ExpandableChatHeader } from "../ui/chat/expandable-chat";
 import ChatContent from "./chat-content";
 import ChatBox from "./chat-box";
+import { toast } from "sonner";
 
 
 export default function FloatingBubble({ currentUserId }: Readonly<{ currentUserId: string }>) {
-  const { latestSenderId, lastSenderBackup, subscribeToLatestMessages, initializeFromHistory } = useLatestChatStore((state) => state)
+  const { latestSenderId, lastSenderBackup, subscribeToLatestMessages, initializeFromHistory, lastMessageContent, showPreview } = useLatestChatStore((state) => state)
 
   const [latestSender, setLatestSender] = useState<{ id: string; name: string, imageUrl: string, email: string } | null>(null)
 
@@ -26,6 +27,16 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
     return () => unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+  
+    if (showPreview) {
+      toast.message(`💬  ${latestSender?.name} : "${lastMessageContent}"`, {
+        duration: 10000,
+        position: "bottom-right",
+      });
+    }
+  },  [lastMessageContent, showPreview, latestSender?.name]);
 
 
   useEffect(() => {

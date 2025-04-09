@@ -5,6 +5,7 @@ import { MessageContent } from "../definitions";
 export async function getMessagesFromUser(userId: string) {
     try {
         if (!userId) {
+
             const { data, error } = await supabase
                 .from('messages')
                 .select(`
@@ -47,57 +48,65 @@ export async function getMessagesBetweenUsers(conversationUserId: string) {
     const userId = await getCurrentUserId();
     const conversationUserInfo = await getUserInfo(conversationUserId);
 
-    const { data, error } = await supabase
-        .rpc('fetch_messages', {
-            conversation_user_id: conversationUserId,
-            user_id: userId
-        });
-
-    if (error) {
-        console.error('Error fetching messages:', error);
-        throw error;
-    }
-
-    return {
-        ...conversationUserInfo[0],
-        messages: data,
-    } as  unknown as {
-        id: string; name: string; email: string; imageUrl: string;
-        messages: MessageContent[];
-    };
-}
-
-export async function getAllMessages() {
     try {
-        const userId = await getCurrentUserId();
-
         const { data, error } = await supabase
-            .from('messages')
-            .select(`
-                message_id,
-                content,
-                is_read,
-                created_at,
-                sender_id,
-                receiver_id,
-                sender:sender_id (
-                id,
-                name,
-                email
-                ),
-                receiver:receiver_id (
-                id,
-                name,
-                email
-                )
-            `).or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
-            .order('created_at', { ascending: true });
+            .rpc('fetch_messages', {
+                conversation_user_id: conversationUserId,
+                user_id: userId
+            });
 
         if (error) {
-            console.error('Erreur récupération messages :', error);
-            return [];
+            console.error('Error fetching messages:', error);
+            throw error;
         }
-        return groupMessages(data as unknown as MessageResult[]);
+
+        await markMessagesAsRead(userId);
+
+        return {
+            ...conversationUserInfo[0],
+            messages: data,
+        } as unknown as {
+            id: string; name: string; email: string; imageUrl: string;
+            messages: MessageContent[];
+        };
+    } catch (e) {
+        console.error(e);
+    }
+
+}
+
+
+export async function markMessagesAsRead(userId: string) {
+    const { error } = await supabase
+        .from("messages")
+        .update({ is_read: true })
+        .eq("receiver_id", userId)
+        .eq("is_read", false);
+
+    if (error) {
+        console.error("Error on updating messages:", error.message);
+    }
+}
+
+export async function getAllMessages(search?: string) {
+    try {
+        const userId = await getCurrentUserId();
+        if (!search) {
+            const { data: messageData, error: rpcError } = await supabase
+                .rpc('get_user_conversations', {
+                    p_user_id: userId,
+                });
+            if (rpcError) console.error(rpcError);
+            return messageData as MessagesList[];
+        } else {
+            const { data: messageData, error: rpcError } = await supabase
+                .rpc('get_filtered_user_conversations', {
+                    p_user_id: userId,
+                    p_search_term: search
+                });
+            if (rpcError) console.error(rpcError);
+            return messageData as MessagesList[];
+        }
     } catch (e) {
         console.error(e);
         return [];
@@ -109,6 +118,19 @@ export type MessageGroup = Record<string, {
     user: { id: string; name: string; email: string };
     messages: Array<{ direction: 'sent' | 'received' }>;
 }>
+
+export type MessagesList = {
+    content: string;
+    correspondent_email: string;
+    correspondent_id: string;
+    correspondent_image_url: string;
+    correspondent_name: string;
+    created_at: string;
+    is_read: boolean;
+    message_id: string;
+    receiver_id: string;
+    sender_id: string;
+}
 
 const groupMessages = async (data: MessageResult[]) => {
     const currentUserId = await getCurrentUserId();

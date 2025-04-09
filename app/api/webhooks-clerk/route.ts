@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
+import { SessionJSON, SessionWebhookEvent, UserJSON, UserWebhookEvent, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { User } from "@/lib/definitions";
 import { supabase } from "@/lib/supabase";
@@ -55,18 +55,20 @@ export async function POST(req: Request) {
   const eventType = event.type;
   console.info(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.info("Webhook payload:", body);
-  await manageUserEventData(event.data as UserJSON, eventType);
+  if (eventType.startsWith("user")) {
+    await manageUserEventData(event.data as UserJSON, eventType as UserWebhookEvent["type"]);
+  }
+  if (eventType.startsWith("session") ) {
+    await manageSessionEventData(event.data as SessionJSON, eventType as SessionWebhookEvent["type"])
+  }
 
   return new Response("Webhook received", { status: 200 });
 }
 
 const manageUserEventData = async (
   data: UserJSON,
-  type: WebhookEvent["type"],
+  type: UserWebhookEvent["type"],
 ) => {
-  /**
-   * Note that password_has was omitted for now, it will be used later for two factor authentication
-   */
 
   if (type === "user.created" || type === "user.updated") {
     const user: User  = {
@@ -113,3 +115,28 @@ const manageUserEventData = async (
     }
   }
 };
+
+const manageSessionEventData = async (
+  sessionData: SessionJSON,
+  type: SessionWebhookEvent["type"]
+) => {
+  if (type === "session.created") {
+    try {
+      await supabase.from("users").update({
+        online: true
+      }).eq("clerk_id", sessionData.user_id);
+    } catch(e) {
+      console.error(e)
+    }
+  }
+  if (type === "session.ended") {
+    try {
+      await supabase.from("users").update({
+        online: false
+      }).eq("clerk_id", sessionData.user_id)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+}
+
