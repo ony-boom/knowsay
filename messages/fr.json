@@ -23,7 +23,9 @@
     "myTest": {
       "title": "Mes Tests",
       "description": "Révisez et gérez les évaluations que vous avez créées.",
-      "createButton": "Créer un nouveau test"
+      "createButton": "Créer un nouveau test",
+      "empty": "Vous n'avez pas encore créé de tests.",
+      "createTestButton": "Créer un test"
     }
   },
   "quiz": {
@@ -107,5 +109,24 @@
     },
     "success": "Role mis à jour avec succès!",
     "error": "Impossible de mettre à jour le rôle."
+  },
+  "testList": {
+    "noDescription": "Pas de description disponible",
+    "noSchedule": "Aucun horaire défini",
+    "created": "Créé",
+    "manageTest": "Gérer le test"
+  },
+  "testDelete": {
+    "deleteTest": "Supprimer le test",
+    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer \"{title}\" ? Cette action ne peut pas être annulée et toutes les questions, tentatives et données associées seront définitivement supprimées.",
+    "cancel": "Annuler",
+    "delete": "Supprimer le test",
+    "deleting": "Suppression...",
+    "successTitle": "Test supprimé avec succès",
+    "successDescription": "Votre test a été définitivement supprimé",
+    "failedTitle": "Échec de la suppression du test",
+    "failedDescription": "Veuillez réessayer plus tard",
+    "unexpectedErrorTitle": "Une erreur inattendue s'est produite",
+    "unexpectedErrorDescription": "Veuillez réessayer plus tard"
   }
 }

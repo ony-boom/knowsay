@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import { useTranslations } from "next-intl";
 
 export const UserTestListItem = ({
   testId,
@@ -44,6 +45,7 @@ export const UserTestListItem = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const isScheduled = startTime && endTime;
+  const t = useTranslations();
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -51,21 +53,21 @@ export const UserTestListItem = ({
       const result = await deleteTestAction(testId);
 
       if (result.success) {
-        toast.success("Test deleted successfully", {
-          description: "Your test has been permanently removed",
+        toast.success(t("testDelete.successTitle"), {
+          description: t("testDelete.successDescription"),
         });
         if (onDelete) {
           onDelete(testId);
         }
       } else {
-        toast.error(result.errors?._form?.[0] || "Failed to delete test", {
-          description: "Please try again later",
+        toast.error(result.errors?._form?.[0] || t("testDelete.failedTitle"), {
+          description: t("testDelete.failedDescription"),
         });
       }
     } catch (error) {
       console.error(error);
-      toast.error("An unexpected error occurred", {
-        description: "Please try again later",
+      toast.error(t("testDelete.unexpectedErrorTitle"), {
+        description: t("testDelete.unexpectedErrorDescription"),
       });
     } finally {
       setIsDeleting(false);
@@ -87,14 +89,14 @@ export const UserTestListItem = ({
                 e.stopPropagation();
                 setIsDeleteDialogOpen(true);
               }}
-              aria-label="Delete Test"
+              aria-label={t("testDelete.deleteTest")}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
         <CardDescription className="line-clamp-2">
-          {description || "No description available"}
+          {description || t("testList.noDescription")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
@@ -106,18 +108,23 @@ export const UserTestListItem = ({
             </span>
           </div>
         ) : (
-          <div className="text-muted-foreground text-sm">No schedule set</div>
+          <div className="text-muted-foreground text-sm">
+            {t("testList.noSchedule")}
+          </div>
         )}
         <div className="text-muted-foreground flex items-center text-sm">
           <Clock className="mr-1 h-4 w-4" />
           <span>
-            Created {formatDistanceToNow(createdAt, { addSuffix: true })}
+            {t("testList.created")}{" "}
+            {formatDistanceToNow(createdAt, { addSuffix: true })}
           </span>
         </div>
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full">
-          <Link href={`/home/test/${testId}/edit`}>Manage Test</Link>
+          <Link href={`/home/test/${testId}/edit`}>
+            {t("testList.manageTest")}
+          </Link>
         </Button>
       </CardFooter>
 
@@ -125,11 +132,11 @@ export const UserTestListItem = ({
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Delete Test</DialogTitle>
+            <DialogTitle className="text-xl font-bold">
+              {t("testDelete.deleteTest")}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{title}&quot;? This action
-              cannot be undone and all associated questions, attempts, and data
-              will be permanently removed.
+              {t("testDelete.deleteConfirmation", { title })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex justify-end space-x-2 pt-4">
@@ -138,14 +145,14 @@ export const UserTestListItem = ({
               onClick={() => setIsDeleteDialogOpen(false)}
               disabled={isDeleting}
             >
-              Cancel
+              {t("testDelete.cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={isDeleting}
             >
-              {isDeleting ? "Deleting..." : "Delete Test"}
+              {isDeleting ? t("testDelete.deleting") : t("testDelete.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

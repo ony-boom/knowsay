@@ -23,7 +23,9 @@
     "myTest": {
       "title": "My Tests",
       "description": "Review and manage the tests you've created.",
-      "createButton": "Create a new test"
+      "createButton": "Create a new test",
+      "empty": "You haven't created any tests yet.",
+      "createTestButton": "Create a test"
     }
   },
   "quiz": {
@@ -69,18 +71,6 @@
         "button": "Add questions after creating the quiz"
       }
     },
-    "usersMangement": {
-      "title": "Users management",
-      "description": "Change users permissions to manage access",
-      "roleDescription": "Change user role",
-      "role": {
-        "super_admin": "Admin",
-        "corrector": "Corrector",
-        "user": "User"
-      },
-      "success": "Role updated succesfully!",
-      "error": "Error on updating role"
-    },
     "listItem": {
       "edit": "Edit quiz",
       "delete": "Delete quiz",
@@ -119,5 +109,24 @@
     },
     "success": "Role updated succesfully!",
     "error": "Error on updating role"
+  },
+  "testList": {
+    "noDescription": "No description available",
+    "noSchedule": "No schedule defined",
+    "created": "Created",
+    "manageTest": "Manage test"
+  },
+  "testDelete": {
+    "deleteTest": "Delete test",
+    "deleteConfirmation": "Are you sure you want to delete \"{title}\"? This action cannot be undone and all associated questions, attempts, and data will be permanently removed.",
+    "cancel": "Cancel",
+    "delete": "Delete test",
+    "deleting": "Deleting...",
+    "successTitle": "Test deleted successfully",
+    "successDescription": "Your test has been permanently removed",
+    "failedTitle": "Failed to delete test",
+    "failedDescription": "Please try again later",
+    "unexpectedErrorTitle": "An unexpected error occurred",
+    "unexpectedErrorDescription": "Please try again later"
   }
 }
