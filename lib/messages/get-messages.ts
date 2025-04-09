@@ -32,7 +32,7 @@ export async function getMessagesFromUser(userId: string) {
                 console.error('Erreur récupération messages :', error);
                 return [];
             }
-            return groupMessages(data);
+            return groupMessages(data as unknown as MessageResult[]);
         }
     } catch (e) {
         console.error(e);
