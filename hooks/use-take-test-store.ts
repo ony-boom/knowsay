@@ -3,6 +3,7 @@ import { create } from "zustand/react";
 interface TakeTestStore {
   submited: boolean;
   started: boolean;
+  hasAttempted: boolean;
 
   testAnswers: Record<
     string,
@@ -25,6 +26,7 @@ export const useTakeTestStore = create<TakeTestStore>((set, get) => ({
   started: false,
   submited: false,
   testAnswers: {},
+  hasAttempted: false,
 
   hasAnswered: () => {
     return Object.keys(get().testAnswers).length > 0;
