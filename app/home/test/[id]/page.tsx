@@ -21,6 +21,7 @@ export default async function TestPage({
     (acc, question) => acc + (question.time_limit ?? 0),
     0,
   );
+
   const { attempts } = await getUserTestAttempt(testId);
 
   return (
