@@ -10,16 +10,17 @@ import { ExpandableChat, ExpandableChatBody, ExpandableChatFooter, ExpandableCha
 import ChatContent from "./chat-content";
 import ChatBox from "./chat-box";
 import { toast } from "sonner";
+import { Circle } from "lucide-react";
 
 
 export default function FloatingBubble({ currentUserId }: Readonly<{ currentUserId: string }>) {
   const { latestSenderId, lastSenderBackup, subscribeToLatestMessages, initializeFromHistory, lastMessageContent, showPreview } = useLatestChatStore((state) => state)
 
-  const [latestSender, setLatestSender] = useState<{ id: string; name: string, imageUrl: string, email: string } | null>(null)
+  const [latestSender, setLatestSender] = useState<{ id: string; name: string, imageUrl: string, email: string, online: boolean } | null>(null)
 
   // Unsubscribe from the channel when the component unmounts
   // and subscribe to the latest messages when the component mounts
-  
+
   useEffect(() => {
     const unsubscribe = subscribeToLatestMessages(currentUserId);
     const init = async () => initializeFromHistory();
@@ -29,14 +30,14 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
   }, [])
 
   useEffect(() => {
-  
+
     if (showPreview) {
       toast.message(`💬  ${latestSender?.name} : "${lastMessageContent}"`, {
         duration: 10000,
         position: "bottom-right",
       });
     }
-  },  [lastMessageContent, showPreview, latestSender?.name]);
+  }, [lastMessageContent, showPreview, latestSender?.name]);
 
 
   useEffect(() => {
@@ -57,7 +58,11 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
       position="bottom-right"
     >
       <ExpandableChatHeader className="flex-col text-center justify-center">
-        <h1 className="text-xl font-semibold">{latestSender?.name}</h1>
+
+        <h1 className="text-xl font-semibold flex items-center gap-2">
+          <span>
+            {latestSender?.online ? (<Circle className="text-green-500" size={12} />) : (<Circle className="text-red-500" size={12} />)}
+          </span>{latestSender?.name}</h1>
         <div className="flex gap-2 items-center pt-2">
           <Button variant="secondary" type="button">New Chat</Button>
         </div>
@@ -80,9 +85,9 @@ const ImageBubble = ({ latestSender }: Readonly<{ latestSender: UserLike | null 
   return (
     <Avatar className="size-12">
       <AvatarImage
-          src={latestSender?.imageUrl}
-          alt="Avatar"
-          />
+        src={latestSender?.imageUrl}
+        alt="Avatar"
+      />
       <AvatarFallback className="size-12 flex items-center justify-center"><h3 className="text-2xl">
         {latestSender?.name[0]}</h3></AvatarFallback>
     </Avatar>

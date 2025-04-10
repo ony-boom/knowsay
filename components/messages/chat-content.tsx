@@ -1,10 +1,10 @@
 "use client";
-import useSWR from "swr";
-import { getMessagesBetweenUsers } from "@/lib/messages/get-messages";
-import { ChatBubble, ChatBubbleActionWrapper, ChatBubbleAvatar, ChatBubbleMessage } from "../ui/chat/chat-bubble";
 import { MessageContent } from "@/lib/definitions";
+import { getMessagesBetweenUsers } from "@/lib/messages/get-messages";
+import { CircleCheck } from "lucide-react";
 import moment from "moment";
-import { Check } from "lucide-react";
+import useSWR from "swr";
+import { ChatBubble, ChatBubbleActionWrapper, ChatBubbleAvatar, ChatBubbleMessage } from "../ui/chat/chat-bubble";
 
 const fetcher = (userId: string) => getMessagesBetweenUsers(userId);
 
@@ -31,7 +31,7 @@ export default function ChatContent({ latestSenderId }: Readonly<{ latestSenderI
           </ChatBubbleMessage>
           <ChatBubbleActionWrapper>
             <div className=" flex gap-1 justify-center items-center">
-              {message.is_read && (<Check size={8} />)}
+              {message.is_read && (<CircleCheck size={8} />)}
               <p className="text-xs/5">{moment(message.created_at).fromNow()}</p>
             </div>
           </ChatBubbleActionWrapper>

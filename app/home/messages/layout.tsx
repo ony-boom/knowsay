@@ -12,7 +12,7 @@ export default function MessagesLayout({ children, content, list }: Readonly<Mes
             <div>
                {children}
             </div>
-            <div className="flex flex-row-reverse">
+            <div className="flex flex-row-reverse h-full">
                 <div className="flex-2/3 overflow-y-auto min-w-[250px] border-l border-gray-200 p-4">
                     {content}
                 </div>
