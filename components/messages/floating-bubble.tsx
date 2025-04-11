@@ -14,7 +14,14 @@ import { Circle } from "lucide-react";
 
 
 export default function FloatingBubble({ currentUserId }: Readonly<{ currentUserId: string }>) {
-  const { latestSenderId, lastSenderBackup, subscribeToLatestMessages, initializeFromHistory, lastMessageContent, showPreview } = useLatestChatStore((state) => state)
+  const { latestSenderId,
+    lastSenderBackup,
+    subscribeToLatestMessages,
+    initializeFromHistory,
+    lastMessageContent,
+    showPreview,
+    unreadMessages
+  } = useLatestChatStore((state) => state)
 
   const [latestSender, setLatestSender] = useState<{ id: string; name: string, imageUrl: string, email: string, online: boolean } | null>(null)
 
@@ -31,9 +38,9 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
 
   useEffect(() => {
 
-    if (showPreview) {
+    if (showPreview && latestSender?.name) {
       toast.message(`💬  ${latestSender?.name} : "${lastMessageContent}"`, {
-        duration: 10000,
+        duration: 5000,
         position: "bottom-right",
       });
     }
@@ -54,7 +61,7 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
   return (
     <ExpandableChat
       size="md"
-      icon={<ImageBubble latestSender={latestSender} />}
+      icon={<ImageBubble latestSender={latestSender} unreadMessages={unreadMessages}/>}
       position="bottom-right"
     >
       <ExpandableChatHeader className="flex-col text-center justify-center">
@@ -81,16 +88,23 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
   )
 }
 
-const ImageBubble = ({ latestSender }: Readonly<{ latestSender: UserLike | null }>) => {
+const ImageBubble = ({ latestSender, unreadMessages }: Readonly<{ latestSender: UserLike | null, unreadMessages: number }>) => {
   return (
-    <Avatar className="size-12">
-      <AvatarImage
-        src={latestSender?.imageUrl}
-        alt="Avatar"
-      />
-      <AvatarFallback className="size-12 flex items-center justify-center"><h3 className="text-2xl">
-        {latestSender?.name[0]}</h3></AvatarFallback>
-    </Avatar>
+    <div className="relative">
+      <Avatar className="size-12">
+        <AvatarImage
+          src={latestSender?.imageUrl}
+          alt="Avatar"
+        />
+        <AvatarFallback className="size-12 flex items-center justify-center"><h3 className="text-2xl">
+          {latestSender?.name[0]}</h3></AvatarFallback>
+      </Avatar>
+      {unreadMessages > 0 && (
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          {unreadMessages > 9 ? "9+" : unreadMessages}
+        </span>
+      )}
+    </div>
   )
 }
 

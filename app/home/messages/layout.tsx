@@ -1,25 +1,15 @@
-import { ReactNode } from 'react';
-
-interface MessagesLayoutProps {
-    content: ReactNode;
-    list: ReactNode;
-    children: ReactNode;
-}
-
-export default function MessagesLayout({ children, content, list }: Readonly<MessagesLayoutProps>) {
+export default function Layout(props: Readonly<{
+    content: React.ReactNode;
+    list: React.ReactNode;
+}>) {
     return (
-        <>
-            <div>
-               {children}
-            </div>
-            <div className="flex flex-row-reverse h-full">
-                <div className="flex-2/3 overflow-y-auto min-w-[250px] border-l border-gray-200 p-4">
-                    {content}
-                </div>
-                <div className=" flex-1/3 w-1/4 min-w-[250px] border-l border-gray-200 p-4 overflow-y-auto">
-                    {list}
-                </div>
-            </div>
-        </>
+        <div className="md:grid md:grid-cols-[350px_1fr] lg:grid-cols-[400px_1fr] flex flex-col">
+            <aside className="md:border-r md:h-[calc(100vh-4rem)] md:w-full w-full border-b">
+            {props.list}
+            </aside>
+            <main className="md:h-[calc(100vh-4rem)] h-[calc(100vh-4rem-var(--aside-height,auto))]">
+                {props.content}
+            </main>
+        </div>
     );
 }

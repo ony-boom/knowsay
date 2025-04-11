@@ -117,6 +117,7 @@ function IdContent({ id }: { id: string }) {
     quiz: "quizzes",
     challenge: "challenges",
     test: "tests",
+    messages: "messages"
   };
 
   const pathType = Object.keys(pathMapping).find((key) =>

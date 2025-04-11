@@ -5,17 +5,23 @@ import { SendHorizonal } from "lucide-react";
 import { ChatInput } from "../ui/chat/chat-input";
 import { sendMessage } from "@/lib/actions/send-messages";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 export default function ChatBox({ receiverId }: Readonly<{ receiverId: string }>) {
   const { mutate } = useSWRConfig();
   const [isPending, startTransition] = useTransition();
 
-  async function handleSubmit(formData: FormData) {
-    await sendMessage(formData);
+  const handleSubmit = async (formData: FormData) => {
+    const {error, success} = await sendMessage(formData);
+      if (error) {
+        toast.error(error);
+      } else if (success) {
+        toast.success(success);
+      }
     startTransition(() => {
       mutate(`/messages/${receiverId}`);
     });
-  }
+    }
 
   return (
     <form action={handleSubmit} className="flex justify-center items-center mt-4 w-full">

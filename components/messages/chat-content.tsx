@@ -5,6 +5,7 @@ import { CircleCheck } from "lucide-react";
 import moment from "moment";
 import useSWR from "swr";
 import { ChatBubble, ChatBubbleActionWrapper, ChatBubbleAvatar, ChatBubbleMessage } from "../ui/chat/chat-bubble";
+import { ChatContentSkeleton } from "./chat-content-skeleton";
 
 const fetcher = (userId: string) => getMessagesBetweenUsers(userId);
 
@@ -14,7 +15,7 @@ export default function ChatContent({ latestSenderId }: Readonly<{ latestSenderI
     () => fetcher(latestSenderId!)
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <ChatContentSkeleton />;
   if (error) return <div>Failed to load messages.</div>;
   if (!data) return null;
 

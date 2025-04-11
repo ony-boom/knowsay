@@ -11,6 +11,7 @@ type LatestChatState = {
   subscribeToLatestMessages: (currentUserId: string) => () => void;
   lastMessageContent: string | null
   showPreview: boolean;
+  unreadMessages: number;
   initializeFromHistory: () => Promise<any>
 }
 
@@ -30,6 +31,7 @@ export const useLatestChatStore = create<LatestChatState>((set, get) => {
     lastSenderBackup: null,
     lastMessageContent: null,
     showPreview: false,
+    unreadMessages: 0,
 
     setLatestSender: (id: string) =>
       set(() => ({
@@ -83,7 +85,8 @@ export const useLatestChatStore = create<LatestChatState>((set, get) => {
             latestSenderId: fallbackId,
             lastSenderBackup: fallbackId,
             showPreview: isRecentMessage(lastMessage.created_at),
-            lastMessageContent: lastMessage.content
+            lastMessageContent: lastMessage.content,
+            unreadMessages: allMessages.filter((message) => message.receiver_id === currentUserId && !message.is_read).length,
           }))
         }
       },

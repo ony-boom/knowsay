@@ -31,5 +31,6 @@ export type MessageContent = {
   receiver_name: string,
   receiver_email: string,
   receiver_imageurl: string;
+  sendAt?: string;
   message_type: 'sent' | 'received';
 }

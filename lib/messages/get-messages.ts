@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { getCurrentUserId, getUserInfo } from "../actions/get-user";
 import { MessageContent } from "../definitions";
+import moment from "moment";
 
 export async function getMessagesFromUser(userId: string) {
     try {
@@ -59,14 +60,15 @@ export async function getMessagesBetweenUsers(conversationUserId: string) {
             console.error('Error fetching messages:', error);
             throw error;
         }
+        const messages: MessageContent[] = data.map((message: MessageContent) => ({sendAt: moment(message.created_at).fromNow(), ...message}));
 
         await markMessagesAsRead(userId);
 
         return {
             ...conversationUserInfo[0],
-            messages: data,
+            messages,
         } as unknown as {
-            id: string; name: string; email: string; imageUrl: string;
+            id: string; name: string; email: string; imageUrl: string; online: boolean
             messages: MessageContent[];
         };
     } catch (e) {
@@ -97,7 +99,7 @@ export async function getAllMessages(search?: string) {
                     p_user_id: userId,
                 });
             if (rpcError) console.error(rpcError);
-            return messageData as MessagesList[];
+            return messageData.map((item: MessagesList) => ({ sendAt: moment(item.created_at).fromNow(), ...item})) as MessagesList[];
         } else {
             const { data: messageData, error: rpcError } = await supabase
                 .rpc('get_filtered_user_conversations', {
@@ -105,7 +107,7 @@ export async function getAllMessages(search?: string) {
                     p_search_term: search
                 });
             if (rpcError) console.error(rpcError);
-            return messageData as MessagesList[];
+            return messageData.map((item: MessagesList) => ({ sendAt: moment(item.created_at).fromNow(), ...item})) as MessagesList[];
         }
     } catch (e) {
         console.error(e);
@@ -126,6 +128,7 @@ export type MessagesList = {
     correspondent_image_url: string;
     correspondent_name: string;
     created_at: string;
+    sendAt?: string;
     is_read: boolean;
     message_id: string;
     receiver_id: string;
