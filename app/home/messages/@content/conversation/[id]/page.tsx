@@ -26,6 +26,21 @@ export default async function Page({
                     <h2 className="text-xl font-semibold ">{contents?.name}</h2>
                     <p className="mt-1 truncate text-xs/5 text-gray-500">{contents?.email}</p>
                 </div>
+                <div className="ml-auto flex items-center">
+                    <span className="flex items-center gap-1.5">
+                        {contents?.online ? (
+                            <>
+                                <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
+                                <span className="text-xs text-gray-500">Online</span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+                                <span className="text-xs text-gray-500">Offline</span>
+                            </>
+                        )}
+                    </span>
+                </div>
             </div>
             <Separator className="my-4" />
             <div className="flex flex-col gap-4">

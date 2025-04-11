@@ -42,6 +42,11 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
       toast.message(`💬  ${latestSender?.name} : "${lastMessageContent}"`, {
         duration: 5000,
         position: "bottom-right",
+        action: {
+          label: "Open",
+          onClick: () => {
+          }
+        }
       });
     }
   }, [lastMessageContent, showPreview, latestSender?.name]);

@@ -99,7 +99,8 @@ export async function getAllMessages(search?: string) {
                     p_user_id: userId,
                 });
             if (rpcError) console.error(rpcError);
-            return messageData.map((item: MessagesList) => ({ sendAt: moment(item.created_at).fromNow(), ...item})) as MessagesList[];
+            const corespondantInfos = await getUserInfo(messageData.map((item: MessagesList) => item.correspondent_id));
+            return messageData.map((item: MessagesList) => ({ sendAt: moment(item.created_at).fromNow(), ...item, ...corespondantInfos.find(info => info.id === item.correspondent_id) })) as MessagesList[];
         } else {
             const { data: messageData, error: rpcError } = await supabase
                 .rpc('get_filtered_user_conversations', {
@@ -107,7 +108,8 @@ export async function getAllMessages(search?: string) {
                     p_search_term: search
                 });
             if (rpcError) console.error(rpcError);
-            return messageData.map((item: MessagesList) => ({ sendAt: moment(item.created_at).fromNow(), ...item})) as MessagesList[];
+            const corespondantInfos = await getUserInfo(messageData.map((item: MessagesList) => item.correspondent_id));
+            return messageData.map((item: MessagesList) => ({ sendAt: moment(item.created_at).fromNow(), ...item, ...corespondantInfos.find(info => info.id === item.correspondent_id) })) as MessagesList[];
         }
     } catch (e) {
         console.error(e);
@@ -123,6 +125,7 @@ export type MessageGroup = Record<string, {
 
 export type MessagesList = {
     content: string;
+    online?: boolean;
     correspondent_email: string;
     correspondent_id: string;
     correspondent_image_url: string;
