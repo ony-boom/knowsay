@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { createTestAction, TestState } from "@/lib/actions/create-test";
 import { CreateTestForm, createTestSchema } from "@/schemas/testSchema";
+import { TestCorrectorSelect } from "@/components/test-corrector-select/test-corrector-select";
 
 export default function CreateTestPage() {
   // Use DateRange type from react-day-picker to match CalendarDateRangePicker component
@@ -193,6 +194,24 @@ const TestDetailsForm = ({
                   <FormDescription>
                     Add detailed information about the test to help participants
                     understand what to expect.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="corrector_id"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>Corrector</FormLabel>
+                  <FormControl>
+                    <TestCorrectorSelect {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Select a corrector for the test. You can choose to correct
+                    it yourself or assign it to someone else.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

@@ -16,6 +16,7 @@ export const createTestSchema = z
     title: z.string().min(1, "Title is required"),
     description: z.string().optional(),
     start_time: z.string().optional(),
+    corrector_id: z.string().optional(),
     end_time: z
       .string()
       .optional()
