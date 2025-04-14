@@ -32,6 +32,40 @@
       "description": "Review and manage the challenges you've created.",
       "createButton": "Create your own challenge",
       "empty": "You haven't created any challenges yet. Start building your challenge collection now!"
+    },
+    "messages": {
+      "title": "Messages",
+      "description": "Manage your messages and notifications here.",
+      "empty": "No messages found.",
+      "createButton": "Send a message",
+      "sendButton": "Send",
+      "cancel": "Cancel",
+      "messagePlaceholder": "Write your message here...",
+      "messageDescription": "Use this section to communicate with other users or to send notifications.",
+      "messageSent": {
+        "title": "Message sent successfully",
+        "description": "Your message has been sent successfully."
+      },
+      "newMessage": {
+        "title": "New message",
+        "description": "Compose a new message to send to your contacts."
+      },
+      "to": "To",
+      "searchUserPlaceholder": "Search for users...",
+      "searching": "Searching...",
+      "remove": "Remove",
+      "messageFailed": {
+        "title": "Message sending failed",
+        "description": "An error occurred while sending your message. Please try again."
+      },
+      "messageDeleted": {
+        "title": "Message deleted",
+        "description": "Your message has been successfully deleted."
+      },
+      "messageArchived": {
+        "title": "Message archived",
+        "description": "Your message has been successfully archived."
+      }
     }
   },
   "quiz": {

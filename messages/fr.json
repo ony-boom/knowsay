@@ -32,6 +32,40 @@
       "description": "Révisez et gérez les défis que vous avez créés.",
       "createButton": "Créer votre propre défi",
       "empty": "Vous n'avez pas encore créé de défis. Commencez à construire votre collection de défis maintenant!"
+    },
+    "messages": {
+      "title": "Messages",
+      "description": "Gérez vos messages et notifications ici.",
+      "empty": "Aucun message trouvé.",
+      "createButton": "Envoyer un message",
+      "sendButton": "Envoyer",
+      "cancel": "Annuler",
+      "messagePlaceholder": "Écrivez votre message ici...",
+      "messageDescription": "Utilisez cette section pour communiquer avec d'autres utilisateurs ou pour envoyer des notifications.",
+      "messageSent": {
+        "title": "Message envoyé avec succès",
+        "description": "Votre message a été envoyé avec succès."
+      },
+      "newMessage": {
+        "title": "Nouveau message",
+        "description": "Rédigez un nouveau message à envoyer à vos contacts."
+      },
+      "to": "À",
+      "searchUserPlaceholder": "Rechercher des utilisateurs...",
+      "remove": "Supprimer",
+      "searching": "Recherche...",
+      "messageFailed": {
+        "title": "Échec de l'envoi du message",
+        "description": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+      },
+      "messageDeleted": {
+        "title": "Message supprimé",
+        "description": "Votre message a été supprimé avec succès."
+      },
+      "messageArchived": {
+        "title": "Message archivé",
+        "description": "Votre message a été archivé avec succès."
+      }
     }
   },
   "quiz": {

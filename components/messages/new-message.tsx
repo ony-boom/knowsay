@@ -10,6 +10,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { searchUsers } from "@/lib/actions/get-users";
 import { User } from "@/lib/definitions";
 import { Search, Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 type NewMessageProps = {
@@ -26,6 +27,7 @@ export default function NewMessage({
     initialSelectedUser = null 
 }: Readonly<NewMessageProps>) {
     const messageRef = useRef<HTMLTextAreaElement>(null);
+    const t = useTranslations("home.messages")
     
     // Local state for form handling
     const [searchQuery, setSearchQuery] = useState(initialSearchTerm);
@@ -33,6 +35,7 @@ export default function NewMessage({
     const [searchResults, setSearchResults] = useState<User[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const [isSending, setIsSending] = useState(false);
+    
     
     // Debounce search input to reduce API calls
     const debouncedSearchTerm = useDebounce(searchQuery, 300);
@@ -111,12 +114,13 @@ export default function NewMessage({
     return (
         <Card className="w-full max-w-md mx-auto shadow-lg">
             <CardHeader>
-                <CardTitle>New Message</CardTitle>
+                <CardTitle>{t("newMessage.title")}</CardTitle>
+                <p className="text-sm text-muted-foreground">{t("newMessage.description")}</p>
             </CardHeader>
 
             <CardContent className="space-y-4">
                 <div className="relative">
-                    <Label htmlFor="recipient" className="text-sm font-medium">To:</Label>
+                    <Label htmlFor="recipient" className="text-sm font-medium">{t("to")}</Label>
                     {selectedUser ? (
                         <div className="mt-2 flex items-center gap-2 rounded border p-2">
                             <Avatar className="h-8 w-8">
@@ -136,7 +140,7 @@ export default function NewMessage({
                                 className="h-8 w-8 p-0"
                                 onClick={handleClearUser}
                             >
-                                <span className="sr-only">Remove</span>
+                                <span className="sr-only">{t("remove")}</span>
                                 <span aria-hidden="true">&times;</span>
                             </Button>
                         </div>
@@ -147,7 +151,7 @@ export default function NewMessage({
                                 <Input
                                     id="recipient"
                                     type="text"
-                                    placeholder="Search for a user..."
+                                    placeholder={t("searchUserPlaceholder")}
                                     className="pl-8"
                                     value={searchQuery}
                                     onChange={handleSearchChange}
@@ -187,7 +191,7 @@ export default function NewMessage({
 
                             {isSearching && (
                                 <div className="absolute z-10 mt-1 w-full rounded-md border bg-popover p-4 text-center shadow-md">
-                                    Searching...
+                                    {t("searching")}
                                 </div>
                             )}
                         </div>
@@ -195,10 +199,10 @@ export default function NewMessage({
                 </div>
 
                 <div>
-                    <Label htmlFor="message" className="text-sm font-medium">Message:</Label>
+                    <Label htmlFor="message" className="text-sm font-medium">{t("title")}</Label>
                     <Textarea
                         id="message"
-                        placeholder="Type your message here..."
+                        placeholder={t("messagePlaceholder")}
                         className="mt-2 min-h-[100px]"
                         ref={messageRef}
                     />
@@ -207,7 +211,7 @@ export default function NewMessage({
 
             <CardFooter className="flex justify-end space-x-2">
                 <Button type="button" variant="outline" onClick={onClose}>
-                    Cancel
+                    {t("cancel")}
                 </Button>
                 <Button
                     onClick={handleSendMessage}
@@ -215,7 +219,7 @@ export default function NewMessage({
                     className="gap-2"
                 >
                     <Send className="h-4 w-4" />
-                    Send
+                    {t("sendButton")}
                 </Button>
             </CardFooter>
         </Card>
