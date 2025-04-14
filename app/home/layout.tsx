@@ -6,6 +6,8 @@ import { LanguageSwitch } from "@/components/language-switch";
 import { Logo } from "@/components/logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { FriendRequestsIndicator } from "@/components/friend-requests-indicator";
+import { MessageIndicator } from "@/components/message-indicator";
 import {
   Dialog,
   DialogContent,
@@ -96,6 +98,8 @@ export default function Layout({
           </div>
           <nav className="flex items-center gap-2 md:gap-4">
             <LanguageSwitch />
+            <FriendRequestsIndicator />
+            <MessageIndicator />
             <div className="hidden md:flex">
               <LogoutButton />
             </div>
@@ -209,6 +213,32 @@ export default function Layout({
                         </Link>
                       </NavigationMenuLink>
                     </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href="/home/friends"
+                          className="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex flex-col items-start rounded-md p-3 text-sm transition-colors outline-none"
+                        >
+                          <div className="font-medium">My Friends</div>
+                          <p className="text-muted-foreground text-xs">
+                            Manage your connections
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href="/home/messages"
+                          className="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex flex-col items-start rounded-md p-3 text-sm transition-colors outline-none"
+                        >
+                          <div className="font-medium">Messages</div>
+                          <p className="text-muted-foreground text-xs">
+                            Chat with friends and colleagues
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -229,7 +259,7 @@ export default function Layout({
               <Button
                 asChild
                 variant="outline"
-                className="hover:cursor-pointe border-2 border-dashed border-neutral-300 p-4"
+                className="hover:cursor-pointer border-2 border-dashed border-neutral-300 p-4"
               >
                 <Link href="/home/challenge/create">
                   {t("home.toolbar.buttons.createChallenge")}
@@ -242,16 +272,6 @@ export default function Layout({
               >
                 <Link href="/home/test/create">
                   {t("home.toolbar.buttons.createTest")}
-                </Link>
-              </Button>
-
-              <Button
-                asChild
-                variant="outline"
-                className="border-2 border-dashed border-neutral-300 p-4 hover:cursor-pointer"
-              >
-                <Link href="/home/messages">
-                  {t("home.toolbar.buttons.messages")}
                 </Link>
               </Button>
             </div>

@@ -34,3 +34,21 @@ export type MessageContent = {
   sendAt?: string;
   message_type: 'sent' | 'received';
 }
+
+export type FriendshipStatus = 'pending' | 'accepted' | 'declined' | 'blocked';
+
+export interface Friendship {
+  friendship_id: string;
+  user_id1: string;
+  user_id2: string;
+  status: FriendshipStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FriendWithDetails extends User {
+  friendship_id: string;
+  friendship_status: FriendshipStatus;
+  friendship_created_at: string;
+  online?: boolean;
+}
