@@ -38,13 +38,18 @@ export default function ContactsList({ messages }: Readonly<{ messages: Messages
                                             <span className="md:w-0.5">
                                                 {content.correspondent_id !== content.sender_id && (<CornerUpRight className="truncate text-xs/5" size={10} />)}
                                             </span>
-                                            <p className="mt-1 text-xs/5 text-gray-500 md:truncate md:w-full md:flex-1">
+                                            <p className={`mt-1 text-xs/5 ${!content.is_read ? 'font-semibold text-gray-800' : 'text-gray-500'} md:truncate md:w-full md:flex-1`}>
                                                 {content.content}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="hidden shrink-0 md:flex sm:flex-col sm:items-end">
-                                    <p className="text-xs/5 text-gray-900">{content?.sendAt}</p>
+                                    <div className="flex items-center">
+                                        <p className={`text-xs/5 ${!content.is_read ? 'font-semibold' : ''} text-gray-900`}>{content?.sendAt}</p>
+                                        {!content.is_read && (
+                                            <div className="ml-2 h-2.5 w-2.5 rounded-full bg-blue-600"></div>
+                                        )}
+                                    </div>
                                 </div>
                             </Link>
                         </li>
