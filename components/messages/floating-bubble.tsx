@@ -11,7 +11,7 @@ import ChatContent from "./chat-content";
 import ChatBox from "./chat-box";
 import { toast } from "sonner";
 import { Circle } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 
 export default function FloatingBubble({ currentUserId }: Readonly<{ currentUserId: string }>) {
   const { latestSenderId,
@@ -24,6 +24,7 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
   } = useLatestChatStore((state) => state)
 
   const [latestSender, setLatestSender] = useState<{ id: string; name: string, imageUrl: string, email: string, online: boolean } | null>(null)
+  const router = useRouter();
 
   // Unsubscribe from the channel when the component unmounts
   // and subscribe to the latest messages when the component mounts
@@ -37,7 +38,6 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
   }, [])
 
   useEffect(() => {
-
     if (showPreview && latestSender?.name) {
       toast.message(`💬  ${latestSender?.name} : "${lastMessageContent}"`, {
         duration: 5000,
@@ -45,12 +45,15 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
         action: {
           label: "Open",
           onClick: () => {
+            // Navigate to the conversation with the latest sender
+            if (latestSender?.id) {
+              router.push(`/home/messages/conversation/${latestSender.id}`);
+            }
           }
         }
       });
     }
-  }, [lastMessageContent, showPreview, latestSender?.name]);
-
+  }, [lastMessageContent, showPreview, latestSender?.name, latestSender?.id, router]);
 
   useEffect(() => {
     const fetchSender = async () => {
@@ -76,7 +79,13 @@ export default function FloatingBubble({ currentUserId }: Readonly<{ currentUser
             {latestSender?.online ? (<Circle className="text-green-500" size={12} />) : (<Circle className="text-red-500" size={12} />)}
           </span>{latestSender?.name}</h1>
         <div className="flex gap-2 items-center pt-2">
-          <Button variant="secondary" type="button">New Chat</Button>
+          <Button 
+            variant="secondary" 
+            type="button" 
+            onClick={() => router.push('/home/messages?compose=true')}
+          >
+            New Chat
+          </Button>
         </div>
       </ExpandableChatHeader>
       <ExpandableChatBody>
