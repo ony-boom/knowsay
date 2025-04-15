@@ -16,7 +16,7 @@ export default async function Page({
     const contents = await getMessagesBetweenUsers(id);
     return (
 
-        <div className="flex flex-col h-full w-full lg:w-[80%] mx-auto overflow-hidden sm:w-full">
+        <div className="flex flex-col h-full w-full mx-auto overflow-hidden sm:w-full">
             <div className="flex gap-6">
                 <Avatar>
                     <AvatarImage src={contents?.imageUrl} />

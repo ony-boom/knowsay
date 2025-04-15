@@ -6,17 +6,17 @@ import Link from "next/link";
 
 export default function ContactsList({ messages }: Readonly<{ messages: MessagesList[] }>) {
     return (
-        <div className="flex flex-col h-full w-full md:w-[80%] overflow-hidden sm:w-full gap-4">
-            <div className="flex flex-col justify-start bg-gray-50">
+        <div className="flex flex-col h-full w-full md:w-[80%] overflow-hiddenflow-hidden sm:w-full gap-4">
+            <div className="flex flex-col justify-start">
                 <h2 className="text-xl font-semibold mb-4">Contacts</h2>
                 <div className="relative flex justify-between items-center w-full max-w-sm">
                     <SearchInput />
                 </div>
             </div>
-            <ul className="flex md:divide-y md:divide-gray-100 gap-4 md:flex-col sm:flex-row sm:divide-y-0">
+            <ul className="flex md:flex-col w-full gap-3">
                 {
                     messages?.map((content) => (
-                        <li className={`flex flex-col items-center md:w-full justify-between py-5 sm:w-1/4 ${!content.is_read ? 'bg-blue-50 rounded-md' : ''}`} key={content.message_id}>
+                        <li className={`flex flex-col items-center md:w-full justify-between p-2 ${!content.is_read ? 'bg-blue-50 rounded-md' : ''}`} key={content.message_id}>
                             <Link href={`/home/messages/conversation/${content.correspondent_id}`} className="w-full flex justify-between">
                                 <div className="flex min-w-0 gap-x-4 md:w-full">
                                     <div className="relative">
