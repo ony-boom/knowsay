@@ -1,5 +1,5 @@
 import { supabase } from '../supabase';
-import { Friendship, FriendWithDetails, User } from '@/lib/definitions';
+import { Friendship, FriendWithDetails } from '@/lib/definitions';
 
 
 
@@ -31,7 +31,7 @@ export async function getFriends(userId: string) {
         throw new Error('Failed to fetch friends due to an internal error.');
     }
 
-    if (!friendships || !friendships.length) {
+    if (!friendships?.length) {
         return [];
     }
 
@@ -51,7 +51,7 @@ export async function getFriends(userId: string) {
         throw new Error('Failed to fetch friend details due to an internal error.');
     }
 
-    if (!friendUsers || !friendUsers.length) {
+    if (!friendUsers?.length) {
         return [];
     }
 
@@ -113,7 +113,7 @@ export async function getFriendRequests(
         throw new Error('Failed to fetch friend requests due to an internal error.');
     }
 
-    if (!requests || !requests.length) {
+    if (!requests?.length) {
         return { incoming: [], outgoing: [] };
     }
 
@@ -141,7 +141,7 @@ export async function getFriendRequests(
         throw new Error('Failed to fetch request details due to an internal error.');
     }
 
-    if (!requestUsers || !requestUsers.length) {
+    if (!requestUsers?.length) {
         return { incoming: [], outgoing: [] };
     }
 

@@ -1,34 +1,312 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useDebounce } from "@/hooks/use-debounce";
-import { useEffect, useState } from "react";
-import { FriendWithDetails, User } from "@/lib/definitions";
-import { Search, UserPlus, UserX, Check, X, MessageSquare } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { getFriends, getFriendRequests, searchPotentialFriends } from "@/lib/friendship/get-friends";
-import { getCurrentUserId } from "@/lib/actions/get-user";
-import { 
-  acceptFriendRequest, 
-  declineFriendRequest, 
-  removeFriend, 
-  sendFriendRequest 
+import {
+  acceptFriendRequest,
+  declineFriendRequest,
+  removeFriend,
+  sendFriendRequest
 } from "@/components/friends/friend-actions";
-import Link from "next/link";
 import { FriendCard } from "@/components/friends/friend-card";
 import { FriendRequestCard } from "@/components/friends/friend-request-card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDebounce } from "@/hooks/use-debounce";
+import { getCurrentUserId } from "@/lib/actions/get-user";
+import { FriendWithDetails, User } from "@/lib/definitions";
+import { getFriendRequests, getFriends, searchPotentialFriends } from "@/lib/friendship/get-friends";
+import { Search, UserPlus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+// Helper components for conditional rendering
+const EmptyState = ({ title, description }: { title: string, description: string }) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+    </CardHeader>
+  </Card>
+);
+
+const LoadingState = ({ text }: { text: string }) => (
+  <p className="text-center text-muted-foreground">{text}</p>
+);
+
+// Friends Tab Component
+const FriendsTabContent = ({ 
+  isLoading, 
+  friends, 
+  onRemoveFriend 
+}: {
+  isLoading: boolean;
+  friends: FriendWithDetails[];
+  onRemoveFriend: (friendshipId: string) => Promise<void>;
+}) => {
+  if (isLoading) {
+    return <LoadingState text="Loading your friends..." />;
+  }
+
+  if (friends.length === 0) {
+    return (
+      <EmptyState
+        title="No friends yet"
+        description="Search for users and send them friend requests to connect"
+      />
+    );
+  }
+
+  return (
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {friends.map((friend) => (
+        <FriendCard 
+          key={friend.id}
+          friend={friend}
+          onRemove={onRemoveFriend}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Request Card List Component
+const RequestCardList = ({
+  isLoading,
+  requests,
+  type,
+  onAccept,
+  onDecline,
+  emptyTitle,
+  emptyDescription
+}: {
+  isLoading: boolean;
+  requests: FriendWithDetails[];
+  type: "incoming" | "outgoing";
+  onAccept?: (id: string) => Promise<void>;
+  onDecline?: (id: string) => Promise<void>;
+  emptyTitle: string;
+  emptyDescription: string;
+}) => {
+  if (isLoading) {
+    return <LoadingState text="Loading requests..." />;
+  }
+
+  if (requests.length === 0) {
+    return <EmptyState title={emptyTitle} description={emptyDescription} />;
+  }
+
+  return (
+    <div className="grid gap-4">
+      {requests.map((request) => (
+        <FriendRequestCard
+          key={request.friendship_id}
+          request={request}
+          type={type}
+          onAccept={onAccept}
+          onDecline={onDecline}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Requests Tab Component
+const RequestsTabContent = ({
+  isLoading,
+  incomingRequests,
+  outgoingRequests,
+  onAcceptRequest,
+  onDeclineRequest
+}: {
+  isLoading: boolean;
+  incomingRequests: FriendWithDetails[];
+  outgoingRequests: FriendWithDetails[];
+  onAcceptRequest: (id: string) => Promise<void>;
+  onDeclineRequest: (id: string) => Promise<void>;
+}) => {
+  return (
+    <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Incoming Requests</h3>
+        <RequestCardList
+          isLoading={isLoading}
+          requests={incomingRequests}
+          type="incoming"
+          onAccept={onAcceptRequest}
+          onDecline={onDeclineRequest}
+          emptyTitle="No incoming requests"
+          emptyDescription="You don't have any pending friend requests"
+        />
+      </div>
+      
+      <div>
+        <h3 className="text-lg font-semibold mb-4">Outgoing Requests</h3>
+        <RequestCardList
+          isLoading={isLoading}
+          requests={outgoingRequests}
+          type="outgoing"
+          emptyTitle="No outgoing requests"
+          emptyDescription="You haven't sent any friend requests"
+        />
+      </div>
+    </div>
+  );
+};
+
+// Search Results Component
+const SearchResultItem = ({
+  user,
+  onSendRequest
+}: {
+  user: User;
+  onSendRequest: (userId: string) => Promise<void>;
+}) => {
+  const initials = user.name
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .substring(0, 2) || "??";
+
+  return (
+    <div
+      className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border p-4 gap-4"
+    >
+      <div className="flex items-center gap-4">
+        <Avatar>
+          <AvatarImage src={user.imageUrl} alt={user.name || "User"} />
+          <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
+        <div>
+          <p className="font-medium">{user.name || "Unnamed User"}</p>
+          <p className="text-sm text-muted-foreground">
+            {user.email}
+          </p>
+        </div>
+      </div>
+      <Button
+        variant="secondary"
+        size="sm"
+        className="gap-2 w-full sm:w-auto"
+        onClick={() => user.id && onSendRequest(user.id)}
+      >
+        <UserPlus className="h-4 w-4" />
+        Add Friend
+      </Button>
+    </div>
+  );
+};
+
+// Search Results Display Component
+const SearchResultsDisplay = ({ 
+  isSearching, 
+  searchTerm, 
+  searchResults, 
+  onSendRequest 
+}: { 
+  isSearching: boolean;
+  searchTerm: string;
+  searchResults: User[];
+  onSendRequest: (userId: string) => Promise<void>;
+}) => {
+  if (isSearching) {
+    return <LoadingState text="Searching for users..." />;
+  }
+  
+  if (searchTerm.length < 2) {
+    return <p className="text-center text-muted-foreground">Type at least 2 characters to search</p>;
+  }
+  
+  if (searchResults.length === 0) {
+    return <p className="text-center text-muted-foreground">No users found matching your search</p>;
+  }
+  
+  return (
+    <div className="grid gap-4">
+      {searchResults.map((user) => (
+        <SearchResultItem 
+          key={user.id} 
+          user={user} 
+          onSendRequest={onSendRequest} 
+        />
+      ))}
+    </div>
+  );
+};
+
+// Find Friends Tab Component
+const FindFriendsTabContent = ({
+  searchTerm,
+  isSearching,
+  searchResults,
+  onSendRequest
+}: {
+  searchTerm: string;
+  isSearching: boolean;
+  searchResults: User[];
+  onSendRequest: (userId: string) => Promise<void>;
+}) => {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Find New Friends</CardTitle>
+        <CardDescription>
+          Search for users by name or email to connect with them
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <SearchResultsDisplay
+          isSearching={isSearching}
+          searchTerm={searchTerm}
+          searchResults={searchResults}
+          onSendRequest={onSendRequest}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+// Page Header Component
+const PageHeader = ({ 
+  searchTerm, 
+  onSearchChange 
+}: { 
+  searchTerm: string; 
+  onSearchChange: (value: string) => void; 
+}) => (
+  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <hgroup className="space-y-2 md:space-y-4">
+      <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
+        Friends
+      </h1>
+      <p className="text-foreground/80 text-base md:text-lg">
+        Connect with other users and manage your network
+      </p>
+    </hgroup>
+    
+    <div className="relative max-w-sm w-full">
+      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <Input
+        type="search"
+        placeholder="Search for users..."
+        className="w-full pl-8"
+        value={searchTerm}
+        onChange={(e) => onSearchChange(e.target.value)}
+      />
+    </div>
+  </div>
+);
+
+// Main component
 export default function FriendsPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [friends, setFriends] = useState<FriendWithDetails[]>([]);
@@ -49,9 +327,13 @@ export default function FriendsPage() {
         const userId = await getCurrentUserId();
         setCurrentUserId(userId);
         
-        // Load friends and requests
-        const friendsList = await getFriends(userId);
-        const requests = await getFriendRequests(userId);
+        if (!userId) return;
+        
+        // Use Promise.all for concurrent requests
+        const [friendsList, requests] = await Promise.all([
+          getFriends(userId),
+          getFriendRequests(userId)
+        ]);
         
         setFriends(friendsList);
         setIncomingRequests(requests.incoming);
@@ -90,6 +372,24 @@ export default function FriendsPage() {
     performSearch();
   }, [debouncedSearchTerm, currentUserId]);
 
+  const refreshData = async () => {
+    if (!currentUserId) return;
+    
+    try {
+      const [friendsList, requests] = await Promise.all([
+        getFriends(currentUserId),
+        getFriendRequests(currentUserId)
+      ]);
+      
+      setFriends(friendsList);
+      setIncomingRequests(requests.incoming);
+      setOutgoingRequests(requests.outgoing);
+    } catch (error) {
+      console.error("Failed to refresh data:", error);
+      toast.error("Failed to refresh data");
+    }
+  };
+
   const handleSendRequest = async (userId: string) => {
     if (!currentUserId) return;
     
@@ -97,12 +397,13 @@ export default function FriendsPage() {
       await sendFriendRequest(currentUserId, userId);
       toast.success("Friend request sent!");
       
-      // Refresh search results
-      const results = await searchPotentialFriends(currentUserId, debouncedSearchTerm);
-      setSearchResults(results);
+      // Refresh search results and outgoing requests
+      const [results, requests] = await Promise.all([
+        searchPotentialFriends(currentUserId, debouncedSearchTerm),
+        getFriendRequests(currentUserId)
+      ]);
       
-      // Refresh outgoing requests
-      const requests = await getFriendRequests(currentUserId);
+      setSearchResults(results);
       setOutgoingRequests(requests.outgoing);
     } catch (error) {
       console.error("Failed to send friend request:", error);
@@ -111,16 +412,12 @@ export default function FriendsPage() {
   };
 
   const handleAcceptRequest = async (friendshipId: string) => {
+    if (!currentUserId) return;
+    
     try {
-      await acceptFriendRequest(friendshipId, currentUserId!);
+      await acceptFriendRequest(friendshipId, currentUserId);
       toast.success("Friend request accepted!");
-      
-      // Refresh friends list and incoming requests
-      const friendsList = await getFriends(currentUserId!);
-      const requests = await getFriendRequests(currentUserId!);
-      
-      setFriends(friendsList);
-      setIncomingRequests(requests.incoming);
+      await refreshData();
     } catch (error) {
       console.error("Failed to accept friend request:", error);
       toast.error("Failed to accept friend request");
@@ -128,12 +425,14 @@ export default function FriendsPage() {
   };
 
   const handleDeclineRequest = async (friendshipId: string) => {
+    if (!currentUserId) return;
+    
     try {
-      await declineFriendRequest(friendshipId, currentUserId!);
+      await declineFriendRequest(friendshipId, currentUserId);
       toast.success("Friend request declined");
       
-      // Refresh incoming requests
-      const requests = await getFriendRequests(currentUserId!);
+      // Only need to refresh incoming requests
+      const requests = await getFriendRequests(currentUserId);
       setIncomingRequests(requests.incoming);
     } catch (error) {
       console.error("Failed to decline friend request:", error);
@@ -142,12 +441,14 @@ export default function FriendsPage() {
   };
 
   const handleRemoveFriend = async (friendshipId: string) => {
+    if (!currentUserId) return;
+    
     try {
-      await removeFriend(friendshipId, currentUserId!);
+      await removeFriend(friendshipId, currentUserId);
       toast.success("Friend removed");
       
-      // Refresh friends list
-      const friendsList = await getFriends(currentUserId!);
+      // Only need to refresh friends list
+      const friendsList = await getFriends(currentUserId);
       setFriends(friendsList);
     } catch (error) {
       console.error("Failed to remove friend:", error);
@@ -157,28 +458,7 @@ export default function FriendsPage() {
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6 md:px-6 md:py-8">
-      {/* Page Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <hgroup className="space-y-2 md:space-y-4">
-          <h1 className="text-2xl font-black md:text-3xl lg:text-5xl">
-            Friends
-          </h1>
-          <p className="text-foreground/80 text-base md:text-lg">
-            Connect with other users and manage your network
-          </p>
-        </hgroup>
-        
-        <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search for users..."
-            className="w-full pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
+      <PageHeader searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       
       <Tabs defaultValue="friends" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-3">
@@ -202,150 +482,30 @@ export default function FriendsPage() {
         </TabsList>
         
         <TabsContent value="friends" className="mt-6">
-          {isLoading ? (
-            <p className="text-center text-muted-foreground">Loading your friends...</p>
-          ) : friends.length === 0 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>No friends yet</CardTitle>
-                <CardDescription>
-                  Search for users and send them friend requests to connect
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {friends.map((friend) => (
-                <FriendCard 
-                  key={friend.id}
-                  friend={friend}
-                  onRemove={handleRemoveFriend}
-                />
-              ))}
-            </div>
-          )}
+          <FriendsTabContent 
+            isLoading={isLoading} 
+            friends={friends} 
+            onRemoveFriend={handleRemoveFriend}
+          />
         </TabsContent>
         
         <TabsContent value="requests" className="mt-6">
-          <div className="grid gap-8 md:grid-cols-2">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Incoming Requests</h3>
-              {isLoading ? (
-                <p className="text-center text-muted-foreground">Loading requests...</p>
-              ) : incomingRequests.length === 0 ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>No incoming requests</CardTitle>
-                    <CardDescription>
-                      You don't have any pending friend requests
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              ) : (
-                <div className="grid gap-4">
-                  {incomingRequests.map((request) => (
-                    <FriendRequestCard
-                      key={request.friendship_id}
-                      request={request}
-                      type="incoming"
-                      onAccept={handleAcceptRequest}
-                      onDecline={handleDeclineRequest}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Outgoing Requests</h3>
-              {isLoading ? (
-                <p className="text-center text-muted-foreground">Loading requests...</p>
-              ) : outgoingRequests.length === 0 ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>No outgoing requests</CardTitle>
-                    <CardDescription>
-                      You haven't sent any friend requests
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              ) : (
-                <div className="grid gap-4">
-                  {outgoingRequests.map((request) => (
-                    <FriendRequestCard
-                      key={request.friendship_id}
-                      request={request}
-                      type="outgoing"
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          <RequestsTabContent
+            isLoading={isLoading}
+            incomingRequests={incomingRequests}
+            outgoingRequests={outgoingRequests}
+            onAcceptRequest={handleAcceptRequest}
+            onDeclineRequest={handleDeclineRequest}
+          />
         </TabsContent>
         
         <TabsContent value="find" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Find New Friends</CardTitle>
-              <CardDescription>
-                Search for users by name or email to connect with them
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {debouncedSearchTerm.length < 2 ? (
-                <p className="text-center text-muted-foreground">
-                  Type at least 2 characters to search
-                </p>
-              ) : isSearching ? (
-                <p className="text-center text-muted-foreground">Searching...</p>
-              ) : searchResults.length === 0 ? (
-                <p className="text-center text-muted-foreground">
-                  No users found matching "{debouncedSearchTerm}"
-                </p>
-              ) : (
-                <div className="grid gap-4">
-                  {searchResults.map((user) => {
-                    const initials = user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()
-                      .substring(0, 2);
-                    
-                    return (
-                      <div
-                        key={user.id}
-                        className="flex items-center justify-between rounded-lg border p-4"
-                      >
-                        <div className="flex items-center gap-4">
-                          <Avatar>
-                            <AvatarImage src={user.imageUrl} alt={user.name} />
-                            <AvatarFallback>{initials}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{user.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {user.email}
-                            </p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="gap-2"
-                          onClick={() => handleSendRequest(user.id!)}
-                        >
-                          <UserPlus className="h-4 w-4" />
-                          Add Friend
-                        </Button>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <FindFriendsTabContent
+            searchTerm={debouncedSearchTerm}
+            isSearching={isSearching}
+            searchResults={searchResults}
+            onSendRequest={handleSendRequest}
+          />
         </TabsContent>
       </Tabs>
     </div>
