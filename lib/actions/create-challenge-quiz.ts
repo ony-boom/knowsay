@@ -6,7 +6,7 @@ import {
   type CreateChallengeQuizzes,
 } from "@/schemas/challengeQuizSchema";
 import { supabase } from "@/lib/supabase";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@/lib/auth-compatibility";
 import { revalidatePath } from "next/cache";
 
 export type ChallengeQuizState = {

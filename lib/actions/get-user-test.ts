@@ -1,7 +1,7 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "../auth-compatibility";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { testSchema } from "@/schemas/testSchema";

@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@/lib/auth-compatibility";
 import { Quiz } from "@/schemas/quizSchema";
 
 export async function getQuizzesWithScoresAndStatus() {

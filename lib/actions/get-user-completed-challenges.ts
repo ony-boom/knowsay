@@ -1,19 +1,28 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { supabase } from "../supabase";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function getUserCompletedChallenges() {
-  const clerkUser = await currentUser();
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
+    return [];
+  }
 
   const { data: user } = await supabase
     .from("users")
     .select("*")
-    .eq("clerk_id", clerkUser?.id)
+    .eq("email", session.user.email)
     .single();
+
+  if (!user) {
+    return [];
+  }
 
   const { data: completedChallenges } = await supabase.rpc(
     "get_user_completed_challenges",
     {
-      user_uuid: user!.id,
+      user_uuid: user.id,
     },
   );
 

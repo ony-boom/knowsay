@@ -1,27 +1,37 @@
 "use server";
 
-import { currentUser } from "@clerk/nextjs/server";
-import { ChallengeQuizState } from "./create-challenge-quiz";
 import { redirect } from "next/navigation";
 import { supabase } from "../supabase";
 import { revalidatePath } from "next/cache";
+import { ChallengeQuizState } from "./create-challenge-quiz";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function deleteChallengeQuizAction(
   id: string,
 ): Promise<ChallengeQuizState> {
-  // Verify user authentication
-  const clerkUser = await currentUser();
-  if (!clerkUser) {
+  // Verify user authentication using NextAuth
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
     redirect("/auth/login");
   }
 
   try {
-    // Get user details
+    // Get user details using the email from session
     const { data: user } = await supabase
       .from("users")
       .select("id")
-      .eq("clerk_id", clerkUser.id)
+      .eq("email", session.user.email)
       .single();
+
+    if (!user) {
+      return {
+        errors: {
+          _form: ["User not found"],
+        },
+        success: false,
+      };
+    }
 
     // Get challenge quiz details to verify ownership
     const { data: challengeQuiz } = await supabase

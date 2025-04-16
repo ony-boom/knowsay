@@ -1,22 +1,26 @@
 "use server";
 
 import { supabase } from "@/lib/supabase";
-import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export async function updateQuizAttempt(data: {
   quizId: string;
   score: number;
 }) {
-  const clerkUser = await currentUser();
+  const session = await getServerSession(authOptions);
 
-  if (!clerkUser) return false;
+  if (!session?.user) return false;
 
+  // Get user from Supabase by email or provider ID
   const { data: user } = await supabase
     .from("users")
     .select("*")
-    .eq("clerk_id", clerkUser.id)
+    .eq("email", session.user.email)
     .single();
+
+  if (!user) return false;
 
   const { error } = await supabase.from("quiz_attempts").insert({
     quiz_id: data.quizId,

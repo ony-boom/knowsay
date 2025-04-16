@@ -1,6 +1,6 @@
 "use server";
 
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "../auth-compatibility";
 import { redirect } from "next/navigation";
 import { supabase } from "../supabase";
 import { revalidatePath } from "next/cache";

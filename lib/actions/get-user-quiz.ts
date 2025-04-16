@@ -1,8 +1,8 @@
 "use server";
 import { supabase } from "@/lib/supabase";
 import { quizArraySchemaWithCategory } from "@/schemas/quizSchema";
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { currentUser } from "@/lib/auth-compatibility";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -21,16 +21,17 @@ export async function getUserQuizzes(
   categorySlug?: string,
 ) {
   try {
-    const clerkUser = await currentUser();
+    // Replace Clerk with NextAuth session
+    const session = await currentUser();
 
-    if (!clerkUser) {
+    if (!session?.user) {
       redirect("/auth/login");
     }
 
     const { data: user, error: userError } = await supabase
       .from("users")
       .select("id")
-      .eq("clerk_id", clerkUser.id)
+      .eq("email", session.user.email)
       .single();
 
     if (userError || !user) {

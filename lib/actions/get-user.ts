@@ -1,13 +1,22 @@
 "use server";
 
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { supabase } from "../supabase";
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 
-export async function getUser(id: string, isClerkId = false) {
-  const client = await clerkClient();
+export async function getUser(id: string, isProviderId = false) {
+  if (isProviderId) {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("provider_id", id)
+      .single();
 
-  if (isClerkId) {
-    return client.users.getUser(id);
+    if (error || !data) {
+      throw new Error(error?.message || "User not found");
+    }
+    
+    return data;
   }
 
   const { data: supabaseUser, error } = await supabase
@@ -18,23 +27,29 @@ export async function getUser(id: string, isClerkId = false) {
 
   if (error || !supabaseUser) {
     console.error(error);
-    throw new Error(error?.message);
+    throw new Error(error?.message || "User not found");
   }
 
-  return client.users.getUser(supabaseUser.clerk_id);
+  return supabaseUser;
 }
 
 export const getCurrentUserId = async () => {
-  const clerkUser = await currentUser();
+  const session = await getServerSession(authOptions);
 
-  if (!clerkUser) {
+  if (!session?.user) {
     throw new Error("No active session found");
   }
 
+  // Return the Supabase user ID from the session
+  if (session.user.supabaseId) {
+    return session.user.supabaseId;
+  }
+
+  // Fallback to searching by email if supabaseId is not in session
   const { data: supabaseUser, error } = await supabase
     .from("users")
-    .select("*")
-    .eq("clerk_id", clerkUser.id)
+    .select("id")
+    .eq("email", session.user.email)
     .single();
 
   if (!supabaseUser || error) {

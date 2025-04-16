@@ -2,7 +2,7 @@
 
 import { supabase } from "@/lib/supabase";
 import { challengeSchema } from "@/schemas/challengeSchema";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "../auth-compatibility";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 

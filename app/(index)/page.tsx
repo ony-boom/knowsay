@@ -1,15 +1,21 @@
 "use client";
 
 import { AuthButtons } from "@/components/auth";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  const { isSignedIn } = useAuth();
+  const { data: session, status } = useSession();
   const t = useTranslations("index");
-  if (isSignedIn) redirect("/home");
+  
+  useEffect(() => {
+    if (status === "authenticated") {
+      redirect("/home");
+    }
+  }, [status]);
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-20 md:flex-row md:justify-between lg:gap-32">

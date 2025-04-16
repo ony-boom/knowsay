@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
-import { SignOutButton, useUser } from "@clerk/nextjs";
+import { useSession, signOut } from "next-auth/react";
 import { LogOut, Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -66,9 +66,9 @@ const LogoutButton = () => {
             >
               Cancel
             </Button>
-            <SignOutButton>
-              <Button variant="destructive">Log Out</Button>
-            </SignOutButton>
+            <Button variant="destructive" onClick={() => signOut()}>
+              Log Out
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -79,7 +79,8 @@ const LogoutButton = () => {
 export default function Layout({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const pathname = usePathname();
   const t = useTranslations();
 
@@ -123,13 +124,13 @@ export default function Layout({
                   <Avatar className="border-primary/10 h-8 w-8 border-2">
                     <AvatarImage
                       src={
-                        user?.imageUrl ??
+                        user?.image ?? 
                         "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
                       }
-                      alt={user?.firstName || "User"}
+                      alt={user?.name || "User"}
                     />
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      {user?.firstName?.charAt(0) ?? "U"}
+                      {user?.name?.charAt(0) ?? "U"}
                     </AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium">Learner</span>
@@ -140,22 +141,21 @@ export default function Layout({
                       <Avatar className="border-primary/10 h-12 w-12 border-2">
                         <AvatarImage
                           src={
-                            user?.imageUrl ??
+                            user?.image ?? 
                             "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
                           }
-                          alt={user?.firstName || "User"}
+                          alt={user?.name || "User"}
                         />
                         <AvatarFallback className="bg-primary/10 text-primary">
-                          {user?.firstName?.charAt(0) ?? "U"}
+                          {user?.name?.charAt(0) ?? "U"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-base font-semibold">
-                          {user?.firstName || "User"} {user?.lastName || ""}
+                          {user?.name || "User"}
                         </h4>
                         <p className="text-muted-foreground text-sm">
-                          {user?.emailAddresses[0]?.emailAddress ||
-                            "user@example.com"}
+                          {user?.email || "user@example.com"}
                         </p>
                       </div>
                     </div>

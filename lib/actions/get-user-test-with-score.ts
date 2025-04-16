@@ -1,15 +1,18 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { supabase } from "../supabase";
 import { TestAttempt } from "@/schemas/testAttemptSchema";
 import { Test } from "@/schemas/testSchema";
+import { currentUser } from "@/lib/auth-compatibility";
 
 export async function getUserTestWithScore() {
+  // Using our compatibility layer
   const clerkUser = await currentUser();
+
+  if (!clerkUser) return [];
 
   const { data: user } = await supabase
     .from("users")
     .select("*")
-    .eq("clerk_id", clerkUser?.id)
+    .or(`clerk_id.eq.${clerkUser.id},provider_id.eq.${clerkUser.id},id.eq.${clerkUser.id}`)
     .single();
 
   if (!user) return [];
@@ -32,7 +35,7 @@ export async function getUserTestWithScore() {
     withMaybeDuplicate.reduce((map, test) => {
       if (
         !map.has(test.test_id) ||
-        new Date(map.get(test.test_id).completed_at) <
+        new Date(map.get(test.test_id).completed_at) < 
           new Date(test?.completed_at as string)
       ) {
         map.set(test.test_id, test);

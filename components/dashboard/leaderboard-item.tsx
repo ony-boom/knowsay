@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { Medal, Trophy, UserCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LeaderBoardEntry } from "@/lib/definitions";
-import { clerkClient } from "@clerk/nextjs/server";
+import { clerkClient } from "@/lib/auth-compatibility";
 
 type LeaderboardItemProps = {
   user: LeaderBoardEntry & { rank: number };
@@ -34,7 +34,7 @@ export async function LeaderboardItem({ user }: LeaderboardItemProps) {
   try {
     const client = await clerkClient();
     const clerkUser = await client.users.getUser(user.user_clerk_id);
-    const displayName = clerkUser.fullName || clerkUser.username || "User";
+    const displayName = clerkUser?.fullName ?? clerkUser?.username ?? "User";
 
     return (
       <div
@@ -49,7 +49,7 @@ export async function LeaderboardItem({ user }: LeaderboardItemProps) {
           </div>
           <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
             <AvatarImage
-              src={clerkUser.imageUrl}
+              src={clerkUser?.imageUrl}
               alt={displayName}
               className="rounded-full"
             />

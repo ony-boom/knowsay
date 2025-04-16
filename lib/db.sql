@@ -5,11 +5,18 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  full_name VARCHAR(255) NOT NULL,
-  role VARCHAR(50) NOT NULL CHECK (role IN ('super_admin', 'user', 'corrector')),
+  password_hash VARCHAR(255),
+  name VARCHAR(255) NOT NULL,
+  imageUrl TEXT,
+  role VARCHAR(50) NOT NULL DEFAULT 'user' CHECK (role IN ('super_admin', 'user', 'corrector')),
+  clerk_id VARCHAR(255), -- For backwards compatibility during migration
+  provider VARCHAR(50), -- Authentication provider (google, clerk_migrated, etc.)
+  provider_id VARCHAR(255), -- ID from the provider
+  online BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  last_login TIMESTAMP WITH TIME ZONE
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  last_login TIMESTAMP WITH TIME ZONE,
+  UNIQUE(provider, provider_id)
 );
 
 CREATE TABLE qcm (

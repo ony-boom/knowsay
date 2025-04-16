@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { createChallengeSchema } from "@/schemas/challengeSchema";
 import { supabase } from "@/lib/supabase";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@/lib/auth-compatibility";
 import type { Challenge } from "@/schemas/challengeSchema";
 
 export type ChallengeState = {

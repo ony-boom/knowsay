@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { State } from "./types";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@/lib/auth-compatibility";
 
 export async function createQuizFormAction(
   prevState: State,

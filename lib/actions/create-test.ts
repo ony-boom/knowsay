@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { createTestSchema } from "@/schemas/testSchema";
 import { supabase } from "@/lib/supabase";
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@/lib/auth-compatibility"
 
 export type TestState = {
   errors?: {

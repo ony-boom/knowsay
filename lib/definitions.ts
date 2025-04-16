@@ -1,11 +1,13 @@
 export type User = {
   id?: string;
-  name: string;
-  password_hash?: string;
-  role: "super_admin" | "user" | "corrector";
+  clerk_id?: string; // For backward compatibility
+  provider?: string;
+  provider_id?: string;
   email: string;
-  clerk_id: string;
+  name: string;
+  role: string;
   imageUrl?: string;
+  online?: boolean;
 };
 
 export type LeaderBoardEntry = {

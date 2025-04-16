@@ -1,9 +1,10 @@
 "use server";
 
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { supabase } from "../supabase";
 import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 export interface DeleteChallengeState {
   errors?: {
@@ -16,9 +17,9 @@ export interface DeleteChallengeState {
 export async function deleteChallengeAction(
   challengeId: string,
 ): Promise<DeleteChallengeState> {
-  // Verify user authentication
-  const clerkUser = await currentUser();
-  if (!clerkUser) {
+  // Verify user authentication using NextAuth instead of Clerk
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
     redirect("/auth/login");
   }
 
@@ -27,7 +28,7 @@ export async function deleteChallengeAction(
     const { data: user } = await supabase
       .from("users")
       .select("id")
-      .eq("clerk_id", clerkUser.id)
+      .eq("email", session.user.email)
       .single();
 
     if (!user) {
